@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:w_app/models/review_model.dart';
+import 'package:w_app/screens/home/widgets/review_card.dart';
 
 class ReviewExtendedWidget extends StatelessWidget {
   final Review review;
@@ -8,21 +9,29 @@ class ReviewExtendedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ReviewCard(author: review.author, content: review.content),
-        Divider(),
-        for (var comment in review.comments) CommentWidget(comment: comment),
-      ],
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: EdgeInsets.only(top: 102, bottom: 96),
+      child: Column(
+        children: [
+          ReviewCard(
+            isThread: true,
+            review: review,
+          ),
+          // ReviewIntoCard(author: review.author, content: review.content),
+
+          for (Comment comment in []) CommentWidget(comment: comment),
+        ],
+      ),
     );
   }
 }
 
-class ReviewCard extends StatelessWidget {
+class ReviewIntoCard extends StatelessWidget {
   final String author;
   final String content;
 
-  ReviewCard({required this.author, required this.content});
+  const ReviewIntoCard({required this.author, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +47,7 @@ class ReviewCard extends StatelessWidget {
 class CommentWidget extends StatelessWidget {
   final Comment comment;
 
-  CommentWidget({required this.comment});
+  const CommentWidget({required this.comment});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +60,7 @@ class CommentWidget extends StatelessWidget {
         if (comment.children != null)
           for (var childComment in comment.children!)
             Padding(
-              padding: EdgeInsets.only(left: 30),
+              padding: const EdgeInsets.only(left: 30),
               child: CommentWidget(comment: childComment),
             ),
       ],

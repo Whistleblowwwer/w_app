@@ -7,10 +7,8 @@ import 'package:w_app/bloc/auth_bloc/auth_bloc_state.dart';
 import 'package:w_app/bloc/lifecycle_bloc/lifecycle_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
-import 'package:w_app/screens/home/home_screen.dart';
 import 'package:w_app/screens/sign_in_screen.dart';
 import 'package:w_app/screens/start_screen.dart';
-import 'package:w_app/widgets/snackbar.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'repository/user_repository.dart';
@@ -18,6 +16,7 @@ import 'repository/user_repository.dart';
 void main() async {
   await dotenv.load(fileName: ".env");
   final apiService = ApiService();
+
   final userRepository = UserRepository();
 
   final AuthBloc authBloc = AuthBloc(
@@ -127,13 +126,14 @@ class AuthHandler extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is AuthAuthenticated) {
+          print(state);
           return StartPage(userRepository: userRepository);
         } else if (state is AuthUnauthenticated || state is AuthError) {
           return SignInScreen();
         } else {
           return const Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator.adaptive(),
             ),
           );
         }

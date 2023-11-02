@@ -26,6 +26,7 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
 
       if (response.containsKey('token')) {
         await userRepository.saveToken(response['token']);
+        print("r");
         emit(AuthAuthenticated());
       } else {
         print('Sign in failed');
@@ -45,6 +46,7 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
 
       //(token != null && apiService.validateToken(token))
       if (token != null) {
+        print("hey");
         final validate = await apiService.validateAccesToken(token);
 
         if (validate) {

@@ -31,107 +31,124 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Inicia sesión'),
+        title: Text(
+          'Inicia sesión',
+          style: TextStyle(
+            fontFamily: 'Montserrat',
+          ),
+        ),
         backgroundColor: Color.fromRGBO(16, 28, 43, 1),
       ),
       body: Form(
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 48,
-              ),
-              CustomTextFormField(
-                controller: _usernameController,
-                focusNode: _usernameFocus,
-                nextFocusNode: _passwordFocus,
-                labelText: 'Email',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an email';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 24),
-              CustomTextFormField(
-                controller: _passwordController,
-                focusNode: _passwordFocus,
-                labelText: 'Contraseña',
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a password';
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (_) {
-                  _onSignInButtonPressed();
-                },
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Text(
-                    "¿Olvidaste tu contraseña?",
-                    style: TextStyle(
-                        color: Color.fromRGBO(100, 31, 137, 1),
-                        fontWeight: FontWeight.w600),
-                  ),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 48,
                 ),
-              ),
-              GestureDetector(
-                onTap: _onSignInButtonPressed,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 32),
-                  width: double.maxFinite,
-                  height: 56,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Color.fromRGBO(100, 31, 137, 1)),
-                  child: Text(
-                    "Ingresar",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20),
-                  ),
+                Image.asset(
+                  'assets/images/logos/imagew.png',
+                  width: 102,
                 ),
-              ),
-              InterceptionTextWidget(
-                text: "Ingresa tambien con",
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: SignInWithButton(
-                  text: "Ingresa con Google",
+                SizedBox(
+                  height: 48,
                 ),
-              ),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '¿No tienes cuenta? ',
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                CustomTextFormField(
+                  controller: _usernameController,
+                  focusNode: _usernameFocus,
+                  nextFocusNode: _passwordFocus,
+                  labelText: 'Email',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an email';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 24),
+                CustomTextFormField(
+                  controller: _passwordController,
+                  focusNode: _passwordFocus,
+                  labelText: 'Contraseña',
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a password';
+                    }
+                    return null;
+                  },
+                  onFieldSubmitted: (_) {
+                    _onSignInButtonPressed();
+                  },
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Text(
+                      "¿Olvidaste tu contraseña?",
+                      style: TextStyle(
+                          color: Color.fromRGBO(100, 31, 137, 1),
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w600),
                     ),
-                    TextSpan(
-                        text: 'Registrate',
-                        style: TextStyle(
-                            letterSpacing: 0.02 * 1,
-                            fontWeight: FontWeight.w600,
-                            color: Color.fromRGBO(100, 31, 137, 1))),
-                  ],
+                  ),
                 ),
-                style: TextStyle(
-                  // fontFamily: 'Anuphan',
-                  fontSize: 14,
+                GestureDetector(
+                  onTap: _onSignInButtonPressed,
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 32),
+                    width: double.maxFinite,
+                    height: 56,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Color.fromRGBO(100, 31, 137, 1)),
+                    child: Text(
+                      "Ingresar",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                          fontSize: 18),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                InterceptionTextWidget(
+                  text: "Ingresa tambien con",
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: SignInWithButton(
+                    text: "Ingresa con Google",
+                  ),
+                ),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '¿No tienes cuenta? ',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      TextSpan(
+                          text: 'Registrate',
+                          style: TextStyle(
+                              letterSpacing: 0.02 * 1,
+                              fontWeight: FontWeight.w600,
+                              color: Color.fromRGBO(100, 31, 137, 1))),
+                    ],
+                  ),
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -161,7 +178,10 @@ class SignInWithButton extends StatelessWidget {
           )),
       child: Text(
         text,
-        style: TextStyle(fontWeight: FontWeight.w400),
+        style: TextStyle(
+          fontWeight: FontWeight.w400,
+          fontFamily: 'Montserrat',
+        ),
       ),
     );
   }
@@ -186,7 +206,11 @@ class InterceptionTextWidget extends StatelessWidget {
         ),
         Text(
           text,
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            fontFamily: 'Montserrat',
+          ),
         ),
         Expanded(
           child: Container(
@@ -230,14 +254,19 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
+      style: TextStyle(
+        fontFamily: 'Montserrat',
+      ),
       decoration: InputDecoration(
         labelText: widget.labelText,
         floatingLabelStyle: TextStyle(
             color: Color.fromRGBO(163, 173, 179, 1),
             fontSize: 16,
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w600),
         labelStyle: TextStyle(
             color: Color.fromRGBO(163, 173, 179, 1),
+            fontFamily: 'Montserrat',
             fontSize: 16,
             fontWeight: FontWeight.w600),
         border: OutlineInputBorder(

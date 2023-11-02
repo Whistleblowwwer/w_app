@@ -1,43 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/screens/home/widgets/review_extended_widget.dart';
 
 class ReviewPage extends StatefulWidget {
-  const ReviewPage({super.key});
+  final Review review;
+  const ReviewPage({super.key, required this.review});
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
 }
 
 class _ReviewPageState extends State<ReviewPage> {
-  Review? review;
-  Map<String, dynamic> reviewJson = {
-    "review": {
-      "author": "Jorge Ancer",
-      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
-    },
-    "comments": [
-      {
-        "author": "Aristoteles Onasis",
-        "content": "Este es un comentario sobre la reseña...",
-        "children": [
-          {
-            "author": "Poncho Cifuentes",
-            "content": "Este es un comentario hijo de Aristoteles Onasis..."
-          },
-          {
-            "author": "Maria Perez",
-            "content": "Otro comentario hijo de Aristoteles Onasis..."
-          }
-        ]
-      },
-      {
-        "author": "Julia Ocampo",
-        "content": "Otro comentario principal sobre la reseña..."
-      }
-    ]
-  };
-
   @override
   void initState() {
     // TODO: implement initState
@@ -50,7 +26,35 @@ class _ReviewPageState extends State<ReviewPage> {
       body: Container(
           width: double.maxFinite,
           height: double.maxFinite,
-          child: ReviewExtendedWidget(review: Review.fromJson(reviewJson))),
+          child: Stack(
+            children: [
+              ReviewExtendedWidget(review: widget.review),
+              Container(
+                width: double.maxFinite,
+                height: Platform.isIOS ? 102 : 56,
+                padding: EdgeInsets.only(top: 24),
+                decoration: BoxDecoration(color: Colors.white),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 16, right: 8),
+                        child: Icon(FeatherIcons.arrowLeft),
+                      ),
+                      Text(
+                        "Empresa",
+                        style: TextStyle(fontFamily: 'Montserrat'),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )),
     );
   }
 }

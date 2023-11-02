@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:w_app/models/company_model.dart';
+import 'package:w_app/models/review_model.dart';
 import 'package:w_app/repository/user_repository.dart';
 
 class ApiService {
@@ -19,37 +20,22 @@ class ApiService {
     _utils = ApiServerUtils(baseUrl, userRepository);
   }
 
-  Future<Map<String, dynamic>> createUser({
-    required String name,
-    required String lastName,
-    required String phone,
-    required String email,
-    required String profilePicture,
-    required String password,
-    required String specialty,
-    required String role,
-  }) async {
+  Future<http.Response> createReview(
+      {required String content,
+      required String idBusiness,
+      required String idUser}) async {
     // Construir el cuerpo del POST request con todos los argumentos
-    var body = {
-      'name': name,
-      'last_name': lastName,
-      'phone': phone,
-      'email': email,
-      'profile_picture': profilePicture,
-      'password': password,
-      'specialty': specialty,
-      'role': role,
-    };
+    var body = {"content": content, "_id_business": idBusiness};
 
     // Realizar la petición POST al endpoint para registrar usuarios
-    var response = await _utils.post('users/', body);
+    var response = await _utils.post('reviews/?_id_user=$idUser', body);
 
     // Devolver la respuesta procesada
-    return _utils.handleResponse(response);
+    return response;
   }
 
   Future<Map<String, dynamic>> signIn(String email, String password) async {
-    var body = {'email': email, 'password': password};
+    var body = {'client_email': email, 'client_password': password};
     var response = await _utils.post('users/login', body);
 
     return _utils.handleResponse(response);
@@ -60,8 +46,10 @@ class ApiService {
   }
 
   Future<bool> validateAccesToken(String token) async {
-    var response = await _utils.get('users/token');
-    return _utils.handleResponse(response)['success'];
+    // var response = await _utils.get('users/token');
+    // print(response.statusCode);
+    // _utils.handleResponse(response)['success'];
+    return true;
   }
 
   Future<bool> validateNumberSMS(String phoneNumber) async {
@@ -75,31 +63,78 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> getUserProfile(String id) async {
-    var response = await _utils.get('users?_id_user=$id');
+    var response = await _utils.get('users');
+    print(response.statusCode);
+    print("---------");
+    print(_utils.handleResponse(response));
     return _utils.handleResponse(response);
   }
 
-  Future<List<Company>> getSearch(String id) async {
-    try {
-      // var response = await _utils.get('users?_id_user=$id');
+  Future<Business> getBusinessDetail(String idBusiness) async {
+    var response =
+        await _utils.get('business/details?_id_business=$idBusiness');
+    print(response.statusCode);
+    print(_utils.handleResponse(response));
+    return Business.fromJson(_utils.handleResponse(response)["business"]);
+  }
 
-      // final List<dynamic> companyData =
-      //     _utils.handleResponse(response)['companies'];
+  Future<List<Business>> getSearch(String name) async {
+    try {
+      var response = await _utils
+          .get('business/search?address=&name=$name&state&reviewCount=&city=');
+
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['businesses'];
 
       await Future.delayed(Duration(seconds: 1));
 
-      final List<dynamic> companyData = [
-        {'name': 'Starbucks', 'parentCompany': 'Alsea'},
-        {'name': 'Apple', 'parentCompany': 'Apple Inc.'},
-        {
-          'name': 'Burger King',
-          'parentCompany': 'Restaurant Brands International'
-        },
-        {'name': 'Nike', 'parentCompany': 'Nike, Inc.'},
-        {'name': 'Pepsi', 'parentCompany': 'PepsiCo'}
-      ];
+      // final List<dynamic> companyData = [
+      //   {'name': 'Starbucks', 'parentCompany': 'Alsea'},
+      //   {'name': 'Apple', 'parentCompany': 'Apple Inc.'},
+      //   {
+      //     'name': 'Burger King',
+      //     'parentCompany': 'Restaurant Brands International'
+      //   },
+      //   {'name': 'Nike', 'parentCompany': 'Nike, Inc.'},
+      //   {'name': 'Pepsi', 'parentCompany': 'PepsiCo'}
+      // ];
 
-      return companyData.map((data) => Company.fromJson(data)).toList();
+      return companyData.map((data) => Business.fromJson(data)).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<List<Review>> getReviews() async {
+    try {
+      var response = await _utils.get('reviews/');
+      print(response.statusCode);
+      print("---a------a------");
+
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['reviews'];
+      print(companyData);
+
+      await Future.delayed(Duration(seconds: 1));
+
+      return companyData.map((data) => Review.fromJson(data)).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<List<Review>> getBusinessReviews(String idBusiness) async {
+    try {
+      var response = await _utils.get('reviews/business/$idBusiness');
+      print(response.statusCode);
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['reviews'];
+      print("-----b-----b---");
+      print(companyData);
+
+      await Future.delayed(Duration(seconds: 1));
+
+      return companyData.map((data) => Review.fromJson(data)).toList();
     } catch (e) {
       return Future.error(e);
     }
@@ -114,13 +149,14 @@ class ApiServerUtils {
 
   Future<Map<String, String>> _getDefaultHeaders() async {
     final token = await userRepository.getToken();
+    print(token);
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
 
     if (token != null) {
-      headers['Authorization'] = token;
+      headers['Authorization'] = 'Bearer $token';
     }
 
     return headers;

@@ -4,10 +4,12 @@ import 'package:w_app/styles/color_style.dart';
 class CustomTextField extends StatefulWidget {
   final FocusNode focusNode; // Añade esta línea
   final TextEditingController controller;
+  final String? Function(String?)? validator;
 
   CustomTextField(
       {required this.focusNode,
-      required this.controller}); // Añade este constructor
+      required this.controller,
+      this.validator}); // Añade este constructor
 
   @override
   _CustomTextFieldState createState() => _CustomTextFieldState();
@@ -34,11 +36,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   Widget _buildTextField() {
     return Flexible(
-      child: TextField(
+      child: TextFormField(
         controller: widget.controller,
         focusNode: widget.focusNode,
         maxLines: 8,
         minLines: 1,
+        validator: widget.validator,
         style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 14,

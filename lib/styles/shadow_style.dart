@@ -14,6 +14,12 @@ class ShadowStyle {
       offset: Offset(0, 4),
       blurRadius: 4,
       spreadRadius: 0);
+  // Sombra base para un post (Box)
+  BoxShadow dropComponentShadow = const BoxShadow(
+      color: Color.fromRGBO(0, 0, 0, 0.1),
+      offset: Offset(0, 0),
+      blurRadius: 24,
+      spreadRadius: 0);
 
   // Sombra para objetos dentro de un componente base
   BoxShadow insideObjectShadow = const BoxShadow(

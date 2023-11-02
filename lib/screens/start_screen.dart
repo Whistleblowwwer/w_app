@@ -46,9 +46,12 @@ class StartPageState extends State<StartPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _authBloc = BlocProvider.of<AuthBloc>(context);
-      _userBloc = BlocProvider.of<UserBloc>(context);
-      _fetchUserProfile();
+      if (mounted) {
+        // Es seguro usar el context aquí
+        _authBloc = BlocProvider.of<AuthBloc>(context);
+        _userBloc = BlocProvider.of<UserBloc>(context);
+        _fetchUserProfile();
+      }
     });
   }
 
@@ -56,9 +59,10 @@ class StartPageState extends State<StartPage> {
     final token = await widget.userRepository.getToken();
     if (token != null) {
       final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      print(decodedToken);
 
       final String userId =
-          decodedToken['id']; // Asume que el ID está bajo la clave 'id'
+          decodedToken['_id_user']; // Asume que el ID está bajo la clave 'id'
       _userBloc.add(FetchUserProfile(token, userId));
     }
   }
@@ -172,20 +176,26 @@ class StartPageState extends State<StartPage> {
                           ?.popUntil((route) => route.isFirst);
                     } else {
                       if (key == 2) {
-                        // Check if the third option is pressed
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            barrierColor: const Color.fromRGBO(0, 0, 0, 0.1),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20.0),
-                                topRight: Radius.circular(20.0),
+                        final userState = _userBloc.state;
+                        if (userState is UserLoaded) {
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              barrierColor: const Color.fromRGBO(0, 0, 0, 0.1),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20.0),
+                                  topRight: Radius.circular(20.0),
+                                ),
                               ),
-                            ),
-                            builder: (context) => BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-                                child: CombinedBottomSheet()));
+                              builder: (context) => BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                                  child: CombinedBottomSheet(
+                                    user: userState.user,
+                                  )));
+                        }
+                        // Check if the third option is pressed
                       } else {
                         setState(() {
                           currentIndex = key;

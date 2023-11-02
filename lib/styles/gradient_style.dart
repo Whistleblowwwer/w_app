@@ -22,6 +22,19 @@ class GradientStyle {
       ]);
 
   // Gradiente para el icono de Nodoo Control
+  LinearGradient grayGradient = const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      stops: [
+        0.0,
+        1.0
+      ],
+      colors: <Color>[
+        Color.fromRGBO(230, 230, 230, 1),
+        Color.fromRGBO(10, 10, 10, .2),
+      ]);
+
+  // Gradiente para el icono de Nodoo Control
   LinearGradient medicFlowBlueGradient = const LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
