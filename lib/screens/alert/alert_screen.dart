@@ -28,19 +28,6 @@ class _AlertScreenState extends State<AlertScreen> {
     });
   }
 
-  Future<void> _fetchUserProfile() async {
-    // await widget.userRepository.deleteToken();
-
-    final token = await widget.userRepository.getToken();
-    if (token != null) {
-      final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-      print(decodedToken);
-      final String userId =
-          decodedToken['id']; // Asume que el ID está bajo la clave 'id'
-      _userBloc.add(FetchUserProfile(token, userId));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

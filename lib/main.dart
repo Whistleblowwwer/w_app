@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_state.dart';
+import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
+import 'package:w_app/bloc/feed_bloc/feed_state.dart';
 import 'package:w_app/bloc/lifecycle_bloc/lifecycle_bloc.dart';
+import 'package:w_app/bloc/search_bloc/search_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/screens/sign_in_screen.dart';
@@ -16,7 +20,6 @@ import 'repository/user_repository.dart';
 void main() async {
   await dotenv.load(fileName: ".env");
   final apiService = ApiService();
-
   final userRepository = UserRepository();
 
   final AuthBloc authBloc = AuthBloc(
@@ -24,8 +27,12 @@ void main() async {
     apiService,
     userRepository,
   );
-
-  runApp(MainApp(authBloc, apiService, userRepository));
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(MainApp(authBloc, apiService, userRepository));
+  });
 }
 
 class MainApp extends StatefulWidget {
@@ -87,7 +94,11 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
           ),
           BlocProvider<UserBloc>(
             create: (context) => UserBloc(UserLoading(), widget.apiService),
-          )
+          ),
+          BlocProvider<SearchBloc>(create: (context) => SearchBloc()),
+          BlocProvider<FeedBloc>(
+            create: (context) => FeedBloc(widget.apiService),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

@@ -62,7 +62,8 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
     }
   }
 
-  FutureOr<void> _logOutUser(LogOutUser event, Emitter<AuthState> emit) {
+  FutureOr<void> _logOutUser(LogOutUser event, Emitter<AuthState> emit) async {
+    await userRepository.deleteToken();
     emit(AuthUnauthenticated());
   }
 }

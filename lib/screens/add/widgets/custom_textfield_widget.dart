@@ -22,7 +22,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       padding: const EdgeInsets.only(left: 16, bottom: 16, right: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: ColorStyle().lightGrey,
+        color: ColorStyle.lightGrey,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -72,7 +72,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               fontWeight: FontWeight.w400,
               fontSize: 14,
               fontFamily: 'Montserrat',
-              color: ColorStyle().textGrey,
+              color: ColorStyle.textGrey,
             ),
           );
         },

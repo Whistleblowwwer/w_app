@@ -27,6 +27,34 @@ class User {
     this.updatedAt,
   });
 
+  String getFormattedCreationDate() {
+    if (createdAt == null) {
+      return 'Fecha de creación no disponible';
+    }
+
+    // Formatear la fecha
+    return 'Se creó el ${createdAt!.day} de ${_getMonthName(createdAt!.month)} del ${createdAt!.year}';
+  }
+
+  String _getMonthName(int month) {
+    const monthNames = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
+    ];
+
+    return monthNames[month - 1];
+  }
+
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       idUser: json['_id_user'],

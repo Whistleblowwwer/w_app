@@ -177,7 +177,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                             "Oct 25",
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                color: ColorStyle().grey,
+                                color: ColorStyle.grey,
                                 fontFamily: 'Montserrat',
                                 fontSize: 12),
                           ),
@@ -229,7 +229,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                 itemPadding: const EdgeInsets.symmetric(horizontal: 0.5),
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
-                  color: ColorStyle().solidBlue,
+                  color: ColorStyle.solidBlue,
                 ),
                 onRatingUpdate: (rating) {
                   setState(() {
@@ -308,10 +308,10 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                             width: 32,
                                             height: 32,
                                             decoration: BoxDecoration(
-                                                color: ColorStyle().lightGrey,
+                                                color: ColorStyle.lightGrey,
                                                 shape: BoxShape.circle),
                                             child: DottedCircularBorder(
-                                              color: ColorStyle().borderGrey,
+                                              color: ColorStyle.borderGrey,
                                               diameter: 26,
                                               borderWidth: 1.2,
                                               icon: Container(
@@ -319,7 +319,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                                     shape: BoxShape.circle),
                                                 child: Icon(
                                                   Icons.cached,
-                                                  color: ColorStyle().solidBlue,
+                                                  color: ColorStyle.solidBlue,
                                                   size: 20,
                                                 ),
                                               ),
@@ -334,7 +334,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                             : Row(
                                 children: [
                                   DottedCircularBorder(
-                                    color: ColorStyle().borderGrey,
+                                    color: ColorStyle.borderGrey,
                                     diameter: 32,
                                     borderWidth: 1.5,
                                     icon: Container(
@@ -342,7 +342,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                           shape: BoxShape.circle),
                                       child: Icon(
                                         FeatherIcons.plus,
-                                        color: ColorStyle().borderGrey,
+                                        color: ColorStyle.borderGrey,
                                         size: 24,
                                       ),
                                     ),
@@ -354,7 +354,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                     "Selecciona una entidad",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
-                                        color: ColorStyle().textGrey,
+                                        color: ColorStyle.textGrey,
                                         fontFamily: 'Montserrat',
                                         fontSize: 14),
                                   ),
@@ -390,11 +390,10 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                          color: ColorStyle().lightGrey,
-                          shape: BoxShape.circle),
+                          color: ColorStyle.lightGrey, shape: BoxShape.circle),
                       child: Icon(
                         FeatherIcons.arrowRight,
-                        color: ColorStyle().midToneGrey,
+                        color: ColorStyle.midToneGrey,
                       ),
                     ),
                   ),
@@ -457,7 +456,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                 Container(
                   height: 0.8,
                   width: double.maxFinite,
-                  color: ColorStyle().borderGrey,
+                  color: ColorStyle.borderGrey,
                 )
               ],
             ),
@@ -479,7 +478,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                       child: RoundedDotterRectangleBorder(
                           height: 52,
                           width: double.maxFinite,
-                          color: ColorStyle().borderGrey,
+                          color: ColorStyle.borderGrey,
                           borderWidth: 1,
                           icon: Container(
                             width: double.maxFinite,
@@ -490,7 +489,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                               children: [
                                 Icon(
                                   FeatherIcons.plusCircle,
-                                  color: ColorStyle().borderGrey,
+                                  color: ColorStyle.borderGrey,
                                 ),
                                 SizedBox(
                                   width: 8,
@@ -499,7 +498,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                   'Agregar Empresa',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: ColorStyle().borderGrey,
+                                      color: ColorStyle.borderGrey,
                                       fontSize: 14,
                                       fontFamily: 'Montserrat'),
                                 ),
@@ -543,7 +542,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                         decoration: BoxDecoration(
                                           border: Border(
                                             bottom: BorderSide(
-                                              color: ColorStyle()
+                                              color: ColorStyle
                                                   .borderGrey, // Color del borde.
                                               width: 0.5, // Ancho del borde.
                                             ),
@@ -588,7 +587,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color:
-                                                              ColorStyle().grey,
+                                                              ColorStyle.grey,
                                                           fontSize: 12,
                                                           fontFamily:
                                                               'Montserrat'),
@@ -602,8 +601,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                   shape: BoxShape.circle,
-                                                  color:
-                                                      ColorStyle().lightGrey),
+                                                  color: ColorStyle.lightGrey),
                                               child: SvgPicture.asset(
                                                 'assets/images/icons/WhistleActive.svg',
                                                 width: 24,
@@ -716,7 +714,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                   Container(
                     height: 0.8,
                     width: double.maxFinite,
-                    color: ColorStyle().borderGrey,
+                    color: ColorStyle.borderGrey,
                   )
                 ],
               ),
@@ -791,7 +789,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: ColorStyle().solidBlue),
+                    color: ColorStyle.solidBlue),
                 child: Text(
                   "Crear",
                   style: TextStyle(
@@ -979,7 +977,7 @@ class CustomInput extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: "Montserrat",
-                color: ColorStyle().textGrey,
+                color: ColorStyle.textGrey,
                 fontSize: 14,
                 fontWeight: FontWeight.w400),
           ),
@@ -991,7 +989,7 @@ class CustomInput extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
               border: Border.all(
-                color: ColorStyle().borderGrey,
+                color: ColorStyle.borderGrey,
                 width: 1.0,
               ),
               color:
@@ -1075,7 +1073,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
               border: Border.all(
-                color: ColorStyle().borderGrey,
+                color: ColorStyle.borderGrey,
                 width: 1.0,
               ),
               color: Colors.white,
@@ -1098,7 +1096,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                 icon: Icon(
                   FeatherIcons.chevronDown,
                   size: 20,
-                  color: ColorStyle().textGrey,
+                  color: ColorStyle.textGrey,
                 ),
                 items:
                     widget.list.map<DropdownMenuItem<String>>((String value) {

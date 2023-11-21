@@ -63,7 +63,8 @@ class StartPageState extends State<StartPage> {
 
       final String userId =
           decodedToken['_id_user']; // Asume que el ID está bajo la clave 'id'
-      _userBloc.add(FetchUserProfile(token, userId));
+      print(userId);
+      _userBloc.add(FetchUserProfile());
     }
   }
 
@@ -126,7 +127,7 @@ class StartPageState extends State<StartPage> {
                     onGenerateRoute: (settings) {
                       return MaterialPageRoute(
                         builder: (context) =>
-                            ProfileScreen(widget.userRepository),
+                            ProfileScreen(widget.userRepository, state.user),
                       );
                     },
                   ),
@@ -146,8 +147,8 @@ class StartPageState extends State<StartPage> {
   Widget _buildBottomNavigationBar() {
     double displayWidth = MediaQuery.of(context).size.width / 100;
     return Container(
-      height: 106,
-      padding: const EdgeInsets.only(top: 16, left: 24, right: 24),
+      height: 88,
+      padding: const EdgeInsets.only(top: 8, left: 24, right: 24),
       decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -225,7 +226,7 @@ class StartPageState extends State<StartPage> {
                                 height: 32,
                                 colorFilter: ColorFilter.mode(
                                     currentIndex == key
-                                        ? ColorStyle().darkPurple
+                                        ? ColorStyle.darkPurple
                                         : Colors.black,
                                     BlendMode.srcIn),
                               )
@@ -237,7 +238,7 @@ class StartPageState extends State<StartPage> {
                                         : 26
                                     : 24,
                                 color: currentIndex == key
-                                    ? ColorStyle().darkPurple
+                                    ? ColorStyle.darkPurple
                                     : Colors.black,
                               ),
                         SizedBox(
@@ -247,10 +248,10 @@ class StartPageState extends State<StartPage> {
                             visible: currentIndex == key,
                             child: Container(
                               width: 32,
-                              height: 4,
+                              height: 2.5,
                               margin: const EdgeInsets.only(top: 4),
                               decoration: BoxDecoration(
-                                  color: ColorStyle().darkPurple,
+                                  color: ColorStyle.darkPurple,
                                   borderRadius: BorderRadius.circular(2)),
                             ))
                       ],

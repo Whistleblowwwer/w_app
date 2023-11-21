@@ -18,7 +18,7 @@ class UserBloc extends Bloc<UserBlocEvent, UserState> {
     emit(UserLoading());
     try {
       print("aa");
-      final response = await apiService.getUserProfile(event.idUser);
+      final response = await apiService.getUserProfile();
       final user = User.fromJson(response['user']);
 
       emit(UserLoaded(user));

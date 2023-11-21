@@ -4,11 +4,8 @@ import 'package:equatable/equatable.dart';
 abstract class UserBlocEvent extends Equatable {}
 
 class FetchUserProfile extends UserBlocEvent {
-  final String token;
-  final String idUser;
-
-  FetchUserProfile(this.token, this.idUser);
+  FetchUserProfile();
 
   @override
-  List<Object> get props => [token, idUser];
+  List<Object> get props => [];
 }

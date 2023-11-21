@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -34,6 +36,27 @@ class ApiService {
     return response;
   }
 
+  Future<Map<String, dynamic>> commentReview(
+      {required String content,
+      required String idReview,
+      String? idParent}) async {
+    // Construir el cuerpo del POST request con todos los argumentos
+    var body = {
+      "content": content,
+      "_id_review": idReview,
+    };
+
+    if (idParent != null) {
+      body.addAll({"_id_parent": idParent});
+    }
+
+    // Realizar la petición POST al endpoint para registrar usuarios
+    var response = await _utils.post('comments', body);
+
+    // Devolver la respuesta procesada
+    return _utils.handleResponse(response);
+  }
+
   Future<Map<String, dynamic>> signIn(String email, String password) async {
     var body = {'client_email': email, 'client_password': password};
     var response = await _utils.post('users/login', body);
@@ -62,8 +85,8 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> getUserProfile(String id) async {
-    var response = await _utils.get('users');
+  Future<Map<String, dynamic>> getUserProfile() async {
+    var response = await _utils.get('users/');
     print(response.statusCode);
     print("---------");
     print(_utils.handleResponse(response));
@@ -71,11 +94,15 @@ class ApiService {
   }
 
   Future<Business> getBusinessDetail(String idBusiness) async {
-    var response =
-        await _utils.get('business/details?_id_business=$idBusiness');
-    print(response.statusCode);
-    print(_utils.handleResponse(response));
-    return Business.fromJson(_utils.handleResponse(response)["business"]);
+    try {
+      var response =
+          await _utils.get('business/details?_id_business=$idBusiness');
+      print(response.statusCode);
+      print(_utils.handleResponse(response));
+      return Business.fromJson(_utils.handleResponse(response)["business"]);
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
   Future<List<Business>> getSearch(String name) async {
@@ -125,7 +152,8 @@ class ApiService {
 
   Future<List<Review>> getBusinessReviews(String idBusiness) async {
     try {
-      var response = await _utils.get('reviews/business/$idBusiness');
+      var response =
+          await _utils.get('reviews/business/?_id_business=$idBusiness');
       print(response.statusCode);
       final List<dynamic> companyData =
           _utils.handleResponse(response)['reviews'];
@@ -138,6 +166,61 @@ class ApiService {
     } catch (e) {
       return Future.error(e);
     }
+  }
+
+  Future<List<Comment>> getReviewsParentComments(String idReview) async {
+    try {
+      var response = await _utils.get('reviews/info/?_id_review=$idReview');
+      print(response.statusCode);
+      print("---a------a------");
+
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['Comments'];
+
+      await Future.delayed(Duration(seconds: 1));
+
+      return companyData.map((data) => Comment.fromJson(data)).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  //Actions
+
+  Future<int> likeReview({required String idReview}) async {
+    // Construir el cuerpo del POST request con todos los argumentos
+    var body = {};
+
+    // Realizar la petición POST al endpoint para registrar usuarios
+    var response =
+        await _utils.post('users/reviews/like/?_id_review=$idReview', body);
+
+    // Devolver la respuesta procesada
+    return response.statusCode;
+  }
+
+  Future<int> followUser({required String idFollowed}) async {
+    // Construir el cuerpo del POST request con todos los argumentos
+    var body = {};
+
+    // Realizar la petición POST al endpoint para registrar usuarios
+    var response =
+        await _utils.post('users/follow/?_id_followed=$idFollowed', body);
+
+    // Devolver la respuesta procesada
+    return response.statusCode;
+  }
+
+  Future<int> followBusiness({required String idBusiness}) async {
+    // Construir el cuerpo del POST request con todos los argumentos
+    var body = {};
+
+    // Realizar la petición POST al endpoint para registrar usuarios
+    var response = await _utils.post(
+        'users/business/follow/?_id_business=$idBusiness', body);
+
+    // Devolver la respuesta procesada
+    return response.statusCode;
   }
 }
 

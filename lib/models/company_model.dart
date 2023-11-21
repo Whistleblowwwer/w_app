@@ -10,20 +10,21 @@ class Business {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String idUser;
+  final bool followed;
 
-  Business({
-    required this.idBusiness,
-    required this.name,
-    required this.address,
-    required this.state,
-    required this.city,
-    this.profilePictureUrl,
-    required this.country,
-    required this.isValid,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.idUser,
-  });
+  Business(
+      {required this.idBusiness,
+      required this.name,
+      required this.address,
+      required this.state,
+      required this.city,
+      this.profilePictureUrl,
+      required this.country,
+      required this.isValid,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.idUser,
+      required this.followed});
 
   factory Business.fromJson(Map<String, dynamic> json) {
     return Business(
@@ -38,6 +39,7 @@ class Business {
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       idUser: json['_id_user'],
+      followed: json['followed'] ?? false,
     );
   }
 

@@ -30,8 +30,8 @@ class GradientStyle {
         1.0
       ],
       colors: <Color>[
-        Color.fromRGBO(230, 230, 230, 1),
-        Color.fromRGBO(10, 10, 10, .2),
+        Color.fromRGBO(230, 230, 230, 0.4),
+        Color.fromRGBO(10, 10, 10, .35),
       ]);
 
   // Gradiente para el icono de Nodoo Control
