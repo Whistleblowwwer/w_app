@@ -11,6 +11,7 @@ import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/actions/comments_screen.dart';
+import 'package:w_app/screens/chat/chat_screen.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
@@ -91,7 +92,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: TextStyle(fontFamily: 'Montserrat'),
                             ),
                           ),
-                          Icon(FeatherIcons.messageSquare),
+                          InkWell(
+                            child: Icon(FeatherIcons.messageSquare),
+                            onTap: () {
+                              // Navegar a otra pantalla
+                              Navigator.of(context,rootNavigator: true).push(
+                                MaterialPageRoute(
+                                  settings: RouteSettings(),
+                                  builder: (context)=>ChatPage())
+                              );
+                              // Navigator.push(context, 
+                              // MaterialPageRoute(
+                              //   builder: (context) => ChatPage()));
+                            },
+                          )
                         ],
                       )
                     ],
@@ -203,23 +217,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            Positioned(
-              right: 16,
-              bottom: 104,
-              child: FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
-                      futureReview = ApiService().getReviews();
-                    });
-                    // Aquí va el código que quieres ejecutar cuando se presiona el botón
-                  },
-                  child: Icon(
-                    Icons.refresh,
-                    size: 26,
-                    color: Colors.white,
-                  ),
-                  backgroundColor: ColorStyle.darkPurple),
-            )
+            // Positioned(
+            //   right: 16,
+            //   bottom: 104,
+            //   child: FloatingActionButton(
+            //       onPressed: () {
+            //         setState(() {
+            //           futureReview = ApiService().getReviews();
+            //         });
+            //         // Aquí va el código que quieres ejecutar cuando se presiona el botón
+            //       },
+            //       child: Icon(
+            //         Icons.refresh,
+            //         size: 26,
+            //         color: Colors.white,
+            //       ),
+            //       backgroundColor: ColorStyle.darkPurple),
+            // )
           ],
         ),
       ),
