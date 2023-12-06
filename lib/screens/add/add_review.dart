@@ -1,14 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
+import 'package:w_app/bloc/feed_bloc/feed_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/data/countries_data.dart';
 import 'package:w_app/models/company_model.dart';
+import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
+import 'package:w_app/screens/add/add_business_screen.dart';
 import 'package:w_app/screens/add/widgets/custom_textfield_widget.dart';
+import 'package:w_app/screens/home/advisors_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
@@ -38,17 +45,21 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
   String searchTerm = '';
 
 //AddCompany
-  String? selectedCountry;
-  List<String> states = [];
-  String? selectedState;
-  List<String> cities = [];
-  String? selectedCity;
-  TextEditingController controllerCompanyName = TextEditingController();
-  TextEditingController controllerEntity = TextEditingController();
-  FocusNode focusNodeCompany = FocusNode();
-  FocusNode focusNodeEntity = FocusNode();
-  late Future<List<Business>> futureSearch;
+  // String? selectedCountry;
+  // List<String> states = [];
+  // String? selectedState;
+
+  // List<String> cities = [];
+  // String? selectedCity;
+  // String? selecteCategory;
+  // TextEditingController controllerCompanyName = TextEditingController();
+  // TextEditingController controllerEntity = TextEditingController();
+  // FocusNode focusNodeCompany = FocusNode();
+  // FocusNode focusNodeEntity = FocusNode();
+  //   final _formKeyBusiness = GlobalKey<FormState>();
   final _formKeyReview = GlobalKey<FormState>();
+
+  late Future<List<Business>> futureSearch;
 
   late UserBloc _userBloc;
 
@@ -63,7 +74,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
         focusNodeReview.requestFocus();
       } else {
         if (showAddCompanyPage) {
-          focusNodeCompany.requestFocus();
+          // focusNodeCompany.requestFocus();
         } else {
           futureSearch = ApiService().getSearch(searchTerm);
           focusNodeSearch.requestFocus();
@@ -75,6 +86,8 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
   @override
   void dispose() {
     showReviewPageNotifier.dispose();
+    focusNodeReview.dispose();
+    focusNodeSearch.dispose();
     super.dispose();
   }
 
@@ -89,14 +102,11 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
         ),
       ),
       child: Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: showReviewPageNotifier.value
-            ? _reviewPage(context)
-            : (showAddCompanyPage
-                ? _addCompanyPage(context)
-                : _companyListPage(context)),
-      ),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: showReviewPageNotifier.value
+              ? _reviewPage(context)
+              : _companyListPage(context)),
     );
   }
 
@@ -372,14 +382,24 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                               .createReview(
                                   content: controllerReview.text,
                                   idBusiness: selectedCompany!.idBusiness,
-                                  idUser: userState.user.idUser)
+                                  idUser: userState.user.idUser,
+                                  rating: ratingController)
                               .then((value) {
                             if (value.statusCode == 201) {
                               showSuccessSnackBar(context);
+                              FeedBloc feedBloc =
+                                  BlocProvider.of<FeedBloc>(context);
+                              Map<String, dynamic> json =
+                                  jsonDecode(value.body);
+                              print(json['review']);
+                              print("viejo");
+                              feedBloc.add(
+                                  AddReview(Review.fromJson(json['review'])));
+
                               Navigator.pop(context);
                             } else {
                               showErrorSnackBar(
-                                  context, "No se logro crear reseña");
+                                  context, "No se logró crear la reseña");
                               Navigator.pop(context);
                             }
                           });
@@ -407,9 +427,9 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
   }
 
   Widget _companyListPage(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(focusNodeSearch);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   FocusScope.of(context).requestFocus(focusNodeSearch);
+    // });
     return ConstrainedBox(
       constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.54,
@@ -439,14 +459,14 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                       const Align(
                           alignment: Alignment.center,
                           child: Text(
-                            "Elegir entidad",
+                            "Elegir empresa",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'Montserrat',
                                 fontSize: 15),
                           )),
-                      const Positioned(
-                          right: 0, child: Icon(FeatherIcons.moreHorizontal))
+                      // const Positioned(
+                      //     right: 0, child: Icon(FeatherIcons.moreHorizontal))
                     ],
                   ),
                 ),
@@ -469,16 +489,28 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                     child: PressTransform(
-                      onPressed: () {
+                      onPressed: () async {
                         setState(() {
-                          showReviewPageNotifier.value = false;
-                          showAddCompanyPage = true;
+                          // showReviewPageNotifier.value = false;
+                          // showAddCompanyPage = true;
                         });
+
+                        focusNodeSearch.unfocus();
+                        FocusScope.of(context).unfocus();
+
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddBusinessScreen()),
+                        );
+                        if (mounted) {
+                          FocusScope.of(context).requestFocus(focusNodeSearch);
+                        }
                       },
                       child: RoundedDotterRectangleBorder(
                           height: 52,
                           width: double.maxFinite,
-                          color: ColorStyle.borderGrey,
+                          color: ColorStyle.midToneGrey,
                           borderWidth: 1,
                           icon: Container(
                             width: double.maxFinite,
@@ -487,10 +519,8 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  FeatherIcons.plusCircle,
-                                  color: ColorStyle.borderGrey,
-                                ),
+                                Icon(FeatherIcons.plusCircle,
+                                    color: ColorStyle.midToneGrey),
                                 SizedBox(
                                   width: 8,
                                 ),
@@ -498,7 +528,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                   'Agregar Empresa',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: ColorStyle.borderGrey,
+                                      color: ColorStyle.midToneGrey,
                                       fontSize: 14,
                                       fontFamily: 'Montserrat'),
                                 ),
@@ -646,11 +676,10 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
               if (value.isNotEmpty) {
                 searchTerm =
                     value; // <-- Actualiza el término de búsqueda cada vez que cambia el valor
-                if (value.length >= 3) {
-                  setState(() {
-                    futureSearch = ApiService().getSearch(value);
-                  });
-                }
+
+                setState(() {
+                  futureSearch = ApiService().getSearch(value);
+                });
               } else {
                 setState(() {
                   futureSearch = ApiService().getSearch(value);
@@ -663,148 +692,211 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
     );
   }
 
-  Widget _addCompanyPage(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(focusNodeCompany);
-    });
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.54,
-          minHeight: MediaQuery.of(context).size.height * 0.2),
-      child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: 16),
-              width: double.maxFinite,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Stack(
-                      alignment: AlignmentDirectional.centerStart,
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              setState(() {
-                                showAddCompanyPage = false;
-                                // controllerSearch.clear();
-                              });
-                            },
-                            child: const Icon(FeatherIcons.arrowLeft)),
-                        const Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Agregar entidad",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 15),
-                            )),
-                        const Positioned(
-                            right: 0, child: Icon(FeatherIcons.moreHorizontal))
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Container(
-                    height: 0.8,
-                    width: double.maxFinite,
-                    color: ColorStyle.borderGrey,
-                  )
-                ],
-              ),
-            ),
-            CustomDropdown(
-              title: 'País *',
-              hintText: 'Selecciona un país',
-              list: countries.keys.toList(),
-              showIcon: true,
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              onSelected: (selected) {
-                setState(() {
-                  selectedCountry = selected;
+  // Widget _addCompanyPage(BuildContext context) {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     FocusScope.of(context).requestFocus(focusNodeCompany);
+  //   });
+  //   return ConstrainedBox(
+  //     constraints: BoxConstraints(
+  //         maxHeight: MediaQuery.of(context).size.height * 0.54,
+  //         minHeight: MediaQuery.of(context).size.height * 0.2),
+  //     child: Form(
+  //       key: _formKeyBusiness,
+  //       child: Stack(
+  //         children: [
+  //           SingleChildScrollView(
+  //             physics: const BouncingScrollPhysics(),
+  //             padding: EdgeInsets.only(top: 58),
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 CustomDropdown(
+  //                   title: 'País *',
+  //                   hintText: 'Selecciona un país',
+  //                   list: countries.keys.toList(),
+  //                   showIcon: true,
+  //                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+  //                   onSelected: (selected) {
+  //                     setState(() {
+  //                       selectedCountry = selected;
 
-                  // Reseteamos los valores de estado y ciudad al cambiar el país
-                  selectedState = null;
-                  selectedCity = null;
+  //                       // Reseteamos los valores de estado y ciudad al cambiar el país
+  //                       selectedState = null;
+  //                       selectedCity = null;
 
-                  states = countries[selectedCountry]!.keys.toList();
-                  cities = [];
-                });
-              },
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: CustomDropdown(
-                    title: 'Estado *',
-                    hintText: 'Seleccionar',
-                    list: states,
-                    padding: EdgeInsets.only(left: 24, right: 8),
-                    onSelected: (selected) {
-                      setState(() {
-                        selectedState = selected as String?;
-                        cities = countries[selectedCountry]![selectedState]!;
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: CustomDropdown(
-                    title: 'Ciudad *',
-                    hintText: 'Seleccionar',
-                    list: cities,
-                    padding: EdgeInsets.only(right: 24, left: 8),
-                    onSelected: (selected) {
-                      // Aquí puedes manejar la selección de la ciudad si es necesario
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            CustomInput(
-              title: 'Nombre de la empresa',
-              controller: controllerCompanyName,
-              focusNode: focusNodeCompany,
-            ),
-            CustomInput(
-              title: 'Entidad / Grupo',
-              controller: controllerEntity,
-              focusNode: focusNodeEntity,
-            ),
-            PressTransform(
-              onPressed: () {},
-              child: Container(
-                width: double.maxFinite,
-                height: 56,
-                margin: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: ColorStyle.solidBlue),
-                child: Text(
-                  "Crear",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Montserrat',
-                      color: Colors.white,
-                      fontSize: 16),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  //                       states = countries[selectedCountry]!.keys.toList();
+  //                       cities = [];
+  //                     });
+  //                   },
+  //                 ),
+  //                 Row(
+  //                   children: [
+  //                     Expanded(
+  //                       child: CustomDropdown(
+  //                         title: 'Estado *',
+  //                         hintText: 'Seleccionar',
+  //                         list: states,
+  //                         padding: EdgeInsets.only(left: 24, right: 8),
+  //                         onSelected: (selected) {
+  //                           setState(() {
+  //                             selectedState = selected as String?;
+  //                             cities =
+  //                                 countries[selectedCountry]![selectedState]!;
+  //                           });
+  //                         },
+  //                       ),
+  //                     ),
+  //                     Expanded(
+  //                       child: CustomDropdown(
+  //                         title: 'Ciudad *',
+  //                         hintText: 'Seleccionar',
+  //                         list: cities,
+  //                         padding: EdgeInsets.only(right: 24, left: 8),
+  //                         onSelected: (selected) {
+  //                           // Aquí puedes manejar la selección de la ciudad si es necesario
+  //                         },
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 SizedBox(
+  //                   height: 8,
+  //                 ),
+  //                 CustomInput(
+  //                   title: 'Proyecto',
+  //                   controller: controllerCompanyName,
+  //                   focusNode: focusNodeCompany,
+  //                 ),
+  //                 CustomInput(
+  //                   title: 'Empresa desarrolladora',
+  //                   controller: controllerEntity,
+  //                   focusNode: focusNodeEntity,
+  //                 ),
+  //                 CustomDropdown(
+  //                   title: 'Categoria',
+  //                   hintText: 'Seleccionar',
+  //                   list: const ['Inmobiliaria', 'Automotriz', 'Restaurantes'],
+  //                   padding: EdgeInsets.only(left: 24, right: 8),
+  //                   onSelected: (selected) {
+  //                     setState(() {
+  //                       selecteCategory = selected;
+  //                     });
+  //                   },
+  //                 ),
+  //                 PressTransform(
+  //                   onPressed: () async {
+  //                     if (_formKeyBusiness.currentState!.validate()) {
+  //                       final userState = _userBloc.state;
+  //                       if (selecteCategory != null &&
+  //                           selectedCity != null &&
+  //                           selectedCountry != null &&
+  //                           selectedState != null) {
+  //                         if (userState is UserLoaded) {
+  //                           await ApiService()
+  //                               .createBusiness(
+  //                                   name: controllerCompanyName.text,
+  //                                   entity: controllerEntity.text,
+  //                                   country: selectedCountry ?? '',
+  //                                   state: selectedState ?? '',
+  //                                   city: selectedCity ?? '',
+  //                                   category: selecteCategory ?? '')
+  //                               .then((value) {
+  //                             if (value.statusCode == 201) {
+  //                               showSuccessSnackBar(context);
+
+  //                               Map<String, dynamic> json =
+  //                                   jsonDecode(value.body);
+
+  //                               // Navigator.pop(context);
+  //                             } else {
+  //                               showErrorSnackBar(
+  //                                   context, "No se logró crear la empresa");
+  //                               // Navigator.pop(context);
+  //                             }
+  //                           });
+  //                         }
+  //                       }
+  //                     } else {
+  //                       showErrorSnackBar(
+  //                           context, "No se logró crear la empresa");
+  //                     }
+  //                   },
+  //                   child: Container(
+  //                     width: double.maxFinite,
+  //                     height: 56,
+  //                     margin:
+  //                         EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+  //                     alignment: Alignment.center,
+  //                     decoration: BoxDecoration(
+  //                         borderRadius: BorderRadius.circular(10),
+  //                         color: ColorStyle.solidBlue),
+  //                     child: Text(
+  //                       "Crear",
+  //                       style: TextStyle(
+  //                           fontWeight: FontWeight.w700,
+  //                           fontFamily: 'Montserrat',
+  //                           color: Colors.white,
+  //                           fontSize: 16),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           ClipRRect(
+  //             borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+  //             child: Container(
+  //               padding: EdgeInsets.only(top: 16),
+  //               height: 58,
+  //               color: Colors.white,
+  //               width: double.maxFinite,
+  //               child: Column(
+  //                 children: [
+  //                   Padding(
+  //                     padding: EdgeInsets.symmetric(horizontal: 16),
+  //                     child: Stack(
+  //                       alignment: AlignmentDirectional.centerStart,
+  //                       children: [
+  //                         InkWell(
+  //                             onTap: () {
+  //                               setState(() {
+  //                                 showAddCompanyPage = false;
+  //                                 // controllerSearch.clear();
+  //                               });
+  //                             },
+  //                             child: const Icon(FeatherIcons.arrowLeft)),
+  //                         const Align(
+  //                             alignment: Alignment.center,
+  //                             child: Text(
+  //                               "Agregar entidad",
+  //                               style: TextStyle(
+  //                                   fontWeight: FontWeight.w600,
+  //                                   fontFamily: 'Montserrat',
+  //                                   fontSize: 15),
+  //                             )),
+  //                         const Positioned(
+  //                             right: 0,
+  //                             child: Icon(FeatherIcons.moreHorizontal))
+  //                       ],
+  //                     ),
+  //                   ),
+  //                   SizedBox(
+  //                     height: 16,
+  //                   ),
+  //                   Container(
+  //                     height: 0.8,
+  //                     width: double.maxFinite,
+  //                     color: ColorStyle.borderGrey,
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }
 
 Widget _buildInitialState() {
@@ -885,75 +977,6 @@ Widget _buildEmptyState() {
               fontWeight: FontWeight.w400)));
 }
 
-// class ReviewBottomSheet extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding:
-//           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         mainAxisSize: MainAxisSize.min,
-//         children: [
-//           const Padding(
-//             padding: EdgeInsets.all(8.0),
-//             child: TextField(
-//               maxLines: null,
-//               decoration: InputDecoration(
-//                 hintText: 'Escribe algo...',
-//                 border: OutlineInputBorder(),
-//               ),
-//             ),
-//           ),
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: ElevatedButton(
-//               onPressed: () {
-//                 showModalBottomSheet(
-//                   context: context,
-//                   isScrollControlled: true,
-//                   builder: (context) => CompanyListBottomSheet(),
-//                 );
-//               },
-//               child: const Text('Agregar Empresa'),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// class CompanyListBottomSheet extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding:
-//           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-//       child: SingleChildScrollView(
-//         child: ConstrainedBox(
-//           constraints: BoxConstraints(
-//             minHeight: 150, // La altura mínima que deseas para el bottom sheet
-//             maxHeight: MediaQuery.of(context).size.height * 0.7,
-//           ),
-//           child: ListView.builder(
-//             itemCount: 10, // Lista de empresas
-//             itemBuilder: (context, index) {
-//               return ListTile(
-//                 title: Text("Empresa ${index}"), // Nombre de la empresa
-//                 onTap: () {
-//                   Navigator.pop(context);
-//                   // Aquí puedes agregar lógica adicional si es necesario
-//                 },
-//               );
-//             },
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class CustomInput extends StatelessWidget {
   final String title;
   final TextEditingController controller;
@@ -981,31 +1004,47 @@ class CustomInput extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w400),
           ),
-          Container(
-            width: double.maxFinite,
-            height: 48,
-            margin: EdgeInsets.only(top: 2),
-            padding: EdgeInsets.only(left: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4.0),
-              border: Border.all(
-                color: ColorStyle.borderGrey,
-                width: 1.0,
-              ),
-              color:
-                  Colors.white, // Cambia el color de fondo según tu preferencia
-            ),
-            child: TextField(
-              controller: controller,
-              focusNode: focusNode,
-              style: TextStyle(fontFamily: "Montserrat", fontSize: 14),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-
-                hintText: 'Input*', // Cambia el texto de marcador de posición
-              ),
-            ),
+          SizedBox(
+            height: 4,
           ),
+          TextFormField(
+            controller: controller,
+            focusNode: focusNode,
+            style: TextStyle(fontFamily: "Montserrat", fontSize: 14),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Por favor rellena los campos";
+              }
+            },
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white, // Color de fondo
+              hintText: 'Input*', // Texto de marcador de posición
+              contentPadding:
+                  EdgeInsets.only(left: 12, top: 2, bottom: 2), // Relleno
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4.0),
+                borderSide: BorderSide(
+                  color: ColorStyle.borderGrey,
+                  width: 1.0,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4.0),
+                borderSide: BorderSide(
+                  color: ColorStyle.borderGrey,
+                  width: 1.0,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4.0),
+                borderSide: BorderSide(
+                  color: ColorStyle.borderGrey,
+                  width: 1.0,
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

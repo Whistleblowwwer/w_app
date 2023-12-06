@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ColorStyle {
   // Paleta de azules
-  static const Color mainBlue = Color(0xFF276EF1);
+  static const Color mainBlue = Color.fromRGBO(39, 110, 241, 1);
   static const Color lighterShade = Color.fromRGBO(78, 136, 255, 1);
   static const Color solidBlue = Color.fromRGBO(104, 139, 255, 1);
   static const Color paleShade = Color.fromRGBO(180, 207, 255, 1);

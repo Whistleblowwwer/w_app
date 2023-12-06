@@ -11,21 +11,24 @@ class User {
   final bool? isValid;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final int followings;
+  final int followers;
 
-  User({
-    required this.idUser,
-    required this.name,
-    required this.lastName,
-    required this.email,
-    required this.phoneNumber,
-    this.birthDate,
-    this.gender,
-    this.profilePictureUrl,
-    this.role,
-    this.isValid,
-    this.createdAt,
-    this.updatedAt,
-  });
+  User(
+      {required this.idUser,
+      required this.name,
+      required this.lastName,
+      required this.email,
+      required this.phoneNumber,
+      this.birthDate,
+      this.gender,
+      this.profilePictureUrl,
+      this.role,
+      this.isValid,
+      this.createdAt,
+      this.updatedAt,
+      required this.followers,
+      required this.followings});
 
   String getFormattedCreationDate() {
     if (createdAt == null) {
@@ -73,6 +76,8 @@ class User {
           json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt:
           json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      followers: json['followers'] ?? 0,
+      followings: json['followings'] ?? 0,
     );
   }
 
@@ -89,6 +94,8 @@ class User {
       'is_valid': isValid,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
+      'followers': followers,
+      'followings': followings
     };
   }
 }

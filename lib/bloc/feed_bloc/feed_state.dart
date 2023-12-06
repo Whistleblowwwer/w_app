@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/review_model.dart';
 
 // Feed States
@@ -28,12 +29,32 @@ class FeedLoaded extends FeedState {
   }
 
   List<Review> followUser(Review updatedReview) {
-    // Implementamos el método updateReview para actualizar la lista de reseñas.
+    // Verificamos si el usuario en la reseña actualizada está siendo seguido o no
+    bool isFollowing = updatedReview.user.followed;
+
+    // Actualizamos todas las reseñas que pertenecen al mismo usuario
     return reviews.map((review) {
-      return review.idReview == updatedReview.idReview
-          ? updatedReview.copyWith(
-              user: review.user.copyWith(followed: !review.user.followed))
-          : review;
+      if (review.user.idUser == updatedReview.user.idUser) {
+        // Si el usuario coincide, cambiamos el estado de 'followed'
+        return review.copyWith(
+            user: review.user.copyWith(followed: !isFollowing));
+      }
+      return review;
+    }).toList();
+  }
+
+  List<Review> followBusiness(String idBusiness) {
+    // Verificamos si el negocio en la reseña actualizada está siendo seguido o no
+
+    // Actualizamos todas las reseñas que pertenecen al mismo negocio
+    return reviews.map((review) {
+      if (review.business?.idBusiness == idBusiness) {
+        // Si el negocio coincide, cambiamos el estado de 'followed'
+        return review.copyWith(
+            business: review.business!
+                .copyWith(followed: !review.business!.followed));
+      }
+      return review;
     }).toList();
   }
 

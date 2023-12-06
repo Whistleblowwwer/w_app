@@ -3,63 +3,48 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
-import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
 import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_event.dart';
-import 'package:w_app/bloc/feed_bloc/feed_state.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
-import 'package:w_app/bloc/user_bloc/user_bloc_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
-import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
-import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/actions/comments_screen.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
-import 'package:w_app/widgets/showAdaptiveDialog.dart';
 import 'package:w_app/widgets/snackbar.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ForeignProfileScreen extends StatefulWidget {
   final User user;
 
-  const ProfileScreen(this.user);
+  const ForeignProfileScreen(this.user);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ForeignProfileScreen> createState() => _ForeignProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen>
+class _ForeignProfileScreenState extends State<ForeignProfileScreen>
     with SingleTickerProviderStateMixin {
   late Future<List<Review>> futureListReview;
   List<Review> reviews = [];
   bool isLoading = true;
-  late AuthBloc authBloc;
   late FeedBloc feedBloc;
-  TabController? _tabController;
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  TabController? _tabController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
     _tabController = TabController(length: 3, vsync: this);
     feedBloc = BlocProvider.of<FeedBloc>(context);
-    authBloc = BlocProvider.of<AuthBloc>(context);
-    loadReviews();
+    _loadReviews();
   }
 
-  Future<void> loadReviews() async {
+  Future<void> _loadReviews() async {
     try {
       var reviewsList = await ApiService().getUserReviews(widget.user.idUser);
       setState(() {
@@ -117,45 +102,16 @@ class _ProfileScreenState extends State<ProfileScreen>
               : r)
           .toList();
     });
-    feedBloc.add(FollowBusiness(review.idBusiness));
-  }
-
-  List<Review> addCommentToReview(String reviewId) {
-    return reviews.map((review) {
-      if (review.idReview == reviewId) {
-        return review.copyWith(
-          comments: review.comments + 1,
-        );
-      }
-      return review;
-    }).toList();
-  }
-
-  void _updateReviewsIfChanged(List<Review> updatedReviews) {
-    bool needsUpdate = false;
-
-    // Comprobar si alguna de las reseñas en el perfil ha sido actualizada en el feed
-    for (var updatedReview in updatedReviews) {
-      int index =
-          reviews.indexWhere((r) => r.idReview == updatedReview.idReview);
-      if (index != -1 && reviews[index] != updatedReview) {
-        reviews[index] = updatedReview;
-        needsUpdate = true;
-      }
-    }
-
-    // Si es necesario, actualizar la UI
-    if (needsUpdate) {
-      setState(() {});
-    }
+    // Call the API to update the 'like' status
+    feedBloc.add(FollowBusiness(review.business?.idBusiness ?? ''));
   }
 
   @override
   Widget build(BuildContext context) {
     final sizeW = MediaQuery.of(context).size.width / 100;
     final sizeH = MediaQuery.of(context).size.height / 100;
-
     return Scaffold(
+      appBar: null,
       body: Column(
         children: [
           Container(
@@ -165,8 +121,17 @@ class _ProfileScreenState extends State<ProfileScreen>
             color: Colors.white,
             alignment: Alignment.bottomCenter,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 0, right: 8),
+                    child: Icon(FeatherIcons.arrowLeft),
+                  ),
+                ),
                 Text(
                   '${widget.user.name} ${widget.user.lastName}',
                   maxLines: 2,
@@ -176,36 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       fontSize: 16,
                       fontFamily: 'Montserrat'),
                 ),
-                PressTransform(
-                    onPressed: () {
-                      showAdaptiveDialogIos(
-                          context: context,
-                          title: 'Advertencia',
-                          content: '¿Seguro deseas cerrar sesión?',
-                          onTapCancel: () {
-                            Navigator.of(context, rootNavigator: true).pop();
-                          },
-                          onTapOk: () async {
-                            authBloc.add(LogOutUser());
-                            Navigator.of(context, rootNavigator: true).pop();
-                            // Navigator.of(context);
-                          });
-                    },
-                    child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                            color: ColorStyle.darkPurple,
-                            borderRadius: BorderRadius.circular(8)),
-                        child: Text(
-                          "Log out",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                            fontFamily: 'Montserrat',
-                          ),
-                        )))
+
                 // Padding(
                 //   padding: EdgeInsets.only(left: 8, right: 16),
                 //   child: Icon(FeatherIcons.moreHorizontal),
@@ -278,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   FontWeight
                                                                       .bold)),
                                                       TextSpan(
-                                                        text: ' Seguidos ',
+                                                        text: ' Seguidos  ',
                                                       ),
                                                       TextSpan(
                                                           text: widget
@@ -301,7 +237,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     fontSize: 14,
                                                   ),
                                                 ),
-
                                                 // Text(
                                                 //   widget.user.email,
                                                 //   maxLines: 1,
@@ -409,135 +344,114 @@ class _ProfileScreenState extends State<ProfileScreen>
                             tabs: [
                               Tab(text: 'Reseñas'),
                               Tab(text: 'Comentarios'),
-                              Tab(text: 'Mis me gusta'),
+                              Tab(text: 'Me gusta'),
                             ],
                           ),
                         )),
                   ];
                 },
-                body: BlocListener<FeedBloc, FeedState>(
-                  listener: (BuildContext context, state) {
-                    if (state is FeedLoaded) {
-                      // Actualizar la lista de reseñas si alguna de ellas ha cambiado en el feed
-                      _updateReviewsIfChanged(state.reviews);
-                    }
-                  },
-                  child: CustomScrollView(
-                    physics: BouncingScrollPhysics(),
-                    slivers: [
-                      isLoading
-                          ? const SliverToBoxAdapter(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 96),
-                                child: Center(
-                                    child:
-                                        CircularProgressIndicator.adaptive()),
-                              ),
-                            )
-                          : reviews.isEmpty
-                              ? const SliverToBoxAdapter(
-                                  child: Padding(
-                                      padding: EdgeInsets.only(top: 96),
-                                      child: Center(
-                                        child: Text(
-                                          'Parece que no hay data',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: "Montserrat",
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w400),
-                                        ),
-                                      )),
-                                )
-                              : SliverPadding(
-                                  padding: EdgeInsets.only(bottom: 128),
-                                  sliver: SliverList(
-                                    delegate: SliverChildBuilderDelegate(
-                                      childCount: reviews
-                                          .length, // número de items en la lista
-                                      (BuildContext context, int index) {
-                                        print(index);
-                                        return ReviewCard(
-                                          showBusiness: true,
-                                          review: reviews[index],
-                                          onFollowUser: () async {
-                                            // _followUser(reviews[index]);
-                                          },
-                                          onFollowBusinnes: () {
-                                            _followBusiness(reviews[index]);
-                                          },
-                                          onLike: () {
-                                            _likeReview(reviews[index]);
-                                          },
-                                          onComment: () async {
-                                            final userBloc =
-                                                BlocProvider.of<UserBloc>(
-                                                    context);
-                                            final userState = userBloc.state;
-                                            if (userState is UserLoaded) {
-                                              Map<String, dynamic>? response =
-                                                  await showModalBottomSheet(
-                                                      context: context,
-                                                      isScrollControlled: true,
-                                                      useRootNavigator: true,
-                                                      barrierColor:
-                                                          const Color.fromRGBO(
-                                                              0, 0, 0, 0.1),
-                                                      shape:
-                                                          const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  20.0),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  20.0),
-                                                        ),
-                                                      ),
-                                                      builder: (context) =>
-                                                          BackdropFilter(
-                                                              filter: ImageFilter
-                                                                  .blur(
-                                                                      sigmaX: 6,
-                                                                      sigmaY:
-                                                                          6),
-                                                              child:
-                                                                  CommentBottomSheet(
-                                                                user: userState
-                                                                    .user,
-                                                                name: reviews[
-                                                                        index]
-                                                                    .user
-                                                                    .name,
-                                                                lastName: reviews[
-                                                                        index]
+                body: CustomScrollView(
+                  physics: BouncingScrollPhysics(),
+                  slivers: [
+                    isLoading
+                        ? const SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 96),
+                              child: Center(
+                                  child: CircularProgressIndicator.adaptive()),
+                            ),
+                          )
+                        : reviews.isEmpty
+                            ? const SliverToBoxAdapter(
+                                child: Padding(
+                                    padding: EdgeInsets.only(top: 96),
+                                    child: Center(
+                                      child: Text(
+                                        'Parece que no hay data',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    )),
+                              )
+                            : SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int index) {
+                                    print(index);
+                                    return ReviewCard(
+                                      showBusiness: false,
+                                      review: reviews[index],
+                                      onFollowUser: () async {
+                                        _followUser(reviews[index]);
+                                      },
+                                      onFollowBusinnes: () {
+                                        _followBusiness(reviews[index]);
+                                      },
+                                      onLike: () {
+                                        _likeReview(reviews[index]);
+                                      },
+                                      onComment: () async {
+                                        final userBloc =
+                                            BlocProvider.of<UserBloc>(context);
+                                        final userState = userBloc.state;
+                                        if (userState is UserLoaded) {
+                                          Map<String, dynamic>? response =
+                                              await showModalBottomSheet(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  useRootNavigator: true,
+                                                  barrierColor:
+                                                      const Color.fromRGBO(
+                                                          0, 0, 0, 0.1),
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(20.0),
+                                                      topRight:
+                                                          Radius.circular(20.0),
+                                                    ),
+                                                  ),
+                                                  builder: (context) =>
+                                                      BackdropFilter(
+                                                          filter:
+                                                              ImageFilter.blur(
+                                                                  sigmaX: 6,
+                                                                  sigmaY: 6),
+                                                          child:
+                                                              CommentBottomSheet(
+                                                            user:
+                                                                userState.user,
+                                                            name: reviews[index]
+                                                                .user
+                                                                .name,
+                                                            lastName:
+                                                                reviews[index]
                                                                     .user
                                                                     .lastName,
-                                                                content: reviews[
-                                                                        index]
+                                                            content:
+                                                                reviews[index]
                                                                     .content,
-                                                              )));
+                                                          )));
 
-                                              if (response != null) {
-                                                addCommentToReview(
-                                                  reviews[index].idReview,
-                                                );
-                                                feedBloc.add(AddComment(
-                                                    content:
-                                                        response['content'],
-                                                    reviewId: reviews[index]
-                                                        .idReview));
-                                              }
-                                            }
-                                          },
-                                        );
+                                          if (response != null) {
+                                            feedBloc.add(AddComment(
+                                                content: response['content'],
+                                                reviewId:
+                                                    reviews[index].idReview));
+                                          }
+                                        }
                                       },
-                                    ),
-                                  ),
+                                    );
+                                  },
+                                  childCount: reviews
+                                      .length, // número de items en la lista
                                 ),
-                    ],
-                  ),
+                              )
+                  ],
                 ),
               ),
             ),

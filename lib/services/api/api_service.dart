@@ -4,8 +4,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/review_model.dart';
+import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
 
 class ApiService {
@@ -22,15 +24,46 @@ class ApiService {
     _utils = ApiServerUtils(baseUrl, userRepository);
   }
 
-  Future<http.Response> createReview(
-      {required String content,
-      required String idBusiness,
-      required String idUser}) async {
+  Future<http.Response> createReview({
+    required String content,
+    required String idBusiness,
+    required String idUser,
+    required double rating,
+  }) async {
     // Construir el cuerpo del POST request con todos los argumentos
-    var body = {"content": content, "_id_business": idBusiness};
+    var body = {
+      "content": content,
+      "_id_business": idBusiness,
+      "rating": rating
+    };
 
     // Realizar la petición POST al endpoint para registrar usuarios
     var response = await _utils.post('reviews/?_id_user=$idUser', body);
+
+    // Devolver la respuesta procesada
+    return response;
+  }
+
+  Future<http.Response> createBusiness(
+      {required String name,
+      required String entity,
+      required String country,
+      required String state,
+      required String city,
+      required String category}) async {
+    // Construir el cuerpo del POST request con todos los argumentos
+    var body = {
+      "name": name,
+      "address": "Galerias Monterrey",
+      "entity": entity,
+      "country": country,
+      "state": state,
+      "city": city,
+      "category": category
+    };
+
+    // Realizar la petición POST al endpoint para registrar usuarios
+    var response = await _utils.post('business', body);
 
     // Devolver la respuesta procesada
     return response;
@@ -44,11 +77,12 @@ class ApiService {
     var body = {
       "content": content,
       "_id_review": idReview,
+      "_id_parent": idParent
     };
 
-    if (idParent != null) {
-      body.addAll({"_id_parent": idParent});
-    }
+    // if (idParent != null) {
+    //   body.addAll({});
+    // }
 
     // Realizar la petición POST al endpoint para registrar usuarios
     var response = await _utils.post('comments', body);
@@ -105,44 +139,62 @@ class ApiService {
     }
   }
 
-  Future<List<Business>> getSearch(String name) async {
+  Future<User> getProfileDetail(String idUser) async {
     try {
-      var response = await _utils
-          .get('business/search?address=&name=$name&state&reviewCount=&city=');
-
-      final List<dynamic> companyData =
-          _utils.handleResponse(response)['businesses'];
-
-      await Future.delayed(Duration(seconds: 1));
-
-      // final List<dynamic> companyData = [
-      //   {'name': 'Starbucks', 'parentCompany': 'Alsea'},
-      //   {'name': 'Apple', 'parentCompany': 'Apple Inc.'},
-      //   {
-      //     'name': 'Burger King',
-      //     'parentCompany': 'Restaurant Brands International'
-      //   },
-      //   {'name': 'Nike', 'parentCompany': 'Nike, Inc.'},
-      //   {'name': 'Pepsi', 'parentCompany': 'PepsiCo'}
-      // ];
-
-      return companyData.map((data) => Business.fromJson(data)).toList();
+      var response = await _utils.get('users/?_id_user=$idUser');
+      print(response.statusCode);
+      print(_utils.handleResponse(response));
+      return User.fromJson(_utils.handleResponse(response)["user"]);
     } catch (e) {
       return Future.error(e);
     }
   }
 
+  Future<List<Business>> getSearch(String name) async {
+    try {
+      var response = await _utils.get(
+          'business/search?city=&enitty=&country=&address=&state=&name=$name');
+
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['businesses'];
+
+      print(companyData);
+
+      return companyData.map((data) => Business.fromJson(data)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
   Future<List<Review>> getReviews() async {
+    List<dynamic> companyData = [];
     try {
       var response = await _utils.get('reviews/');
       print(response.statusCode);
       print("---a------a------");
 
-      final List<dynamic> companyData =
-          _utils.handleResponse(response)['reviews'];
+      final hanldeResponse = _utils.handleResponse(response);
+
+      if (hanldeResponse.containsKey('reviews')) {
+        companyData = hanldeResponse['reviews'];
+      }
+
       print(companyData);
 
-      await Future.delayed(Duration(seconds: 1));
+      return companyData.map((data) => Review.fromJson(data)).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<List<Review>> getUserReviews(String idUser) async {
+    try {
+      var response = await _utils.get('users/reviews?_id_user=$idUser');
+      print(response.statusCode);
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['reviews'];
+      print("-----b-----b---");
+      print(companyData);
 
       return companyData.map((data) => Review.fromJson(data)).toList();
     } catch (e) {
@@ -160,8 +212,6 @@ class ApiService {
       print("-----b-----b---");
       print(companyData);
 
-      await Future.delayed(Duration(seconds: 1));
-
       return companyData.map((data) => Review.fromJson(data)).toList();
     } catch (e) {
       return Future.error(e);
@@ -177,10 +227,26 @@ class ApiService {
       final List<dynamic> companyData =
           _utils.handleResponse(response)['Comments'];
 
-      await Future.delayed(Duration(seconds: 1));
+      return companyData.map((data) => Comment.fromJson(data)).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<List<Comment>> getCommentChildren(String idComment) async {
+    try {
+      var response =
+          await _utils.get('comments/children/?_id_comment=$idComment');
+      print(response.statusCode);
+      print(response.body);
+      print("---a------a------");
+
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['comment']["Comments"];
 
       return companyData.map((data) => Comment.fromJson(data)).toList();
     } catch (e) {
+      print(e);
       return Future.error(e);
     }
   }
@@ -194,6 +260,18 @@ class ApiService {
     // Realizar la petición POST al endpoint para registrar usuarios
     var response =
         await _utils.post('users/reviews/like/?_id_review=$idReview', body);
+
+    // Devolver la respuesta procesada
+    return response.statusCode;
+  }
+
+  Future<int> likeComment({required String idComment}) async {
+    // Construir el cuerpo del POST request con todos los argumentos
+    var body = {};
+
+    // Realizar la petición POST al endpoint para registrar usuarios
+    var response =
+        await _utils.post('users/comments/like/?_id_comment=$idComment', body);
 
     // Devolver la respuesta procesada
     return response.statusCode;
@@ -276,6 +354,8 @@ class ApiServerUtils {
       throw Exception('Token is invalid or expired.');
     } else if (response.statusCode == 404) {
       throw Exception('Resource not found.');
+    } else if (response.statusCode == 500) {
+      throw Exception('Server not found.');
     } else {
       throw Exception(
           'Request failed with status: ${response.statusCode}. Response: ${response.body}');

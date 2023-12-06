@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,10 +15,16 @@ import 'package:w_app/widgets/snackbar.dart';
 
 class CommentBottomSheet extends StatefulWidget {
   final User user;
-  final Review review;
+  final String name;
+  final String lastName;
+  final String content;
 
   const CommentBottomSheet(
-      {super.key, required this.user, required this.review});
+      {super.key,
+      required this.user,
+      required this.name,
+      required this.lastName,
+      required this.content});
   @override
   _CommentBottomSheetState createState() => _CommentBottomSheetState();
 }
@@ -41,19 +49,22 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.0),
-          topRight: Radius.circular(20.0),
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+      child: Container(
+        width: double.maxFinite,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
         ),
+        child: Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: _reviewPage(context)),
       ),
-      child: Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: _reviewPage(context)),
     );
   }
 
@@ -66,7 +77,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
       child: Container(
         height: MediaQuery.of(context).size.height -
             MediaQuery.of(context).viewInsets.bottom -
-            96,
+            72,
         child: Stack(
           // mainAxisSize: MainAxisSize.min,
           children: [
@@ -85,7 +96,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                         CircularAvatarW(
                           externalRadius: Offset(42, 42),
                           internalRadius: Offset(36, 36),
-                          nameAvatar: widget.review.user.name.substring(0, 1),
+                          nameAvatar: widget.name.substring(0, 1),
                           isCompany: false,
                         ),
                         const SizedBox(
@@ -95,7 +106,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                           child: SizedBox(
                             width: double.maxFinite,
                             child: Text(
-                              "${widget.review.user.name} ${widget.review.user.lastName}",
+                              "${widget.name} ${widget.lastName}",
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontFamily: 'Montserrat',
@@ -122,7 +133,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                               Padding(
                                 padding: EdgeInsets.only(left: 30, bottom: 16),
                                 child: Text(
-                                  widget.review.content,
+                                  widget.content,
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w400,
@@ -240,7 +251,6 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                         if (_formKeyReview.currentState!.validate()) {
                           Navigator.of(context).pop({
                             'content': controllerReview.text,
-                            'idReview': widget.review.idReview,
                           });
                         }
                       },

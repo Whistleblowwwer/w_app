@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class PressTransform extends StatefulWidget {
   final Widget child;
   final VoidCallback onPressed;
+  final bool? animation;
 
   const PressTransform({
     Key? key,
     required this.child,
     required this.onPressed,
+    this.animation = true, // default value set to true
   }) : super(key: key);
 
   @override
@@ -16,6 +18,14 @@ class PressTransform extends StatefulWidget {
 
 class _PressTransformState extends State<PressTransform> {
   bool _isPressed = false;
+
+  void _updatePressedState(bool isPressed) {
+    if (_isPressed != isPressed) {
+      setState(() {
+        _isPressed = isPressed;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,27 +36,15 @@ class _PressTransformState extends State<PressTransform> {
       ..scale(scaleFactor);
 
     return GestureDetector(
-      onTapDown: (TapDownDetails details) {
-        setState(() {
-          _isPressed = true;
-        });
-      },
-      onTapUp: (TapUpDetails details) {
-        setState(() {
-          _isPressed = false;
-        });
-      },
-      onTapCancel: () {
-        setState(() {
-          _isPressed = false;
-        });
-      },
+      onTapDown: (_) => _updatePressedState(true),
+      onTapUp: (_) => _updatePressedState(false),
+      onTapCancel: () => _updatePressedState(false),
       onTap: widget.onPressed,
       child: Transform(
         alignment: Alignment.center,
-        transform: matrix,
+        transform: widget.animation! ? matrix : Matrix4.identity(),
         child: AnimatedOpacity(
-          duration: Duration(milliseconds: 100),
+          duration: const Duration(milliseconds: 100), // const added
           opacity: opacity,
           child: widget.child,
         ),

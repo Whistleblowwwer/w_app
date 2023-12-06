@@ -126,8 +126,7 @@ class StartPageState extends State<StartPage> {
                     key: navigatorKeys[4],
                     onGenerateRoute: (settings) {
                       return MaterialPageRoute(
-                        builder: (context) =>
-                            ProfileScreen(widget.userRepository, state.user),
+                        builder: (context) => ProfileScreen(state.user),
                       );
                     },
                   ),
@@ -196,7 +195,6 @@ class StartPageState extends State<StartPage> {
                                     user: userState.user,
                                   )));
                         }
-                        // Check if the third option is pressed
                       } else {
                         setState(() {
                           currentIndex = key;

@@ -4,11 +4,27 @@ import 'package:w_app/models/review_model.dart';
 // User Events
 abstract class FeedBlocEvent extends Equatable {}
 
+class InitialFeedReviews extends FeedBlocEvent {
+  InitialFeedReviews();
+
+  @override
+  List<Object> get props => [];
+}
+
 class FetchFeedReviews extends FeedBlocEvent {
   FetchFeedReviews();
 
   @override
   List<Object> get props => [];
+}
+
+class AddReview extends FeedBlocEvent {
+  final Review review;
+
+  AddReview(this.review);
+
+  @override
+  List<Object> get props => [review];
 }
 
 class LikeReview extends FeedBlocEvent {
@@ -27,6 +43,15 @@ class FollowUser extends FeedBlocEvent {
 
   @override
   List<Object> get props => [review];
+}
+
+class FollowBusiness extends FeedBlocEvent {
+  final String idBusiness;
+
+  FollowBusiness(this.idBusiness);
+
+  @override
+  List<Object> get props => [idBusiness];
 }
 
 class AddComment extends FeedBlocEvent {

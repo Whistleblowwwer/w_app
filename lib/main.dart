@@ -39,10 +39,10 @@ class MainApp extends StatefulWidget {
   final AuthBloc authBloc;
   final ApiService apiService;
   final UserRepository userRepository;
-  final AppLifecycleBloc appLifecycleBloc;
+  // final AppLifecycleBloc appLifecycleBloc;
 
-  MainApp(this.authBloc, this.apiService, this.userRepository)
-      : appLifecycleBloc = AppLifecycleBloc(authBloc);
+  const MainApp(this.authBloc, this.apiService, this.userRepository,
+      {super.key}); //: appLifecycleBloc = AppLifecycleBloc(authBloc);
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -78,7 +78,8 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      widget.appLifecycleBloc.add(AppLifecycleEvent.resumed);
+      widget.authBloc.add(AppResumed());
+      // widget.appLifecycleBloc.add(AppLifecycleEvent.resumed);
     }
   }
 
@@ -89,9 +90,9 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
           BlocProvider<AuthBloc>(
             create: (context) => widget.authBloc,
           ),
-          BlocProvider<AppLifecycleBloc>(
-            create: (context) => widget.appLifecycleBloc,
-          ),
+          // BlocProvider<AppLifecycleBloc>(
+          //   create: (context) => widget.appLifecycleBloc,
+          // ),
           BlocProvider<UserBloc>(
             create: (context) => UserBloc(UserLoading(), widget.apiService),
           ),
@@ -153,19 +154,19 @@ class AuthHandler extends StatelessWidget {
   }
 }
 
-class NavigationScreen extends StatelessWidget {
-  final Widget screen;
+// class NavigationScreen extends StatelessWidget {
+//   final Widget screen;
 
-  NavigationScreen(this.screen);
+//   NavigationScreen(this.screen);
 
-  @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      onGenerateRoute: (settings) {
-        return MaterialPageRoute(
-          builder: (context) => screen,
-        );
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Navigator(
+//       onGenerateRoute: (settings) {
+//         return MaterialPageRoute(
+//           builder: (context) => screen,
+//         );
+//       },
+//     );
+//   }
+// }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
+import 'package:w_app/models/comment_model.dart';
 
 class Review extends Equatable {
   final String idReview;
@@ -12,25 +13,28 @@ class Review extends Equatable {
   final String idUser;
   final int likes;
   final int comments;
-  final BusinessData business;
+  final BusinessData? business;
   final UserData user;
-  final bool isLiked; // Agregar un campo para mantener el estado de like
+  final bool isLiked;
+  final double rating;
   final List<Comment>? children;
 
-  const Review(
-      {required this.idReview,
-      required this.content,
-      required this.isValid,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.idBusiness,
-      required this.idUser,
-      required this.likes,
-      required this.comments,
-      required this.business,
-      required this.user,
-      required this.isLiked,
-      this.children});
+  const Review({
+    required this.idReview,
+    required this.content,
+    required this.isValid,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.idBusiness,
+    required this.idUser,
+    required this.likes,
+    required this.comments,
+    required this.business,
+    required this.user,
+    required this.isLiked,
+    required this.rating,
+    this.children,
+  });
 
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(
@@ -47,6 +51,7 @@ class Review extends Equatable {
       comments: int.tryParse(json['comments']?.toString() ?? '0') ?? 0,
       business: BusinessData.fromJson(json['Business']),
       user: UserData.fromJson(json['User']),
+      rating: double.tryParse(json['rating']?.toString() ?? '0') ?? 0,
       children: json['children'] != null
           ? (json['children'] as List).map((c) => Comment.fromJson(c)).toList()
           : null,
@@ -94,7 +99,7 @@ class Review extends Equatable {
       '_id_user': idUser,
       'likes': likes,
       'comments': comments,
-      'Business': business.toJson(),
+      'Business': business?.toJson() ?? '',
       'User': user.toJson(),
     };
   }
@@ -112,6 +117,7 @@ class Review extends Equatable {
       BusinessData? business,
       UserData? user,
       bool? isLiked,
+      double? rating,
       List<Comment>? children}) {
     return Review(
         idReview: idReview ?? this.idReview,
@@ -126,6 +132,7 @@ class Review extends Equatable {
         business: business ?? this.business,
         user: user ?? this.user,
         isLiked: isLiked ?? this.isLiked,
+        rating: rating ?? this.rating,
         children: children ?? this.children);
   }
 
@@ -143,6 +150,7 @@ class Review extends Equatable {
         business,
         user,
         isLiked,
+        rating,
         children
       ];
 }
@@ -165,7 +173,7 @@ class BusinessData extends Equatable {
       idBusiness: json['_id_business'] ?? '',
       name: json['name'] ?? '',
       entity: json['entity'] ?? '',
-      followed: json['followed'] ?? false,
+      followed: json['is_followed'] ?? false,
     );
   }
 
@@ -174,8 +182,22 @@ class BusinessData extends Equatable {
       '_id_business': idBusiness,
       'name': name,
       'entity': entity,
-      'followed': followed,
+      'is_followed': followed,
     };
+  }
+
+  BusinessData copyWith({
+    String? idBusiness,
+    String? name,
+    String? entity,
+    bool? followed,
+  }) {
+    return BusinessData(
+      idBusiness: idBusiness ?? this.idBusiness,
+      name: name ?? this.name,
+      entity: entity ?? this.entity,
+      followed: followed ?? this.followed,
+    );
   }
 
   @override
@@ -200,7 +222,7 @@ class UserData extends Equatable {
       idUser: json['_id_user'] ?? '',
       name: json['name'],
       lastName: json['last_name'],
-      followed: json['followed'] ?? false,
+      followed: json['is_followed'] ?? false,
     );
   }
 
@@ -209,7 +231,7 @@ class UserData extends Equatable {
       '_id_user': idUser,
       'name': name,
       'last_name': lastName,
-      'followed': followed,
+      'is_followed': followed,
     };
   }
 
@@ -229,95 +251,4 @@ class UserData extends Equatable {
 
   @override
   List<Object?> get props => [idUser, name, lastName, followed];
-}
-
-class Comment extends Equatable {
-  final String idComment;
-  final String content;
-  final bool isValid;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String idReview;
-  final String? idParent;
-  final String idUser;
-  final int likes;
-  final UserData user;
-  final List<Comment>? children;
-
-  const Comment(
-      {required this.idComment,
-      required this.content,
-      required this.isValid,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.idReview,
-      this.idParent,
-      required this.idUser,
-      required this.likes,
-      required this.user,
-      this.children});
-
-  factory Comment.fromJson(Map<String, dynamic> json) {
-    return Comment(
-      idComment: json['_id_comment'],
-      content: json['content'],
-      isValid: json['is_valid'] ?? false,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      idReview: json['_id_review'],
-      idParent: json['_id_parent'],
-      idUser: json['_id_user'],
-      likes: int.tryParse(json['likes'].toString()) ?? 0,
-      user: json['User'] != null
-          ? UserData.fromJson(json['User'])
-          : UserData(
-              idUser: json['_id_user'],
-              name: '',
-              lastName: '',
-              followed: false),
-      children: json['children'] != null
-          ? (json['children'] as List).map((c) => Comment.fromJson(c)).toList()
-          : null,
-    );
-  }
-
-  String get getLikes {
-    return likes == 1 ? '$likes Me gusta' : '$likes Me gustas';
-  }
-
-  String get timeAgo {
-    if (createdAt == null) return 'Fecha desconocida';
-
-    final now = DateTime.now();
-    final difference = now.difference(createdAt!);
-
-    if (difference.inDays >= 1) {
-      // Si la diferencia es mayor a un día, devuelve la fecha en formato día/mes/año.
-      return DateFormat('dd/MM/yy').format(createdAt!);
-    } else if (difference.inHours >= 1) {
-      // Si ha pasado al menos una hora, pero menos de un día.
-      return '${difference.inHours} ${difference.inHours == 1 ? 'hora' : 'horas'}';
-    } else if (difference.inMinutes >= 1) {
-      // Si ha pasado al menos un minuto, pero menos de una hora.
-      return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'minuto' : 'minutos'}';
-    } else {
-      // Si ha pasado menos de un minuto.
-      return 'Justo ahora';
-    }
-  }
-
-  @override
-  List<Object?> get props => [
-        idComment,
-        content,
-        isValid,
-        createdAt,
-        updatedAt,
-        idReview,
-        idParent,
-        idUser,
-        likes,
-        user,
-        children
-      ];
 }

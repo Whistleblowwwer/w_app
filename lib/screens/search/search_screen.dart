@@ -13,13 +13,17 @@ import 'package:w_app/bloc/user_bloc/user_bloc_event.dart';
 import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/repository/user_repository.dart';
+import 'package:w_app/screens/add/add_business_screen.dart';
+import 'package:w_app/screens/business_screen.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/styles/gradient_style.dart';
 import 'package:w_app/styles/shadow_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
+import 'package:w_app/widgets/dotters.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
+import 'package:w_app/widgets/snackbar.dart';
 
 class SearchScreen extends StatefulWidget {
   final UserRepository userRepository;
@@ -50,7 +54,9 @@ class _SearchScreenState extends State<SearchScreen>
       controllerSearch.addListener(() {
         setState(() {
           print(controllerSearch.text);
+          // try {
           futureSearch = ApiService().getSearch(controllerSearch.text);
+          // } catch (e) {}
         });
       });
 
@@ -88,117 +94,360 @@ class _SearchScreenState extends State<SearchScreen>
                       ],
                     )
                   : state is Searching
-                      ? FutureBuilder(
-                          future: futureSearch,
-                          builder: (context,
-                              AsyncSnapshot<List<Business>> snapshot) {
-                            if (snapshot.hasError) {
-                              return Container();
-                            } else if (!snapshot.hasData ||
-                                snapshot.data!.isEmpty) {
-                              return Container();
-                            } else {
-                              return SingleChildScrollView(
-                                padding: EdgeInsets.only(
-                                    top: 200 +
-                                        min(192,
-                                            state.lastSearchs.length * 48)),
-                                physics: BouncingScrollPhysics(),
+                      ? SingleChildScrollView(
+                          physics:
+                              BouncingScrollPhysics(), //ClampingScrollPhysics(),
+                          padding: EdgeInsets.only(bottom: 600, top: 200),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: double.maxFinite,
+                                decoration: BoxDecoration(
+                                    // color: Colors.white,
+                                    ),
                                 child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: List.generate(
-                                      snapshot.data!.length,
-                                      (index) => GestureDetector(
-                                        onTap: () {
-                                          setState(() {});
-
-                                          // Aquí puedes agregar lógica adicional si es necesario, por ejemplo, para manejar la selección de la empresa
-                                        },
-                                        child: Container(
-                                          width: double.maxFinite,
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 16, horizontal: 16),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: ColorStyle
-                                                    .borderGrey, // Color del borde.
-                                                width: 0.5, // Ancho del borde.
-                                              ),
+                                  children: List.generate(
+                                      state.lastSearchs.length >= 4
+                                          ? 4
+                                          : state.lastSearchs.length,
+                                      (index) => Container(
+                                            height: 48,
+                                            width: double.maxFinite,
+                                            padding: EdgeInsets.only(
+                                                left: 16, right: 24),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    state.lastSearchs[index],
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  FeatherIcons.arrowUpLeft,
+                                                  size: 18,
+                                                  color: ColorStyle.darkPurple,
+                                                )
+                                              ],
                                             ),
-                                          ),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              // const CircularAvatarW(
-                                              //   externalRadius: Offset(42, 42),
-                                              //   internalRadius: Offset(36, 36),
-                                              //   nameAvatar: "S",
-                                              //   isCompany: true,
-                                              // ),
-                                              // const SizedBox(
-                                              //   width: 16,
-                                              // ),
-                                              Flexible(
-                                                child: SizedBox(
+                                          )),
+                                ),
+                              ),
+                              Divider(
+                                color:
+                                    ColorStyle.borderGrey, // Color del borde.
+                                height: 0.5,
+                              ),
+                              FutureBuilder(
+                                  future: futureSearch,
+                                  builder: (context,
+                                      AsyncSnapshot<List<Business>> snapshot) {
+                                    if (snapshot.hasError) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 224 +
+                                                min(
+                                                    192,
+                                                    state.lastSearchs.length *
+                                                        48),
+                                            left: 24,
+                                            right: 24),
+                                        child: PressTransform(
+                                          onPressed: () {
+                                            setState(() {});
+                                          },
+                                          child: RoundedDotterRectangleBorder(
+                                              height: 52,
+                                              width: double.maxFinite,
+                                              color: ColorStyle.borderGrey,
+                                              borderWidth: 1,
+                                              icon: Container(
+                                                width: double.maxFinite,
+                                                height: double.maxFinite,
+                                                color: Colors.white,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      FeatherIcons.plusCircle,
+                                                      color:
+                                                          ColorStyle.borderGrey,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      'Agregar Empresa',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: Colors.black,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Montserrat'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )),
+                                        ),
+                                      );
+                                    } else if (!snapshot.hasData ||
+                                        snapshot.data!.isEmpty) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 32, left: 24, right: 24),
+                                        child: PressTransform(
+                                          onPressed: () {
+                                            setState(() {});
+                                          },
+                                          child: PressTransform(
+                                            onPressed: () async {
+                                              await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const AddBusinessScreen()),
+                                              );
+                                            },
+                                            child: RoundedDotterRectangleBorder(
+                                                height: 52,
+                                                width: double.maxFinite,
+                                                color: ColorStyle.darkPurple,
+                                                borderWidth: 1,
+                                                icon: Container(
                                                   width: double.maxFinite,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                  height: double.maxFinite,
+                                                  color: Colors.white,
+                                                  child: const Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
                                                     children: [
+                                                      Icon(
+                                                        FeatherIcons.plusCircle,
+                                                        color: ColorStyle
+                                                            .darkPurple,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
                                                       Text(
-                                                        snapshot
-                                                            .data![index].name,
+                                                        'Agregar Empresa',
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.w600,
+                                                            color: ColorStyle
+                                                                .darkPurple,
                                                             fontSize: 14,
-                                                            fontFamily:
-                                                                'Montserrat'),
-                                                      ),
-                                                      Text(
-                                                        snapshot
-                                                            .data![index].city,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color:
-                                                                ColorStyle.grey,
-                                                            fontSize: 12,
                                                             fontFamily:
                                                                 'Montserrat'),
                                                       ),
                                                     ],
                                                   ),
-                                                ),
-                                              ),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color:
-                                                        ColorStyle.lightGrey),
-                                                child: SvgPicture.asset(
-                                                  'assets/images/icons/WhistleActive.svg',
-                                                  width: 24,
-                                                  height: 20,
-                                                ),
-                                              )
-                                            ],
+                                                )),
                                           ),
                                         ),
-                                      ),
-                                    )),
-                              );
-                            }
-                          })
+                                      );
+                                    } else {
+                                      return Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: List.generate(
+                                            snapshot.data!.length + 1,
+                                            (index) => GestureDetector(
+                                                onTap: () {
+                                                  setState(() {});
+                                                  ApiService()
+                                                      .getBusinessDetail(
+                                                          snapshot.data![index]
+                                                              .idBusiness)
+                                                      .then((value) {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              BusinessScreen(
+                                                                business: value,
+                                                              )),
+                                                    );
+                                                  }, onError: (e) {
+                                                    showErrorSnackBar(
+                                                        context, e.toString());
+                                                  });
+                                                  // Aquí puedes agregar lógica adicional si es necesario, por ejemplo, para manejar la selección de la empresa
+                                                },
+                                                child:
+                                                    index <
+                                                            snapshot
+                                                                .data!.length
+                                                        ? Container(
+                                                            width: double
+                                                                .maxFinite,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    vertical:
+                                                                        16,
+                                                                    horizontal:
+                                                                        16),
+                                                            decoration: BoxDecoration(
+                                                                // border: Border(
+                                                                //   bottom: BorderSide(
+                                                                //     color: ColorStyle
+                                                                //         .borderGrey, // Color del borde.
+                                                                //     width:
+                                                                //         0.5, // Ancho del borde.
+                                                                //   ),
+                                                                // ),
+                                                                ),
+                                                            child: Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                // const CircularAvatarW(
+                                                                //   externalRadius: Offset(42, 42),
+                                                                //   internalRadius: Offset(36, 36),
+                                                                //   nameAvatar: "S",
+                                                                //   isCompany: true,
+                                                                // ),
+                                                                // const SizedBox(
+                                                                //   width: 16,
+                                                                // ),
+                                                                Flexible(
+                                                                  child:
+                                                                      SizedBox(
+                                                                    width: double
+                                                                        .maxFinite,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Text(
+                                                                          snapshot
+                                                                              .data![index]
+                                                                              .name,
+                                                                          style: TextStyle(
+                                                                              fontWeight: FontWeight.w600,
+                                                                              fontSize: 14,
+                                                                              fontFamily: 'Montserrat'),
+                                                                        ),
+                                                                        Text(
+                                                                          '${snapshot.data![index].entity} • ${snapshot.data![index].city}',
+                                                                          style: TextStyle(
+                                                                              fontWeight: FontWeight.w400,
+                                                                              color: ColorStyle.grey,
+                                                                              fontSize: 12,
+                                                                              fontFamily: 'Montserrat'),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          8),
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  decoration: BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                      color: ColorStyle
+                                                                          .lightGrey),
+                                                                  child:
+                                                                      SvgPicture
+                                                                          .asset(
+                                                                    'assets/images/icons/WhistleActive.svg',
+                                                                    width: 24,
+                                                                    height: 20,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 32,
+                                                                    left: 24,
+                                                                    right: 24),
+                                                            child:
+                                                                PressTransform(
+                                                              onPressed: () {
+                                                                setState(() {});
+                                                              },
+                                                              child:
+                                                                  PressTransform(
+                                                                onPressed:
+                                                                    () async {
+                                                                  await Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                const AddBusinessScreen()),
+                                                                  );
+                                                                },
+                                                                child: RoundedDotterRectangleBorder(
+                                                                    height: 52,
+                                                                    width: double.maxFinite,
+                                                                    color: ColorStyle.darkPurple,
+                                                                    borderWidth: 1,
+                                                                    icon: Container(
+                                                                      width: double
+                                                                          .maxFinite,
+                                                                      height: double
+                                                                          .maxFinite,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      child:
+                                                                          const Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          Icon(
+                                                                            FeatherIcons.plusCircle,
+                                                                            color:
+                                                                                ColorStyle.darkPurple,
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                8,
+                                                                          ),
+                                                                          Text(
+                                                                            'Agregar Empresa',
+                                                                            style: TextStyle(
+                                                                                fontWeight: FontWeight.w600,
+                                                                                color: ColorStyle.darkPurple,
+                                                                                fontSize: 14,
+                                                                                fontFamily: 'Montserrat'),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )),
+                                                              ),
+                                                            ),
+                                                          )),
+                                          ));
+                                    }
+                                  }),
+                            ],
+                          ),
+                        )
                       : SizedBox.shrink();
             }),
             BlocBuilder<SearchBloc, SearchState>(
@@ -278,25 +527,20 @@ class _SearchScreenState extends State<SearchScreen>
                             fillColor: Colors.grey[100],
                             prefixIcon: Icon(FeatherIcons.search,
                                 size: 18, color: ColorStyle.textGrey),
-                            // suffixIcon: IconButton(
-                            //   onPressed: () {
-                            //     controllerSearch.clear();
-                            //   },
-                            //   icon: Icon(Icons.clear,
-                            //       size: 20, color: ColorStyle.textGrey),
-                            // ),
+                            // suffixIcon: controllerSearch.text.isNotEmpty
+                            //     ? IconButton(
+                            //         onPressed: () {
+                            //           controllerSearch.clear();
+                            //           _searchBloc
+                            //               .add(const SearchTextChanged(''));
+                            //         },
+                            //         icon: Icon(Icons.clear,
+                            //             size: 20, color: ColorStyle.textGrey),
+                            //       )
+                            //     : null,
                           ),
                           onChanged: (value) {
                             _searchBloc.add(SearchTextChanged(value));
-                            // if (value.isNotEmpty) {
-
-                            //   // searchTerm =
-                            //   //     value; // <-- Actualiza el término de búsqueda cada vez que cambia el valor
-                            // } else {
-                            //   setState(() {
-                            //     // futureSearch = ApiService().getSearch(value);
-                            //   });
-                            // }
                           },
                         ),
                       ),
@@ -377,38 +621,6 @@ class _SearchScreenState extends State<SearchScreen>
                                   ),
                                 ),
 
-                                Column(
-                                  children: List.generate(
-                                      state.lastSearchs.length >= 4
-                                          ? 4
-                                          : state.lastSearchs.length,
-                                      (index) => Container(
-                                            height: 48,
-                                            width: double.maxFinite,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 24),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    state.lastSearchs[index],
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                ),
-                                                Icon(
-                                                  FeatherIcons.arrowUpLeft,
-                                                  size: 18,
-                                                  color: ColorStyle.darkPurple,
-                                                )
-                                              ],
-                                            ),
-                                          )),
-                                )
                                 // FutureBuilder(
                                 //     future: null,
                                 //     builder: (context, snapshot) {
@@ -660,6 +872,7 @@ class ForYouScreen extends StatelessWidget {
                   idBusiness: '',
                   idUser: '',
                   likes: 2,
+                  rating: 2.5,
                   isLiked: true,
                   isValid: true,
                   createdAt: null,

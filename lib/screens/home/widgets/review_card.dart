@@ -11,8 +11,11 @@ import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/actions/comments_screen.dart';
+import 'package:w_app/screens/actions/review_bottom_sheet.dart';
 import 'package:w_app/screens/business_screen.dart';
 import 'package:w_app/screens/home/review_screen.dart';
+import 'package:w_app/screens/profile/foreign_profile_screen.dart';
+import 'package:w_app/screens/profile/profile_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
@@ -20,43 +23,48 @@ import 'package:w_app/widgets/press_transform_widget.dart';
 import 'package:w_app/widgets/snackbar.dart';
 
 class ReviewCard extends StatelessWidget {
+  final bool isActive;
   final bool? showBusiness;
   final bool isThread;
   final Review review;
   final VoidCallback onLike;
   final Future Function() onComment;
   final VoidCallback onFollowUser;
+  final VoidCallback onFollowBusinnes;
 
-  const ReviewCard({
-    Key? key,
-    this.showBusiness,
-    this.isThread = false,
-    required this.review,
-    required this.onComment,
-    required this.onLike,
-    required this.onFollowUser,
-  }) : super(key: key);
+  const ReviewCard(
+      {Key? key,
+      this.showBusiness,
+      this.isThread = false,
+      this.isActive = true,
+      required this.review,
+      required this.onComment,
+      required this.onLike,
+      required this.onFollowUser,
+      required this.onFollowBusinnes})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     final stateUser = BlocProvider.of<UserBloc>(context).state;
-
     return stateUser is UserLoaded
         ? Column(
             children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ReviewPage(
-                              review: review,
-                              onLike: onLike,
-                              onComment: onComment,
-                              onFollowUser: onFollowUser,
-                            )),
-                  );
+                  if (isActive) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ReviewPage(
+                                review: review,
+                                onLike: onLike,
+                                onComment: onComment,
+                                onFollowUser: onFollowUser,
+                                onFollowBusiness: onFollowBusinnes,
+                              )),
+                    );
+                  }
 
                   // Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder: (context) => FullScreenPage()));
                 },
@@ -65,7 +73,7 @@ class ReviewCard extends StatelessWidget {
                   decoration: BoxDecoration(color: Colors.white),
                   child: Column(
                     children: [
-                      showBusiness ?? true
+                      false //  showBusiness ?? true
                           ? GestureDetector(
                               onTap: () async {
                                 ApiService()
@@ -86,21 +94,10 @@ class ReviewCard extends StatelessWidget {
                                 height: 56,
                                 width: double.maxFinite,
                                 padding: EdgeInsets.symmetric(horizontal: 16),
-                                decoration:
-                                    BoxDecoration(color: ColorStyle.lightGrey),
+                                decoration: BoxDecoration(),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    // CircularAvatarW(
-                                    //   externalRadius: Offset(42, 42),
-                                    //   internalRadius: Offset(36, 36),
-                                    //   nameAvatar:
-                                    //       review.nameBusiness.substring(0, 1),
-                                    //   isCompany: true,
-                                    // ),
-                                    // SizedBox(
-                                    //   width: 16,
-                                    // ),
                                     Flexible(
                                       child: SizedBox(
                                         width: double.maxFinite,
@@ -112,14 +109,14 @@ class ReviewCard extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              review.business.name,
+                                              review.business?.name ?? '',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 14,
                                                   fontFamily: 'Montserrat'),
                                             ),
                                             Text(
-                                              review.business.entity,
+                                              review.business?.entity ?? '',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   color: ColorStyle.grey,
@@ -140,96 +137,209 @@ class ReviewCard extends StatelessWidget {
                               ),
                             )
                           : const SizedBox.shrink(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 42,
-                              child: Stack(
-                                children: [
-                                  CircularAvatarW(
-                                    externalRadius: Offset(38, 38),
-                                    internalRadius: Offset(34, 34),
-                                    nameAvatar:
-                                        review.user.name.substring(0, 1),
-                                    isCompany: false,
-                                    sizeText: 22,
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: Visibility(
-                                      visible: stateUser.user.idUser ==
-                                              review.user.idUser
-                                          ? false
-                                          : !review.user.followed,
-                                      child: PressTransform(
-                                        onPressed: onFollowUser,
-                                        child: Container(
-                                            width: 18,
-                                            height: 18,
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white),
-                                            child: Icon(
-                                              Icons.add_circle_rounded,
-                                              size: 18,
-                                            )),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 16,
-                            ),
-                            Flexible(
-                              child: SizedBox(
-                                width: double.maxFinite,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                      GestureDetector(
+                        onTap: () {
+                          ApiService()
+                              .getBusinessDetail(review.idBusiness)
+                              .then((value) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BusinessScreen(
+                                        business: value,
+                                      )),
+                            );
+                          }, onError: (e) {
+                            showErrorSnackBar(context, e.toString());
+                          });
+                        },
+                        child: Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 16),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 42,
+                                child: Stack(
                                   children: [
-                                    Text(
-                                      "${review.user.name} ${review.user.lastName}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 14),
+                                    CircularAvatarW(
+                                      externalRadius: Offset(38, 38),
+                                      internalRadius: Offset(34, 34),
+                                      nameAvatar:
+                                          '${review.user.name.substring(0, 1).toUpperCase()}${review.user.lastName.substring(0, 1).toUpperCase()}',
+                                      isCompany: false,
+                                      sizeText: 18,
                                     ),
-                                    SizedBox(
-                                      height: 1,
-                                    ),
-                                    Text(
-                                      review.timeAgo,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: ColorStyle.grey,
-                                          fontSize: 12),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: Visibility(
+                                        visible: stateUser.user.idUser ==
+                                                review.user.idUser
+                                            ? false
+                                            : !review.user.followed,
+                                        child: PressTransform(
+                                          onPressed: onFollowUser,
+                                          child: Container(
+                                              width: 18,
+                                              height: 18,
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white),
+                                              child: Icon(
+                                                Icons.add_circle_rounded,
+                                                size: 18,
+                                              )),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                            Icon(
-                              FeatherIcons.moreHorizontal,
-                              size: 18,
-                            )
-                            // PressTransform(
-                            //   onPressed: () {},
-                            //   child: Container(
-                            //     padding:
-                            //         EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            //     decoration: BoxDecoration(
-                            //       borderRadius: BorderRadius.circular(20),
-                            //       color: ColorStyle.lightGrey,
-                            //     ),
-                            //     child: Icon(FeatherIcons.userCheck),
-                            //   ),
-                            // )
-                          ],
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Flexible(
+                                child: SizedBox(
+                                  width: double.maxFinite,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            review.business?.name ?? '',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
+                                                fontFamily: 'Montserrat'),
+                                          ),
+                                          Visibility(
+                                            visible: showBusiness ?? true
+                                                ? !review.business!.followed
+                                                : false,
+                                            child: PressTransform(
+                                              onPressed: onFollowBusinnes,
+                                              child: Text.rich(
+                                                const TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: ' • ',
+                                                    ),
+                                                    TextSpan(
+                                                      text: 'Unirte',
+                                                      style: TextStyle(
+                                                        color: ColorStyle
+                                                            .solidBlue,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontFamily: 'Montserrat',
+                                                    color: ColorStyle.textGrey,
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await ApiService()
+                                              .getProfileDetail(
+                                                  review.user.idUser)
+                                              .then((value) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ForeignProfileScreen(
+                                                          value)),
+                                            );
+                                          }, onError: (e) {
+                                            showErrorSnackBar(
+                                                context, e.toString());
+                                          });
+                                        },
+                                        child: Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text:
+                                                    "@${review.user.name}${review.user.lastName} • ",
+                                              ),
+                                              TextSpan(
+                                                text: review.timeAgo,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w300,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Montserrat',
+                                              color: ColorStyle.textGrey,
+                                              fontSize: 14),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              PressTransform(
+                                onPressed: () async {
+                                  await showModalBottomSheet(
+                                    context: context,
+                                    useRootNavigator: true,
+                                    isScrollControlled:
+                                        true, // Permite que el contenido sea desplazable si es necesario
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20.0),
+                                        topRight: Radius.circular(20.0),
+                                      ),
+                                    ),
+                                    builder: (BuildContext context) {
+                                      return ReviewBottomSheet(
+                                        user: stateUser.user,
+                                        review: review,
+                                        onFollowUser: onFollowUser,
+                                        onFollowBusinnes: onFollowBusinnes,
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Icon(
+                                  FeatherIcons.moreHorizontal,
+                                  size: 18,
+                                ),
+                              )
+                              // PressTransform(
+                              //   onPressed: () {},
+                              //   child: Container(
+                              //     padding:
+                              //         EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              //     decoration: BoxDecoration(
+                              //       borderRadius: BorderRadius.circular(20),
+                              //       color: ColorStyle.lightGrey,
+                              //     ),
+                              //     child: Icon(FeatherIcons.userCheck),
+                              //   ),
+                              // )
+                            ],
+                          ),
                         ),
                       ),
                       IntrinsicHeight(
@@ -287,6 +397,7 @@ class ReviewCard extends StatelessWidget {
                                                 SizedBox(
                                                   width: 16,
                                                 ),
+
                                                 PressTransform(
                                                   onPressed: onComment,
                                                   child: SvgPicture.asset(
@@ -295,6 +406,29 @@ class ReviewCard extends StatelessWidget {
                                                     height: 20,
                                                   ),
                                                 ),
+                                                //                                             Flexible(
+                                                //   child: TextField(
+                                                //     controller: controllerReview,
+
+                                                //     maxLines: 8,
+                                                //     minLines: 1,
+
+                                                //     style: const TextStyle(
+                                                //         fontWeight: FontWeight.w400,
+                                                //         fontSize: 14,
+                                                //         fontFamily: 'Montserrat'),
+                                                //     decoration: InputDecoration(
+                                                //       hintText: 'Escribe algo...',
+                                                //       contentPadding: const EdgeInsets.only(bottom: 16),
+                                                //       border: OutlineInputBorder(
+                                                //         borderRadius: BorderRadius.circular(12.0),
+                                                //         borderSide: BorderSide.none,
+                                                //       ),
+                                                //       filled: true,
+                                                //       fillColor: Colors.grey[100],
+                                                //     ),
+                                                //   ),
+                                                // ),
                                                 SizedBox(
                                                   width: 16,
                                                 ),
@@ -311,7 +445,7 @@ class ReviewCard extends StatelessWidget {
                                             RatingBar.builder(
                                               maxRating: 5,
                                               itemSize: 22,
-                                              initialRating: 0,
+                                              initialRating: review.rating,
                                               glowColor: Colors.white,
                                               minRating: 1,
                                               direction: Axis.horizontal,
@@ -442,8 +576,9 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                               CircularAvatarW(
                                 externalRadius: Offset(42, 42),
                                 internalRadius: Offset(36, 36),
-                                nameAvatar:
-                                    widget.review.business.name.substring(0, 1),
+                                nameAvatar: widget.review.business?.name
+                                        .substring(0, 1) ??
+                                    '',
                                 isCompany: true,
                               ),
                               SizedBox(
@@ -459,14 +594,14 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        widget.review.business.name,
+                                        widget.review.business?.name ?? '',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 14,
                                             fontFamily: 'Montserrat'),
                                       ),
                                       Text(
-                                        widget.review.business.entity,
+                                        widget.review.business?.entity ?? '',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             color: ColorStyle.grey,
@@ -614,7 +749,7 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                       RatingBar.builder(
                                         maxRating: 5,
                                         itemSize: 24,
-                                        initialRating: 0,
+                                        initialRating: widget.review.rating,
                                         glowColor: Colors.white,
                                         minRating: 1,
                                         direction: Axis.horizontal,
