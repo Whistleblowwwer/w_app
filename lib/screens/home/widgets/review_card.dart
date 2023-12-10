@@ -222,8 +222,8 @@ class ReviewCard extends StatelessWidget {
                                                 : false,
                                             child: PressTransform(
                                               onPressed: onFollowBusinnes,
-                                              child: Text.rich(
-                                                const TextSpan(
+                                              child: const Text.rich(
+                                                TextSpan(
                                                   children: [
                                                     TextSpan(
                                                       text: ' • ',

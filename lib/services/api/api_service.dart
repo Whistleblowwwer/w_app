@@ -103,10 +103,39 @@ class ApiService {
   }
 
   Future<bool> validateAccesToken(String token) async {
-    // var response = await _utils.get('users/token');
-    // print(response.statusCode);
-    // _utils.handleResponse(response)['success'];
-    return true;
+    var response = await _utils.get('users/token');
+    print(response.statusCode);
+    return _utils.handleResponse(response)['success'];
+  }
+
+  Future<Map<String, dynamic>> createUser({
+    required String name,
+    required String lastName,
+    required String phone,
+    required String email,
+    required String birthdate,
+    required String password,
+    required String gender,
+    required String role,
+  }) async {
+    // Construir el cuerpo del POST request con todos los argumentos
+    var body = {
+      "name": name,
+      "last_name": lastName,
+      "email": email,
+      "phone_number": phone,
+      "birth_date": birthdate,
+      "gender": gender,
+      "password": password,
+      "role": role
+    };
+    print(body);
+
+    // Realizar la petición POST al endpoint para registrar usuarios
+    var response = await _utils.post('users/', body);
+
+    // Devolver la respuesta procesada
+    return json.decode(response.body);
   }
 
   Future<bool> validateNumberSMS(String phoneNumber) async {

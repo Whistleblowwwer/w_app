@@ -11,10 +11,11 @@ import 'package:w_app/bloc/lifecycle_bloc/lifecycle_bloc.dart';
 import 'package:w_app/bloc/search_bloc/search_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
-import 'package:w_app/screens/sign_in_screen.dart';
+import 'package:w_app/screens/signInUp/sign_in_screen.dart';
 import 'package:w_app/screens/start_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:w_app/widgets/snackbar.dart';
 import 'repository/user_repository.dart';
 
 void main() async {
@@ -135,7 +136,12 @@ class AuthHandler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthError) {
+          showErrorSnackBar(context, state.error);
+        }
+      },
       builder: (context, state) {
         if (state is AuthAuthenticated) {
           print(state);

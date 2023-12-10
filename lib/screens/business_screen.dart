@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_event.dart';
 import 'package:w_app/bloc/feed_bloc/feed_state.dart';
@@ -367,6 +368,39 @@ class _BusinessScreenState extends State<BusinessScreen> {
                             )
                 ],
               ),
+              Positioned(
+                  bottom: 86,
+                  child: Container(
+                    width: sizeW * 100,
+                    color: Colors.white,
+                    padding: EdgeInsets.only(
+                        bottom: 16, top: 16, left: 24, right: 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Escribe una reseña a ${widget.business.name}',
+                            maxLines: 1,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                fontFamily: 'Montserrat'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        SvgPicture.asset(
+                          'assets/images/icons/Whistle.svg',
+                          width: 32,
+                          height: 32,
+                          colorFilter: ColorFilter.mode(
+                              ColorStyle.darkPurple, BlendMode.srcIn),
+                        ),
+                      ],
+                    ),
+                  )),
               Positioned(
                 top: 0,
                 child: Container(

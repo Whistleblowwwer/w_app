@@ -159,22 +159,24 @@ class BusinessData extends Equatable {
   final String idBusiness;
   final String name;
   final String entity;
+  final double rating;
   final bool followed;
 
   BusinessData({
     required this.idBusiness,
     required this.name,
     required this.entity,
+    required this.rating,
     required this.followed,
   });
 
   factory BusinessData.fromJson(Map<String, dynamic> json) {
     return BusinessData(
-      idBusiness: json['_id_business'] ?? '',
-      name: json['name'] ?? '',
-      entity: json['entity'] ?? '',
-      followed: json['is_followed'] ?? false,
-    );
+        idBusiness: json['_id_business'] ?? '',
+        name: json['name'] ?? '',
+        entity: json['entity'] ?? '',
+        followed: json['is_followed'] ?? false,
+        rating: json['avarage_rating'] ?? 0.0);
   }
 
   Map<String, dynamic> toJson() {
@@ -186,22 +188,22 @@ class BusinessData extends Equatable {
     };
   }
 
-  BusinessData copyWith({
-    String? idBusiness,
-    String? name,
-    String? entity,
-    bool? followed,
-  }) {
+  BusinessData copyWith(
+      {String? idBusiness,
+      String? name,
+      String? entity,
+      bool? followed,
+      double? rating}) {
     return BusinessData(
-      idBusiness: idBusiness ?? this.idBusiness,
-      name: name ?? this.name,
-      entity: entity ?? this.entity,
-      followed: followed ?? this.followed,
-    );
+        idBusiness: idBusiness ?? this.idBusiness,
+        name: name ?? this.name,
+        entity: entity ?? this.entity,
+        followed: followed ?? this.followed,
+        rating: rating ?? this.rating);
   }
 
   @override
-  List<Object?> get props => [idBusiness, name, entity, followed];
+  List<Object?> get props => [idBusiness, name, entity, followed, rating];
 }
 
 class UserData extends Equatable {

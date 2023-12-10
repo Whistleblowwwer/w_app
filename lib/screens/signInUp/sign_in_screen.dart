@@ -1,7 +1,13 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
+import 'package:w_app/bloc/auth_bloc/auth_bloc_state.dart';
+import 'package:w_app/screens/signInUp/sign_up_screen.dart';
+import 'package:w_app/screens/signInUp/widgets/custom_textfield_widget.dart';
+import 'package:w_app/widgets/press_transform_widget.dart';
+import 'package:w_app/widgets/snackbar.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -16,6 +22,13 @@ class _SignInScreenState extends State<SignInScreen> {
   final FocusNode _usernameFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
 
+  bool isValidEmail(String input) {
+    final RegExp regex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+    );
+    return regex.hasMatch(input);
+  }
+
   void _onSignInButtonPressed() {
     if (_formKey.currentState!.validate()) {
       BlocProvider.of<AuthBloc>(context).add(
@@ -25,6 +38,13 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+    super.dispose();
   }
 
   @override
@@ -64,12 +84,16 @@ class _SignInScreenState extends State<SignInScreen> {
                   labelText: 'Email',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter an email';
+                      return 'Please enter your email';
+                    } else if (!EmailValidator.validate(value)) {
+                      return 'Please enter a valid email';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 24),
+                SizedBox(
+                  height: 0,
+                ),
                 CustomTextFormField(
                   controller: _passwordController,
                   focusNode: _passwordFocus,
@@ -88,7 +112,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.only(top: 8, bottom: 16),
                     child: Text(
                       "¿Olvidaste tu contraseña?",
                       style: TextStyle(
@@ -98,8 +122,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: _onSignInButtonPressed,
+                PressTransform(
+                  onPressed: _onSignInButtonPressed,
                   child: Container(
                     margin: EdgeInsets.only(bottom: 32),
                     width: double.maxFinite,
@@ -127,24 +151,32 @@ class _SignInScreenState extends State<SignInScreen> {
                     text: "Ingresa con Google",
                   ),
                 ),
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '¿No tienes cuenta? ',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      TextSpan(
-                          text: 'Registrate',
-                          style: TextStyle(
-                              letterSpacing: 0.02 * 1,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(100, 31, 137, 1))),
-                    ],
-                  ),
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 14,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpPage()));
+                  },
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '¿No tienes cuenta? ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        TextSpan(
+                            text: 'Registrate',
+                            style: TextStyle(
+                                letterSpacing: 0.02 * 1,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromRGBO(100, 31, 137, 1))),
+                      ],
+                    ),
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ],
@@ -220,85 +252,6 @@ class InterceptionTextWidget extends StatelessWidget {
           ),
         )
       ],
-    );
-  }
-}
-
-class CustomTextFormField extends StatefulWidget {
-  final TextEditingController controller;
-  final FocusNode? focusNode;
-  final FocusNode? nextFocusNode;
-  final String labelText;
-  final bool obscureText;
-  final FormFieldValidator<String>? validator;
-  final ValueChanged<String>? onFieldSubmitted;
-
-  CustomTextFormField({
-    required this.controller,
-    this.focusNode,
-    this.nextFocusNode,
-    required this.labelText,
-    this.obscureText = false,
-    this.validator,
-    this.onFieldSubmitted,
-  });
-
-  @override
-  _CustomTextFormFieldState createState() => _CustomTextFormFieldState();
-}
-
-class _CustomTextFormFieldState extends State<CustomTextFormField> {
-  bool _obscureText = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: widget.controller,
-      style: TextStyle(
-        fontFamily: 'Montserrat',
-      ),
-      decoration: InputDecoration(
-        labelText: widget.labelText,
-        floatingLabelStyle: TextStyle(
-            color: Color.fromRGBO(163, 173, 179, 1),
-            fontSize: 16,
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.w600),
-        labelStyle: TextStyle(
-            color: Color.fromRGBO(163, 173, 179, 1),
-            fontFamily: 'Montserrat',
-            fontSize: 16,
-            fontWeight: FontWeight.w600),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(
-              color: const Color.fromRGBO(217, 217, 217, 1), width: 1.0),
-        ),
-        suffixIcon: widget.obscureText
-            ? IconButton(
-                icon: Icon(
-                  _obscureText ? Icons.visibility_off : Icons.visibility,
-                  color: Color.fromRGBO(163, 173, 179, 1),
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscureText = !_obscureText;
-                  });
-                },
-              )
-            : null,
-      ),
-      focusNode: widget.focusNode,
-      validator: widget.validator,
-      obscureText: widget.obscureText ? _obscureText : false,
-      onFieldSubmitted: (value) {
-        if (widget.nextFocusNode != null) {
-          FocusScope.of(context).requestFocus(widget.nextFocusNode);
-        }
-        if (widget.onFieldSubmitted != null) {
-          widget.onFieldSubmitted!(value);
-        }
-      },
     );
   }
 }

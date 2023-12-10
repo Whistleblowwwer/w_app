@@ -116,127 +116,113 @@ class _ReviewPageState extends State<ReviewPage> {
                           // ReviewExtendedWidget(
                           //   review: review,
                           // ),
-                          stateUser is UserLoaded
-                              ? isLoading
+
+                          isLoading
+                              ? const SliverToBoxAdapter(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 96),
+                                    child: Center(
+                                        child: CircularProgressIndicator
+                                            .adaptive()),
+                                  ),
+                                )
+                              : comments.isEmpty
                                   ? const SliverToBoxAdapter(
                                       child: Padding(
-                                        padding: EdgeInsets.only(top: 96),
-                                        child: Center(
-                                            child: CircularProgressIndicator
-                                                .adaptive()),
-                                      ),
+                                          padding: EdgeInsets.only(top: 96),
+                                          child: Center(
+                                            child: Text(
+                                              'Parece que no hay data',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontFamily: "Montserrat",
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          )),
                                     )
-                                  : comments.isEmpty
-                                      ? const SliverToBoxAdapter(
-                                          child: Padding(
-                                              padding: EdgeInsets.only(top: 96),
-                                              child: Center(
-                                                child: Text(
-                                                  'Parece que no hay data',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontFamily: "Montserrat",
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              )),
-                                        )
-                                      : SliverList(
-                                          delegate: SliverChildBuilderDelegate(
-                                            childCount: comments.length,
-                                            (BuildContext context, int index) {
-                                              return CommentWidget(
-                                                comment: comments[index],
-                                                user: stateUser.user,
-                                                onFollowUser: () {
-                                                  _followUser(
-                                                      comments[index].user);
-                                                },
-                                                onLike: () {
-                                                  _likeComment(comments[index]);
-                                                },
-                                                onComment: () async {
-                                                  final userState =
-                                                      _userBloc.state;
-                                                  print("saoa");
-                                                  if (userState is UserLoaded) {
-                                                    print("hey");
-                                                    Map<String, dynamic>?
-                                                        response =
-                                                        await showModalBottomSheet(
-                                                            context: context,
-                                                            isScrollControlled:
-                                                                true,
-                                                            useRootNavigator:
-                                                                true,
-                                                            barrierColor:
-                                                                const Color
-                                                                    .fromRGBO(0,
-                                                                    0, 0, 0.1),
-                                                            shape:
-                                                                const RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .only(
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        20.0),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        20.0),
-                                                              ),
-                                                            ),
-                                                            builder: (context) =>
-                                                                CommentBottomSheet(
-                                                                  user:
-                                                                      userState
-                                                                          .user,
-                                                                  name: comments[
-                                                                          index]
-                                                                      .user
-                                                                      .name,
-                                                                  lastName: comments[
+                                  : SliverList(
+                                      delegate: SliverChildBuilderDelegate(
+                                        childCount: comments.length,
+                                        (BuildContext context, int index) {
+                                          return CommentWidget(
+                                            comment: comments[index],
+                                            user: stateUser.user,
+                                            onFollowUser: () {
+                                              _followUser(comments[index].user);
+                                            },
+                                            onLike: () {
+                                              _likeComment(comments[index]);
+                                            },
+                                            onComment: () async {
+                                              final userState = _userBloc.state;
+                                              print("saoa");
+                                              if (userState is UserLoaded) {
+                                                print("hey");
+                                                Map<String, dynamic>? response =
+                                                    await showModalBottomSheet(
+                                                        context: context,
+                                                        isScrollControlled:
+                                                            true,
+                                                        useRootNavigator: true,
+                                                        barrierColor:
+                                                            const Color
+                                                                .fromRGBO(
+                                                                0, 0, 0, 0.1),
+                                                        shape:
+                                                            const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    20.0),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    20.0),
+                                                          ),
+                                                        ),
+                                                        builder: (context) =>
+                                                            CommentBottomSheet(
+                                                              user: userState
+                                                                  .user,
+                                                              name: comments[
+                                                                      index]
+                                                                  .user
+                                                                  .name,
+                                                              lastName:
+                                                                  comments[
                                                                           index]
                                                                       .user
                                                                       .lastName,
-                                                                  content: comments[
-                                                                          index]
-                                                                      .content,
-                                                                ));
+                                                              content: comments[
+                                                                      index]
+                                                                  .content,
+                                                            ));
 
-                                                    if (response != null) {
-                                                      // _feedBloc.add(AddComment(
-                                                      //     content: response['content'],
-                                                      //    ));
+                                                if (response != null) {
+                                                  // _feedBloc.add(AddComment(
+                                                  //     content: response['content'],
+                                                  //    ));
 
-                                                      ApiService().commentReview(
-                                                          content: response[
-                                                              'content'],
-                                                          idReview:
-                                                              comments[index]
-                                                                  .idReview,
-                                                          idParent:
-                                                              comments[index]
-                                                                  .idParent);
-                                                    }
+                                                  ApiService().commentReview(
+                                                      content:
+                                                          response['content'],
+                                                      idReview: comments[index]
+                                                          .idReview,
+                                                      idParent: comments[index]
+                                                          .idParent);
+                                                }
 
-                                                    await _loadReviews();
-                                                    print(response);
-                                                    setState(() {});
-                                                  }
-                                                },
-                                              );
+                                                await _loadReviews();
+                                                print(response);
+                                                setState(() {});
+                                              }
                                             },
-                                          ),
-                                        )
-                              : const SliverToBoxAdapter(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 96),
-                                    child: Center(child: Text("error")),
-                                  ),
-                                ),
-                          SliverPadding(
+                                          );
+                                        },
+                                      ),
+                                    ),
+                          const SliverPadding(
                             padding: EdgeInsets.only(top: 112),
                           ),
                         ],

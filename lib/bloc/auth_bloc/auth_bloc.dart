@@ -16,11 +16,12 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
     on<SignInButtonPressed>(_onSignInButtonPressed);
     on<AppResumed>(_onAppResumed);
     on<LogOutUser>(_logOutUser);
+    on<CreateUser>(_onCreateUser);
   }
 
   FutureOr<void> _onSignInButtonPressed(
       SignInButtonPressed event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
+    // emit(AuthLoading());
     try {
       final response = await apiService.signIn(event.username, event.password);
 
@@ -58,6 +59,7 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
         emit(AuthUnauthenticated());
       }
     } catch (e) {
+      print("object - - -- - -- - ");
       emit(AuthError(e.toString()));
     }
   }
@@ -65,5 +67,32 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
   FutureOr<void> _logOutUser(LogOutUser event, Emitter<AuthState> emit) async {
     await userRepository.deleteToken();
     emit(AuthUnauthenticated());
+  }
+
+  FutureOr<void> _onCreateUser(
+      CreateUser event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      final response = await apiService.createUser(
+        name: event.name,
+        lastName: event.lastName,
+        phone: event.phone,
+        email: event.email,
+        password: event.password,
+        birthdate: event.birthdate.toString(),
+        gender: event.gender,
+        role: event.role,
+      );
+
+      if (response.containsKey('token')) {
+        await userRepository.saveToken(response['token']);
+        emit(AuthAuthenticated());
+      } else {
+        emit(AuthError('Sign in failed'));
+      }
+    } catch (e) {
+      print(e);
+      emit(AuthError(e.toString()));
+    }
   }
 }

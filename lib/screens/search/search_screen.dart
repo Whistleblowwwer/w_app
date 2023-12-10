@@ -882,6 +882,7 @@ class ForYouScreen extends StatelessWidget {
                       idBusiness: '',
                       name: 'Starbucks',
                       entity: 'Alsea',
+                      rating: 4,
                       followed: true),
                   user: UserData(
                       idUser: '',

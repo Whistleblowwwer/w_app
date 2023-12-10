@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          Icon(FeatherIcons.mail),
+                          Icon(FeatherIcons.messageCircle),
                         ],
                       )
                     ],
