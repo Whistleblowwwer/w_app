@@ -8,7 +8,6 @@ import 'package:w_app/bloc/feed_bloc/feed_state.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/screens/chat/inbox_screen.dart';
 import 'package:w_app/screens/chat/widgets/chat_card.dart';
-import 'package:w_app/screens/home/widgets/review_extended_widget.dart';
 import 'package:w_app/services/api/api_service.dart';
 
 class ChatPage extends StatefulWidget {
