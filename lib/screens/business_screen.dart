@@ -93,7 +93,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
   void _followBusiness() {
     // Update the review with the new 'like' status
     setState(() {
-      widget.business.followed = !widget.business.followed;
+      widget.business.isFollowed = !widget.business.isFollowed;
       // Actualizar el estado de 'followed' del usuario en los comentarios
       reviews = reviews.map((reviewItem) {
         return reviewItem.copyWith(
@@ -191,7 +191,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                     RatingBar.builder(
                                       maxRating: 5,
                                       itemSize: 24,
-                                      initialRating: widget.business.rating,
+                                      initialRating:
+                                          widget.business.averageRating,
                                       glowColor: ColorStyle.lightGrey,
                                       minRating: 1,
                                       direction: Axis.horizontal,
@@ -208,7 +209,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                       onRatingUpdate: (rating) {},
                                     ),
                                     Text(
-                                      "  (${widget.business.rating})",
+                                      "  (${widget.business.averageRating})",
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -239,13 +240,13 @@ class _BusinessScreenState extends State<BusinessScreen> {
                               child: Row(
                                 children: [
                                   Text(
-                                    widget.business.followed
+                                    widget.business.isFollowed
                                         ? "Siguiendo"
                                         : "Seguir",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
-                                        color: widget.business.followed
+                                        color: widget.business.isFollowed
                                             ? Colors.black
                                             : ColorStyle.solidBlue,
                                         fontFamily: 'Montserrat'),
