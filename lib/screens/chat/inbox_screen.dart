@@ -50,13 +50,11 @@ class _InboxScreenState extends State<InboxScreen>{
     setState(() {});
   }
 
-  void initializeSocket(){
-    //Traer mensajes anteriores aqui abajo
-
-
+  Future<void> initializeSocket() async {
+    Map<String, dynamic> rsp = await ApiService().getUserProfile();
     // Configura la conexión con el servidor Socket.IO
     socket = IO.io(
-      'http://10.80.14.158:4000',
+      'http://192.168.1.15:4000',
       IO.OptionBuilder()
         .setTransports(['websocket'])
         .disableAutoConnect()
@@ -74,6 +72,10 @@ class _InboxScreenState extends State<InboxScreen>{
     });
 
     // Configura los listeners para manejar eventos
+
+    socket.on('joinConversation', (_){
+      print("Uniendose a conexion");
+    });
 
     socket.on("error", (err) {
       print("Error mensaje:"+ err);
@@ -103,6 +105,10 @@ class _InboxScreenState extends State<InboxScreen>{
 
     // Inicia la conexión
     socket.connect();
+    socket.emit('joinConversation',{
+      '_id_sender': rsp['user']['_id_user'],
+      '_id_receiver':receiver
+    });
   }
 
   @override

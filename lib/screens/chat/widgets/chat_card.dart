@@ -35,7 +35,7 @@ class ChatCard extends StatelessWidget{
             Navigator.of(context,rootNavigator: true).push(
               MaterialPageRoute(
                 settings: RouteSettings(),
-                builder: (context) => InboxScreen(receiver: '195b5f6b-80c6-4ec0-975d-4ea140864e10',token:'$tk')
+                builder: (context) => InboxScreen(receiver: receiver,token:'$tk')
               )
             );
           }else{

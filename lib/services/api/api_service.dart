@@ -242,6 +242,7 @@ class ApiService {
 
   Future<dynamic> getConversationMessages(String id_receiver) async{
     try{
+      print('SENDED: messages/?_id_receiver=$id_receiver');
       var response = await _utils.get('messages/?_id_receiver=$id_receiver');
       final List<dynamic> messages=
           _utils.handleResponse(response)['messages'];
