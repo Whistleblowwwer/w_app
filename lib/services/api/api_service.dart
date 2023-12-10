@@ -329,6 +329,35 @@ class ApiService {
     // Devolver la respuesta procesada
     return response.statusCode;
   }
+
+  Future<dynamic> getChats() async{
+    try {
+      var response = await _utils.get('messages/conversations');
+      print(response.statusCode);
+      print("__________________");
+
+      final List<dynamic> conversations =
+          _utils.handleResponse(response)['conversations'];
+
+      await Future.delayed(Duration(seconds: 1));
+
+      return conversations;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getConversationMessages(String id_receiver) async{
+    try{
+      print('SENDED: messages/?_id_receiver=$id_receiver');
+      var response = await _utils.get('messages/?_id_receiver=$id_receiver');
+      final List<dynamic> messages=
+          _utils.handleResponse(response)['messages'];
+      return messages;
+    }catch(e) {
+      return Future.error(e);
+    }
+  }
 }
 
 class ApiServerUtils {

@@ -14,6 +14,7 @@ import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/actions/comments_screen.dart';
 import 'package:w_app/screens/home/advisors_screen.dart';
 import 'package:w_app/screens/home/lawyers_screen.dart';
+import 'package:w_app/screens/chat/chat_screen.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
@@ -123,7 +124,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          Icon(FeatherIcons.messageCircle),
+                          InkWell(
+                            child: Icon(FeatherIcons.messageCircle),
+                            onTap: () {
+                              // Navegar a otra pantalla
+                              Navigator.of(context,rootNavigator: true).push(
+                                MaterialPageRoute(
+                                  settings: RouteSettings(),
+                                  builder: (context)=>ChatPage())
+                              );
+                              // Navigator.push(context, 
+                              // MaterialPageRoute(
+                              //   builder: (context) => ChatPage()));
+                            },
+                          )
                         ],
                       )
                     ],
