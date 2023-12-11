@@ -162,393 +162,403 @@ class _ProfileScreenState extends State<ProfileScreen>
     final sizeH = MediaQuery.of(context).size.height / 100;
 
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            width: sizeW * 100,
-            height: 102,
-            padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
-            color: Colors.white,
-            alignment: Alignment.bottomCenter,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${widget.user.name} ${widget.user.lastName}',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      fontFamily: 'Montserrat'),
-                ),
-                PressTransform(
-                    onPressed: () {
-                      showAdaptiveDialogIos(
-                          context: context,
-                          title: 'Advertencia',
-                          content: '¿Seguro deseas cerrar sesión?',
-                          onTapCancel: () {
-                            Navigator.of(context, rootNavigator: true).pop();
-                          },
-                          onTapOk: () async {
-                            authBloc.add(LogOutUser());
-                            Navigator.of(context, rootNavigator: true).pop();
-                            // Navigator.of(context);
-                          });
-                    },
-                    child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                            color: ColorStyle.darkPurple,
-                            borderRadius: BorderRadius.circular(8)),
-                        child: Text(
-                          "Log out",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                            fontFamily: 'Montserrat',
-                          ),
-                        )))
-                // Padding(
-                //   padding: EdgeInsets.only(left: 8, right: 16),
-                //   child: Icon(FeatherIcons.moreHorizontal),
-                // )
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              width: sizeW * 100,
+              height: 102,
+              padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+              color: Colors.white,
+              alignment: Alignment.bottomCenter,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${widget.user.name} ${widget.user.lastName}',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        fontFamily: 'Montserrat'),
+                  ),
+                  PressTransform(
+                      onPressed: () {
+                        showAdaptiveDialogIos(
+                            context: context,
+                            title: 'Advertencia',
+                            content: '¿Seguro deseas cerrar sesión?',
+                            onTapCancel: () {
+                              Navigator.of(context, rootNavigator: true).pop();
+                            },
+                            onTapOk: () async {
+                              authBloc.add(LogOutUser());
+                              Navigator.of(context, rootNavigator: true).pop();
+                              // Navigator.of(context);
+                            });
+                      },
+                      child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                              color: ColorStyle.darkPurple,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Text(
+                            "Log out",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              fontFamily: 'Montserrat',
+                            ),
+                          )))
+                  // Padding(
+                  //   padding: EdgeInsets.only(left: 8, right: 16),
+                  //   child: Icon(FeatherIcons.moreHorizontal),
+                  // )
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: sizeH * 100 - 102,
-            width: sizeW * 100,
-            child: DefaultTabController(
-              length: 3,
-              child: NestedScrollView(
-                headerSliverBuilder: (context, innerBoxIsScrolled) {
-                  return [
-                    SliverAppBar(
-                      automaticallyImplyLeading: false,
-                      expandedHeight: 184,
-                      collapsedHeight: 184,
-                      backgroundColor: Colors.white,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Container(
-                          height: 184,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 112,
-                                width: double.maxFinite,
-                                padding: EdgeInsets.only(
-                                    left: 16, right: 16, bottom: 16),
-                                decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                      Color.fromRGBO(255, 255, 255, 0),
-                                      Color.fromRGBO(0, 0, 0, 0.3)
-                                    ])),
-                              ),
-                              Positioned(
-                                top: 152,
-                                left: 16,
-                                right: 16,
-                                child: SizedBox(
+            SizedBox(
+              height: sizeH * 100 - 102,
+              width: sizeW * 100,
+              child: DefaultTabController(
+                length: 3,
+                child: NestedScrollView(
+                  headerSliverBuilder: (context, innerBoxIsScrolled) {
+                    return [
+                      SliverAppBar(
+                        automaticallyImplyLeading: false,
+                        expandedHeight: 184,
+                        collapsedHeight: 184,
+                        backgroundColor: Colors.white,
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: Container(
+                            height: 184,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: 112,
                                   width: double.maxFinite,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Text.rich(
-                                                  TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                          text: widget
-                                                              .user.followings
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                      TextSpan(
-                                                        text: ' Seguidos  ',
-                                                      ),
-                                                      TextSpan(
-                                                          text: widget
-                                                              .user.followers
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                      TextSpan(
-                                                        text: ' Seguidores',
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-
-                                                // Text(
-                                                //   widget.user.email,
-                                                //   maxLines: 1,
-                                                //   overflow:
-                                                //       TextOverflow.ellipsis,
-                                                //   style: TextStyle(
-                                                //       fontWeight:
-                                                //           FontWeight.w400,
-                                                //       fontSize: 14,
-                                                //       color: Colors.black,
-                                                //       fontFamily: 'Montserrat'),
-                                                // ),
-                                              ],
-                                            ),
-                                          ),
-                                          PressTransform(
-                                            onPressed: () {},
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: 16),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 16, vertical: 10),
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  border: Border.all(
-                                                      color: ColorStyle
-                                                          .borderGrey)),
-                                              child: Row(
+                                  padding: EdgeInsets.only(
+                                      left: 16, right: 16, bottom: 16),
+                                  decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                        Color.fromRGBO(255, 255, 255, 0),
+                                        Color.fromRGBO(0, 0, 0, 0.3)
+                                      ])),
+                                ),
+                                Positioned(
+                                  top: 152,
+                                  left: 16,
+                                  right: 16,
+                                  child: SizedBox(
+                                    width: double.maxFinite,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
                                                 children: [
-                                                  Text(
-                                                    "Editar Perfil",
+                                                  Text.rich(
+                                                    TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                            text: widget
+                                                                .user.followings
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                        TextSpan(
+                                                          text: ' Seguidos  ',
+                                                        ),
+                                                        TextSpan(
+                                                            text: widget
+                                                                .user.followers
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                        TextSpan(
+                                                          text: ' Seguidores',
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    textAlign: TextAlign.left,
                                                     style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Montserrat'),
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 14,
+                                                    ),
                                                   ),
+
+                                                  // Text(
+                                                  //   widget.user.email,
+                                                  //   maxLines: 1,
+                                                  //   overflow:
+                                                  //       TextOverflow.ellipsis,
+                                                  //   style: TextStyle(
+                                                  //       fontWeight:
+                                                  //           FontWeight.w400,
+                                                  //       fontSize: 14,
+                                                  //       color: Colors.black,
+                                                  //       fontFamily: 'Montserrat'),
+                                                  // ),
                                                 ],
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            FeatherIcons.calendar,
-                                            size: 18,
-                                            color: ColorStyle.textGrey,
-                                          ),
-                                          SizedBox(
-                                            width: 4,
-                                          ),
-                                          Text(
-                                            widget.user
-                                                .getFormattedCreationDate(),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 14,
-                                                color: ColorStyle.textGrey,
-                                                fontFamily: 'Montserrat'),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 56,
-                                left: 16,
-                                child: CircularAvatarW(
-                                  externalRadius: Offset(88, 88),
-                                  internalRadius: Offset(82, 82),
-                                  nameAvatar: widget.user.name.substring(0, 1),
-                                  isCompany: false,
-                                  sizeText: 40,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SliverPersistentHeader(
-                        pinned: true,
-                        floating: true,
-                        delegate: MyDelegate(
-                          TabBar(
-                            controller: _tabController,
-                            labelColor: Colors.black,
-                            isScrollable: true,
-                            physics: BouncingScrollPhysics(),
-                            padding: EdgeInsets.only(left: 24),
-                            unselectedLabelColor: Colors.grey,
-                            indicator: _customUnderlineIndicator(),
-                            indicatorColor: ColorStyle.darkPurple,
-                            indicatorWeight: 0,
-                            labelStyle: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w600),
-                            tabs: [
-                              Tab(text: 'Reseñas'),
-                              Tab(text: 'Comentarios'),
-                              Tab(text: 'Mis me gusta'),
-                            ],
-                          ),
-                        )),
-                  ];
-                },
-                body: BlocListener<FeedBloc, FeedState>(
-                  listener: (BuildContext context, state) {
-                    if (state is FeedLoaded) {
-                      // Actualizar la lista de reseñas si alguna de ellas ha cambiado en el feed
-                      _updateReviewsIfChanged(state.reviews);
-                    }
-                  },
-                  child: CustomScrollView(
-                    physics: BouncingScrollPhysics(),
-                    slivers: [
-                      isLoading
-                          ? const SliverToBoxAdapter(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 96),
-                                child: Center(
-                                    child:
-                                        CircularProgressIndicator.adaptive()),
-                              ),
-                            )
-                          : reviews.isEmpty
-                              ? const SliverToBoxAdapter(
-                                  child: Padding(
-                                      padding: EdgeInsets.only(top: 96),
-                                      child: Center(
-                                        child: Text(
-                                          'Parece que no hay data',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: "Montserrat",
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w400),
+                                            PressTransform(
+                                              onPressed: () {},
+                                              child: Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 16),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 10),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    border: Border.all(
+                                                        color: ColorStyle
+                                                            .borderGrey)),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      "Editar Perfil",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Montserrat'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      )),
-                                )
-                              : SliverPadding(
-                                  padding: EdgeInsets.only(bottom: 128),
-                                  sliver: SliverList(
-                                    delegate: SliverChildBuilderDelegate(
-                                      childCount: reviews
-                                          .length, // número de items en la lista
-                                      (BuildContext context, int index) {
-                                        print(index);
-                                        return ReviewCard(
-                                          showBusiness: true,
-                                          review: reviews[index],
-                                          onFollowUser: () async {
-                                            // _followUser(reviews[index]);
-                                          },
-                                          onFollowBusinnes: () {
-                                            _followBusiness(reviews[index]);
-                                          },
-                                          onLike: () {
-                                            _likeReview(reviews[index]);
-                                          },
-                                          onComment: () async {
-                                            final userBloc =
-                                                BlocProvider.of<UserBloc>(
-                                                    context);
-                                            final userState = userBloc.state;
-                                            if (userState is UserLoaded) {
-                                              Map<String, dynamic>? response =
-                                                  await showModalBottomSheet(
-                                                      context: context,
-                                                      isScrollControlled: true,
-                                                      useRootNavigator: true,
-                                                      barrierColor:
-                                                          const Color.fromRGBO(
-                                                              0, 0, 0, 0.1),
-                                                      shape:
-                                                          const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  20.0),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  20.0),
-                                                        ),
-                                                      ),
-                                                      builder: (context) =>
-                                                          BackdropFilter(
-                                                              filter: ImageFilter
-                                                                  .blur(
-                                                                      sigmaX: 6,
-                                                                      sigmaY:
-                                                                          6),
-                                                              child:
-                                                                  CommentBottomSheet(
-                                                                user: userState
-                                                                    .user,
-                                                                name: reviews[
-                                                                        index]
-                                                                    .user
-                                                                    .name,
-                                                                lastName: reviews[
-                                                                        index]
-                                                                    .user
-                                                                    .lastName,
-                                                                content: reviews[
-                                                                        index]
-                                                                    .content,
-                                                              )));
-
-                                              if (response != null) {
-                                                addCommentToReview(
-                                                  reviews[index].idReview,
-                                                );
-                                                feedBloc.add(AddComment(
-                                                    content:
-                                                        response['content'],
-                                                    reviewId: reviews[index]
-                                                        .idReview));
-                                              }
-                                            }
-                                          },
-                                        );
-                                      },
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              FeatherIcons.calendar,
+                                              size: 18,
+                                              color: ColorStyle.textGrey,
+                                            ),
+                                            SizedBox(
+                                              width: 4,
+                                            ),
+                                            Text(
+                                              widget.user
+                                                  .getFormattedCreationDate(),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 14,
+                                                  color: ColorStyle.textGrey,
+                                                  fontFamily: 'Montserrat'),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                    ],
+                                Positioned(
+                                  top: 56,
+                                  left: 16,
+                                  child: CircularAvatarW(
+                                    externalRadius: Offset(88, 88),
+                                    internalRadius: Offset(82, 82),
+                                    nameAvatar:
+                                        widget.user.name.substring(0, 1),
+                                    isCompany: false,
+                                    sizeText: 40,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SliverPersistentHeader(
+                          pinned: true,
+                          floating: true,
+                          delegate: MyDelegate(
+                            TabBar(
+                              controller: _tabController,
+                              labelColor: Colors.black,
+                              isScrollable: true,
+                              physics: BouncingScrollPhysics(),
+                              padding: EdgeInsets.only(left: 24),
+                              unselectedLabelColor: Colors.grey,
+                              indicator: _customUnderlineIndicator(),
+                              indicatorColor: ColorStyle.darkPurple,
+                              indicatorWeight: 0,
+                              labelStyle: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w600),
+                              tabs: [
+                                Tab(text: 'Reseñas'),
+                                Tab(text: 'Comentarios'),
+                                Tab(text: 'Mis me gusta'),
+                              ],
+                            ),
+                          )),
+                    ];
+                  },
+                  body: BlocListener<FeedBloc, FeedState>(
+                    listener: (BuildContext context, state) {
+                      if (state is FeedLoaded) {
+                        // Actualizar la lista de reseñas si alguna de ellas ha cambiado en el feed
+                        _updateReviewsIfChanged(state.reviews);
+                      }
+                    },
+                    child: CustomScrollView(
+                      physics: BouncingScrollPhysics(),
+                      slivers: [
+                        isLoading
+                            ? const SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 96),
+                                  child: Center(
+                                      child:
+                                          CircularProgressIndicator.adaptive()),
+                                ),
+                              )
+                            : reviews.isEmpty
+                                ? const SliverToBoxAdapter(
+                                    child: Padding(
+                                        padding: EdgeInsets.only(top: 96),
+                                        child: Center(
+                                          child: Text(
+                                            'Parece que no hay data',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontFamily: "Montserrat",
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        )),
+                                  )
+                                : SliverPadding(
+                                    padding: EdgeInsets.only(bottom: 128),
+                                    sliver: SliverList(
+                                      delegate: SliverChildBuilderDelegate(
+                                        childCount: reviews
+                                            .length, // número de items en la lista
+                                        (BuildContext context, int index) {
+                                          print(index);
+                                          return ReviewCard(
+                                            showBusiness: true,
+                                            review: reviews[index],
+                                            onFollowUser: () async {
+                                              // _followUser(reviews[index]);
+                                            },
+                                            onFollowBusinnes: () {
+                                              _followBusiness(reviews[index]);
+                                            },
+                                            onLike: () {
+                                              _likeReview(reviews[index]);
+                                            },
+                                            onComment: () async {
+                                              final userBloc =
+                                                  BlocProvider.of<UserBloc>(
+                                                      context);
+                                              final userState = userBloc.state;
+                                              if (userState is UserLoaded) {
+                                                Map<String, dynamic>? response =
+                                                    await showModalBottomSheet(
+                                                        context: context,
+                                                        isScrollControlled:
+                                                            true,
+                                                        useRootNavigator: true,
+                                                        barrierColor:
+                                                            const Color
+                                                                .fromRGBO(
+                                                                0, 0, 0, 0.1),
+                                                        shape:
+                                                            const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    20.0),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    20.0),
+                                                          ),
+                                                        ),
+                                                        builder: (context) =>
+                                                            BackdropFilter(
+                                                                filter: ImageFilter
+                                                                    .blur(
+                                                                        sigmaX:
+                                                                            6,
+                                                                        sigmaY:
+                                                                            6),
+                                                                child:
+                                                                    CommentBottomSheet(
+                                                                  user:
+                                                                      userState
+                                                                          .user,
+                                                                  name: reviews[
+                                                                          index]
+                                                                      .user
+                                                                      .name,
+                                                                  lastName: reviews[
+                                                                          index]
+                                                                      .user
+                                                                      .lastName,
+                                                                  content: reviews[
+                                                                          index]
+                                                                      .content,
+                                                                )));
+
+                                                if (response != null) {
+                                                  addCommentToReview(
+                                                    reviews[index].idReview,
+                                                  );
+                                                  feedBloc.add(AddComment(
+                                                      content:
+                                                          response['content'],
+                                                      reviewId: reviews[index]
+                                                          .idReview));
+                                                }
+                                              }
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

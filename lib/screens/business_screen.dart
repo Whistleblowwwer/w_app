@@ -14,6 +14,7 @@ import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/screens/actions/comments_screen.dart';
+import 'package:w_app/screens/add/add_review.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
@@ -31,6 +32,7 @@ class BusinessScreen extends StatefulWidget {
 class _BusinessScreenState extends State<BusinessScreen> {
   late Future<List<Review>> futureListReview;
   late FeedBloc _feedBloc;
+  late UserBloc _userBloc;
   List<Review> reviews = [];
   bool isLoading = true;
 
@@ -41,6 +43,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
     // futureListReview =
     //     ApiService().getBusinessReviews(widget.business.idBusiness);
     _feedBloc = BlocProvider.of<FeedBloc>(context);
+    _userBloc = BlocProvider.of<UserBloc>(context);
     _loadReviews();
   }
 
@@ -125,7 +128,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
   @override
   Widget build(BuildContext context) {
     final sizeW = MediaQuery.of(context).size.width / 100;
-    // final sizeH = MediaQuery.of(context).size.height / 100;
+    final sizeH = MediaQuery.of(context).size.height / 100;
     return Scaffold(
       body: BlocListener<FeedBloc, FeedState>(
         listener: (BuildContext context, state) {
@@ -136,310 +139,364 @@ class _BusinessScreenState extends State<BusinessScreen> {
         },
         child: Container(
           width: sizeW * 100,
-          height: double.maxFinite,
-          child: Stack(
-            children: [
-              CustomScrollView(
-                physics: BouncingScrollPhysics(),
-                slivers: [
-                  const SliverPadding(
-                    padding: EdgeInsets.only(top: 102),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      height: 132,
-                      width: double.maxFinite,
-                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                            Color.fromRGBO(255, 255, 255, 0),
-                            Color.fromRGBO(0, 0, 0, 0.3)
-                          ])),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  widget.business.name,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                      fontFamily: 'Montserrat'),
-                                ),
-                                Text(
-                                  widget.business.city,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                      fontFamily: 'Montserrat'),
-                                ),
-                                Row(
+          height: sizeH * 100,
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                SizedBox(
+                  width: sizeW * 100,
+                  height: sizeH * 100,
+                  child: CustomScrollView(
+                    physics: BouncingScrollPhysics(),
+                    slivers: [
+                      const SliverPadding(
+                        padding: EdgeInsets.only(top: 102),
+                      ),
+                      SliverToBoxAdapter(
+                        child: Container(
+                          height: 132,
+                          width: double.maxFinite,
+                          padding:
+                              EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                          decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                Color.fromRGBO(255, 255, 255, 0),
+                                Color.fromRGBO(0, 0, 0, 0.3)
+                              ])),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    RatingBar.builder(
-                                      maxRating: 5,
-                                      itemSize: 24,
-                                      initialRating:
-                                          widget.business.averageRating,
-                                      glowColor: ColorStyle.lightGrey,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      unratedColor: ColorStyle.lightGrey,
-                                      ignoreGestures: true,
-                                      allowHalfRating: true,
-                                      itemCount: 5,
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 0.5),
-                                      itemBuilder: (context, _) => Icon(
-                                        Icons.star,
-                                        color: ColorStyle.solidBlue,
-                                      ),
-                                      onRatingUpdate: (rating) {},
-                                    ),
                                     Text(
-                                      "  (${widget.business.averageRating})",
+                                      widget.business.name,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: ColorStyle.lightGrey,
-                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
                                           fontFamily: 'Montserrat'),
+                                    ),
+                                    Text(
+                                      widget.business.city,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                          fontFamily: 'Montserrat'),
+                                    ),
+                                    Row(
+                                      children: [
+                                        RatingBar.builder(
+                                          maxRating: 5,
+                                          itemSize: 24,
+                                          initialRating:
+                                              widget.business.averageRating,
+                                          glowColor: ColorStyle.lightGrey,
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          unratedColor: ColorStyle.lightGrey,
+                                          ignoreGestures: true,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 0.5),
+                                          itemBuilder: (context, _) => Icon(
+                                            Icons.star,
+                                            color: ColorStyle.solidBlue,
+                                          ),
+                                          onRatingUpdate: (rating) {},
+                                        ),
+                                        Text(
+                                          "  (${widget.business.averageRating})",
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              color: ColorStyle.lightGrey,
+                                              fontSize: 14,
+                                              fontFamily: 'Montserrat'),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
-                          PressTransform(
-                            onPressed: () {
-                              _feedBloc.add(
-                                  FollowBusiness(widget.business.idBusiness));
-                              _followBusiness();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(left: 16),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: ColorStyle.lightGrey,
                               ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    widget.business.isFollowed
-                                        ? "Siguiendo"
-                                        : "Seguir",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                        color: widget.business.isFollowed
-                                            ? Colors.black
-                                            : ColorStyle.solidBlue,
-                                        fontFamily: 'Montserrat'),
+                              PressTransform(
+                                onPressed: () {
+                                  _feedBloc.add(FollowBusiness(
+                                      widget.business.idBusiness));
+                                  _followBusiness();
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 16),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: ColorStyle.lightGrey,
                                   ),
-                                  // Icon(
-                                  //   widget.business.followed
-                                  //       ? FeatherIcons.userCheck
-                                  //       : FeatherIcons.userPlus,
-                                  //   color: ColorStyle.darkPurple,
-                                  //   size: 18,
-                                  // ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  isLoading
-                      ? const SliverToBoxAdapter(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 96),
-                            child: Center(
-                                child: CircularProgressIndicator.adaptive()),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        widget.business.isFollowed
+                                            ? "Siguiendo"
+                                            : "Seguir",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                            color: widget.business.isFollowed
+                                                ? Colors.black
+                                                : ColorStyle.solidBlue,
+                                            fontFamily: 'Montserrat'),
+                                      ),
+                                      // Icon(
+                                      //   widget.business.followed
+                                      //       ? FeatherIcons.userCheck
+                                      //       : FeatherIcons.userPlus,
+                                      //   color: ColorStyle.darkPurple,
+                                      //   size: 18,
+                                      // ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      : reviews.isEmpty
+                        ),
+                      ),
+                      isLoading
                           ? const SliverToBoxAdapter(
                               child: Padding(
-                                  padding: EdgeInsets.only(top: 96),
-                                  child: Center(
-                                    child: Text(
-                                      'Parece que no hay data',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontFamily: "Montserrat",
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  )),
-                            )
-                          : SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                childCount: reviews
-                                    .length, // número de items en la lista
-                                (BuildContext context, int index) {
-                                  print(index);
-                                  return ReviewCard(
-                                    showBusiness: false,
-                                    review: reviews[index],
-                                    onFollowUser: () async {
-                                      _feedBloc.add(FollowUser(reviews[index]));
-                                      _followUser(reviews[index]);
-                                    },
-                                    onFollowBusinnes: () {
-                                      _feedBloc.add(FollowBusiness(
-                                          widget.business.idBusiness));
-                                      _followBusiness();
-                                    },
-                                    onLike: () {
-                                      // Call the API to update the 'like' status
-                                      _feedBloc.add(LikeReview(reviews[index]));
-                                      _likeReview(reviews[index]);
-                                    },
-                                    onComment: () async {
-                                      final userBloc =
-                                          BlocProvider.of<UserBloc>(context);
-                                      final userState = userBloc.state;
-                                      if (userState is UserLoaded) {
-                                        Map<String, dynamic>? response =
-                                            await showModalBottomSheet(
-                                                context: context,
-                                                isScrollControlled: true,
-                                                useRootNavigator: true,
-                                                barrierColor:
-                                                    const Color.fromRGBO(
-                                                        0, 0, 0, 0.1),
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(20.0),
-                                                    topRight:
-                                                        Radius.circular(20.0),
-                                                  ),
-                                                ),
-                                                builder: (context) =>
-                                                    BackdropFilter(
-                                                        filter:
-                                                            ImageFilter.blur(
-                                                                sigmaX: 6,
-                                                                sigmaY: 6),
-                                                        child:
-                                                            CommentBottomSheet(
-                                                          user: userState.user,
-                                                          name: reviews[index]
-                                                              .user
-                                                              .name,
-                                                          lastName:
-                                                              reviews[index]
-                                                                  .user
-                                                                  .lastName,
-                                                          content:
-                                                              reviews[index]
-                                                                  .content,
-                                                        )));
-
-                                        if (response != null) {
-                                          _feedBloc.add(AddComment(
-                                              content: response['content'],
-                                              reviewId: response['idReview']));
-                                        }
-                                      }
-                                    },
-                                  );
-                                },
+                                padding: EdgeInsets.only(top: 96),
+                                child: Center(
+                                    child:
+                                        CircularProgressIndicator.adaptive()),
                               ),
                             )
-                ],
-              ),
-              Positioned(
-                  bottom: 86,
-                  child: Container(
-                    width: sizeW * 100,
-                    color: Colors.white,
-                    padding: EdgeInsets.only(
-                        bottom: 16, top: 16, left: 24, right: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Escribe una reseña a ${widget.business.name}',
-                            maxLines: 1,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                fontFamily: 'Montserrat'),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 4,
-                        ),
-                        SvgPicture.asset(
-                          'assets/images/icons/Whistle.svg',
-                          width: 32,
-                          height: 32,
-                          colorFilter: ColorFilter.mode(
-                              ColorStyle.darkPurple, BlendMode.srcIn),
-                        ),
-                      ],
-                    ),
-                  )),
-              Positioned(
-                top: 0,
-                child: Container(
-                  width: sizeW * 100,
-                  height: Platform.isIOS ? 102 : 56,
-                  padding: EdgeInsets.only(bottom: 16),
-                  color: Colors.white,
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      PressTransform(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 16, right: 8),
-                              child: Icon(FeatherIcons.arrowLeft),
-                            ),
-                            Text(
-                              "Empresa",
-                              style: TextStyle(fontFamily: 'Montserrat'),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8, right: 16),
-                        child: Icon(FeatherIcons.moreHorizontal),
-                      )
+                          : reviews.isEmpty
+                              ? const SliverToBoxAdapter(
+                                  child: Padding(
+                                      padding: EdgeInsets.only(top: 96),
+                                      child: Center(
+                                        child: Text(
+                                          'Parece que no hay data',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontFamily: "Montserrat",
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      )),
+                                )
+                              : SliverList(
+                                  delegate: SliverChildBuilderDelegate(
+                                    childCount: reviews
+                                        .length, // número de items en la lista
+                                    (BuildContext context, int index) {
+                                      print(index);
+                                      return ReviewCard(
+                                        showBusiness: false,
+                                        review: reviews[index],
+                                        onFollowUser: () async {
+                                          _feedBloc
+                                              .add(FollowUser(reviews[index]));
+                                          _followUser(reviews[index]);
+                                        },
+                                        onFollowBusinnes: () {
+                                          _feedBloc.add(FollowBusiness(
+                                              widget.business.idBusiness));
+                                          _followBusiness();
+                                        },
+                                        onLike: () {
+                                          // Call the API to update the 'like' status
+                                          _feedBloc
+                                              .add(LikeReview(reviews[index]));
+                                          _likeReview(reviews[index]);
+                                        },
+                                        onComment: () async {
+                                          final userBloc =
+                                              BlocProvider.of<UserBloc>(
+                                                  context);
+                                          final userState = userBloc.state;
+                                          if (userState is UserLoaded) {
+                                            Map<String, dynamic>? response =
+                                                await showModalBottomSheet(
+                                                    context: context,
+                                                    isScrollControlled: true,
+                                                    useRootNavigator: true,
+                                                    barrierColor:
+                                                        const Color.fromRGBO(
+                                                            0, 0, 0, 0.1),
+                                                    shape:
+                                                        const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(
+                                                                20.0),
+                                                        topRight:
+                                                            Radius.circular(
+                                                                20.0),
+                                                      ),
+                                                    ),
+                                                    builder: (context) =>
+                                                        BackdropFilter(
+                                                            filter: ImageFilter
+                                                                .blur(
+                                                                    sigmaX: 6,
+                                                                    sigmaY: 6),
+                                                            child:
+                                                                CommentBottomSheet(
+                                                              user: userState
+                                                                  .user,
+                                                              name:
+                                                                  reviews[index]
+                                                                      .user
+                                                                      .name,
+                                                              lastName:
+                                                                  reviews[index]
+                                                                      .user
+                                                                      .lastName,
+                                                              content:
+                                                                  reviews[index]
+                                                                      .content,
+                                                            )));
+
+                                            if (response != null) {
+                                              _feedBloc.add(AddComment(
+                                                  content: response['content'],
+                                                  reviewId:
+                                                      response['idReview']));
+                                            }
+                                          }
+                                        },
+                                      );
+                                    },
+                                  ),
+                                )
                     ],
                   ),
                 ),
-              )
-            ],
+                Positioned(
+                    bottom: 86,
+                    child: Container(
+                      width: sizeW * 100,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.symmetric(
+                              horizontal: BorderSide(
+                                  color: ColorStyle.borderGrey, width: 0.5))),
+                      padding: EdgeInsets.only(
+                          bottom: 16, top: 16, left: 16, right: 16),
+                      child: PressTransform(
+                        onPressed: () {
+                          final userState = _userBloc.state;
+                          if (userState is UserLoaded) {
+                            showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                barrierColor:
+                                    const Color.fromRGBO(0, 0, 0, 0.1),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20.0),
+                                    topRight: Radius.circular(20.0),
+                                  ),
+                                ),
+                                builder: (context) => BackdropFilter(
+                                    filter:
+                                        ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                                    child: CombinedBottomSheet(
+                                      user: userState.user,
+                                      business: widget.business,
+                                    )));
+                          }
+                        },
+                        child: Container(
+                          width: double.maxFinite,
+                          height: 40,
+                          padding: EdgeInsets.only(left: 16, right: 16),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: ColorStyle.lightGrey),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Escribe una reseña a ${widget.business.name}',
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      fontFamily: 'Montserrat'),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              SvgPicture.asset(
+                                'assets/images/icons/Whistle.svg',
+                                width: 32,
+                                height: 32,
+                                colorFilter: ColorFilter.mode(
+                                    ColorStyle.darkPurple, BlendMode.srcIn),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )),
+                Positioned(
+                  top: 0,
+                  child: Container(
+                    width: sizeW * 100,
+                    height: Platform.isIOS ? 102 : 56,
+                    padding: EdgeInsets.only(bottom: 16),
+                    color: Colors.white,
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        PressTransform(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 16, right: 8),
+                                child: Icon(FeatherIcons.arrowLeft),
+                              ),
+                              Text(
+                                "Empresa",
+                                style: TextStyle(fontFamily: 'Montserrat'),
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8, right: 16),
+                          child: Icon(FeatherIcons.moreHorizontal),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

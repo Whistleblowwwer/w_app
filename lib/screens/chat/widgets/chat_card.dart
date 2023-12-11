@@ -44,46 +44,50 @@ class ChatCard extends StatelessWidget {
               print("Token no provisto o no valido");
             }
           },
-          child: Row(children: [
-            CircularAvatarW(
-                externalRadius: Offset(56, 56),
-                internalRadius: Offset(48, 48),
-                sizeText: 24,
-                nameAvatar: name.substring(0, 1) + lastName.substring(0, 1),
-                isCompany: false),
-            SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '$name $lastName',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'Montserrat',
-                    ),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircularAvatarW(
+                    externalRadius: Offset(56, 56),
+                    internalRadius: Offset(48, 48),
+                    sizeText: 24,
+                    nameAvatar: name.substring(0, 1) + lastName.substring(0, 1),
+                    isCompany: false),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '$name $lastName',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                      Text(
+                        lastMessage,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                      Text(
+                        lastMessageTime.substring(11, 16),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    lastMessage,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                  Text(
-                    lastMessageTime.substring(11, 16),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Spacer()
-          ])),
+                ),
+              ])),
     );
   }
 }

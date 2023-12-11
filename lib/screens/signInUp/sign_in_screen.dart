@@ -166,7 +166,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                         TextSpan(
-                            text: 'Registrate',
+                            text: 'Regístrate',
                             style: TextStyle(
                                 letterSpacing: 0.02 * 1,
                                 fontWeight: FontWeight.w600,

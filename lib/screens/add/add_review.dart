@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
@@ -25,8 +27,9 @@ import 'package:w_app/widgets/snackbar.dart';
 
 class CombinedBottomSheet extends StatefulWidget {
   final User user;
+  final Business? business;
 
-  const CombinedBottomSheet({super.key, required this.user});
+  const CombinedBottomSheet({super.key, required this.user, this.business});
   @override
   _CombinedBottomSheetState createState() => _CombinedBottomSheetState();
 }
@@ -43,6 +46,8 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
 
   Business? selectedCompany;
   String searchTerm = '';
+
+  List<File> images = [];
 
 //AddCompany
   // String? selectedCountry;
@@ -69,6 +74,8 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
     showReviewPageNotifier.value = true;
     _userBloc = BlocProvider.of<UserBloc>(context);
 
+    selectedCompany = widget.business;
+
     showReviewPageNotifier.addListener(() {
       if (showReviewPageNotifier.value) {
         focusNodeReview.requestFocus();
@@ -80,6 +87,10 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
           focusNodeSearch.requestFocus();
         }
       }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(focusNodeReview);
     });
   }
 
@@ -111,12 +122,9 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
   }
 
   Widget _reviewPage(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(focusNodeReview);
-    });
     return Form(
       key: _formKeyReview,
-      child: Container(
+      child: SizedBox(
         width: double.maxFinite,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,10 +224,71 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                 )),
             Padding(
               padding: const EdgeInsets.only(left: 16, bottom: 8),
-              child: SvgPicture.asset(
-                'assets/images/icons/addImage.svg',
-                width: 24,
-                height: 24,
+              child: Row(
+                children: List.generate(
+                  images.length + 1,
+                  (index) {
+                    if (index == 0) {
+                      return PressTransform(
+                        onPressed: () async {
+                          FocusScope.of(context).unfocus();
+                          try {
+                            final ImagePicker picker = ImagePicker();
+                            final XFile? image = await picker.pickImage(
+                              source: ImageSource.gallery,
+                              imageQuality: 100,
+                            );
+                            if (image != null) {
+                              File file = File(image.path);
+
+                              setState(() {
+                                images.add(file);
+                              });
+                              // _uploadFile(
+                              //     file); // Llama a la función para subir el archivo
+                            }
+                          } catch (e) {
+                            debugPrint(e.toString());
+                          }
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            focusNodeReview.requestFocus();
+                          });
+                        },
+                        child: images.isEmpty
+                            ? SvgPicture.asset(
+                                'assets/images/icons/addImage.svg',
+                                width: 24,
+                                height: 24,
+                              )
+                            : RoundedDotterRectangleBorder(
+                                width: 48,
+                                height: 64,
+                                color: ColorStyle.borderGrey,
+                                borderRadius: 8,
+                                borderWidth: 1,
+                                icon: SvgPicture.asset(
+                                  'assets/images/icons/addImage.svg',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                              ),
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            images.reversed.toList()[index - 1].path,
+                            fit: BoxFit.cover,
+                            width: 48,
+                            height: 64,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
               ),
             ),
             Padding(

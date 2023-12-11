@@ -155,7 +155,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your last name';
+                                return 'Please enter your name';
                               }
                               return null;
                             },
@@ -198,7 +198,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your last name';
+                                return 'Please enter your phone number';
                               }
                               return null;
                             },
@@ -287,7 +287,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       obscureText: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a password';
+                          return 'Please enter a confirm password';
                         }
                         return null;
                       },
