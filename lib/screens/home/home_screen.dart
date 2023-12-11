@@ -95,11 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   horizontal: 8, vertical: 4),
                               margin: EdgeInsets.only(right: 8),
                               decoration: BoxDecoration(
-                                  color: ColorStyle.lightGrey,
+                                  color: ColorStyle.sectionBase,
                                   borderRadius: BorderRadius.circular(8)),
                               child: Text(
                                 "Abogados",
-                                style: TextStyle(fontFamily: 'Montserrat'),
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
@@ -116,28 +118,61 @@ class _HomeScreenState extends State<HomeScreen> {
                                   horizontal: 8, vertical: 4),
                               margin: EdgeInsets.only(right: 16),
                               decoration: BoxDecoration(
-                                  color: ColorStyle.lightGrey,
+                                  color: ColorStyle.sectionBase,
                                   borderRadius: BorderRadius.circular(8)),
-                              child: Text(
+                              child: const Text(
                                 "Asesores",
-                                style: TextStyle(fontFamily: 'Montserrat'),
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
                           InkWell(
-                            child: Icon(FeatherIcons.messageCircle),
                             onTap: () {
-                              // Navegar a otra pantalla
-                              Navigator.of(context,rootNavigator: true).push(
-                                MaterialPageRoute(
-                                  settings: RouteSettings(),
-                                  builder: (context)=>ChatPage())
-                              );
-                              // Navigator.push(context, 
-                              // MaterialPageRoute(
-                              //   builder: (context) => ChatPage()));
+                              final userState = _userBloc.state;
+                              if (userState is UserLoaded) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .push(MaterialPageRoute(
+                                        settings: RouteSettings(),
+                                        builder: (context) => ChatPage(
+                                              user: userState.user,
+                                            )));
+                              }
                             },
-                          )
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 2),
+                                  child: Icon(
+                                    FeatherIcons.mail,
+                                    size: 26,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: Container(
+                                      width: 14,
+                                      height: 12,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: ColorStyle.darkPurple,
+                                      ),
+                                      child: Text(
+                                        "1",
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600),
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       )
                     ],

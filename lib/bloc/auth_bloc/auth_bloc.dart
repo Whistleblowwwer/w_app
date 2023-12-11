@@ -22,6 +22,8 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
   FutureOr<void> _onSignInButtonPressed(
       SignInButtonPressed event, Emitter<AuthState> emit) async {
     // emit(AuthLoading());
+    emit(AuthUnauthenticated());
+    await userRepository.deleteToken();
     try {
       final response = await apiService.signIn(event.username, event.password);
 

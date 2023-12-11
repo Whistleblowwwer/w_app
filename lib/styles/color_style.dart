@@ -9,6 +9,7 @@ class ColorStyle {
 
   static const Color darkPurple = Color.fromRGBO(100, 31, 137, 1);
 
+  static const Color purple = Color.fromRGBO(100, 31, 137, 1);
   // Paleta de textos
   static const Color midToneGrey = Color.fromRGBO(136, 136, 136, 1);
   static const Color textGrey = Color.fromRGBO(169, 169, 169, 1);

@@ -52,7 +52,7 @@ class _ReviewPageState extends State<ReviewPage> {
   void dispose() {
     // TODO: implement dispose
     comments.clear();
-    _userBloc.close();
+    // _userBloc.close();
 
     super.dispose();
   }

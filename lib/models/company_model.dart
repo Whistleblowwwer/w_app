@@ -13,8 +13,8 @@ class Business {
   double averageRating;
   int followers;
   bool isFollowed;
-  UserInfo user;
-  Category category;
+  UserInfo? user;
+  Category? category;
 
   Business({
     required this.idBusiness,
@@ -31,16 +31,17 @@ class Business {
     required this.averageRating,
     required this.followers,
     required this.isFollowed,
-    required this.user,
-    required this.category,
+    this.user,
+    this.category,
   });
 
   factory Business.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Business(
       idBusiness: json['_id_business'],
       name: json['name'],
-      entity: json['entity'],
-      address: json['address'],
+      entity: json['entity'] ?? '',
+      address: json['address'] ?? '',
       state: json['state'],
       city: json['city'],
       profilePictureUrl: json['profile_picture_url'],
@@ -48,11 +49,13 @@ class Business {
       isValid: json['is_valid'] ?? false,
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      averageRating: json['average_rating'].toDouble(),
-      followers: json['followers'],
-      isFollowed: json['is_followed'],
-      user: UserInfo.fromJson(json['User']),
-      category: Category.fromJson(json['Category']),
+      averageRating:
+          double.tryParse(json['average_rating']?.toString() ?? '0') ?? 0,
+      followers: json['followers'] ?? 0,
+      isFollowed: json['is_followed'] ?? false,
+      user: json['User'] != null ? UserInfo.fromJson(json['User']) : null,
+      category:
+          json['Category'] != null ? Category.fromJson(json['Category']) : null,
     );
   }
 
@@ -72,8 +75,8 @@ class Business {
       'average_rating': averageRating,
       'followers': followers,
       'is_followed': isFollowed,
-      'User': user.toJson(),
-      'Category': category.toJson(),
+      'User': user?.toJson(),
+      'Category': category?.toJson(),
     };
   }
 }

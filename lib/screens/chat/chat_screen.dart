@@ -1,17 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
-import 'package:w_app/bloc/feed_bloc/feed_state.dart';
-import 'package:w_app/models/review_model.dart';
-import 'package:w_app/screens/chat/inbox_screen.dart';
+import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/chat/widgets/chat_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  final User user;
+  ChatPage({super.key, required this.user});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -20,7 +14,13 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   _ChatPageState();
   dynamic conversations = [];
-  Map<String, dynamic> rsp = {};
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -29,42 +29,47 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> loadChats() async {
-    Map<String, dynamic> user = await ApiService().getUserProfile();
     dynamic conv = await ApiService().getChats();
+    if (!mounted) return;
     setState(() {
       conversations = conv;
-      rsp = user;
     });
     print(conv);
   }
 
   @override
   Widget build(BuildContext context) {
+    final sizeW = MediaQuery.of(context).size.width / 100;
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Text('Mis chats'),
+          title: Text(
+            'Mensajes',
+            style: TextStyle(
+                fontFamily: 'Montserrat', fontWeight: FontWeight.w600),
+          ),
           centerTitle: true,
         ),
-        body: Container(
-            width: double.maxFinite,
+        body: SizedBox(
+            width: sizeW * 100,
             height: double.maxFinite,
             child: Column(children: [
-              Flexible(
+              Expanded(
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
                     if (conversations[index]['Sender']['_id_user'] ==
-                        rsp['user']['_id_user']) {
+                        widget.user.idUser) {
                       return ChatCard(
-                          name:
-                              "${conversations[index]['Receiver']['name']} ${conversations[index]['Receiver']['last_name']}",
+                          name: "${conversations[index]['Receiver']['name']}",
+                          lastName:
+                              "${conversations[index]['Receiver']['last_name']}",
                           lastMessage:
-                              "${conversations[index]['Message']['content']}",
+                              "Tú: ${conversations[index]['Message']['content']}",
                           lastMessageTime:
                               "${conversations[index]['Message']['createdAt']}",
                           photoUrl:
@@ -73,8 +78,9 @@ class _ChatPageState extends State<ChatPage> {
                               "${conversations[index]['Receiver']['_id_user']}");
                     } else {
                       return ChatCard(
-                          name:
-                              "${conversations[index]['Sender']['name']} ${conversations[index]['Sender']['last_name']}",
+                          name: "${conversations[index]['Sender']['name']}",
+                          lastName:
+                              "${conversations[index]['Sender']['last_name']}",
                           lastMessage:
                               "${conversations[index]['Message']['content']}",
                           lastMessageTime:

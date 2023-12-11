@@ -21,6 +21,24 @@ class GradientStyle {
         Color.fromRGBO(39, 110, 241, 1),
       ]);
 
+  LinearGradient accesoryGradient = const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      tileMode: TileMode.repeated,
+      colors: <Color>[
+        Color.fromRGBO(179, 157, 219, 1),
+        Color.fromRGBO(211, 151, 250, 1)
+      ]);
+
+  LinearGradient normalGradient = const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      tileMode: TileMode.repeated,
+      colors: <Color>[
+        Color.fromRGBO(235, 244, 245, 1),
+        Color.fromRGBO(181, 198, 224, 1)
+      ]);
+
   // Gradiente para el icono de Nodoo Control
   LinearGradient grayGradient = const LinearGradient(
       begin: Alignment.topCenter,

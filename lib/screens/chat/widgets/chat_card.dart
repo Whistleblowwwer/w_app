@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/chat/inbox_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
+import 'package:w_app/widgets/circularAvatar.dart';
 
-
-class ChatCard extends StatelessWidget{
+class ChatCard extends StatelessWidget {
   final String name;
+  final String lastName;
   final String lastMessage;
   final String lastMessageTime;
   final String photoUrl;
@@ -16,62 +17,73 @@ class ChatCard extends StatelessWidget{
 
   ChatCard({
     required this.name,
+    required this.lastName,
     required this.lastMessage,
     required this.lastMessageTime,
     required this.photoUrl,
     required this.receiver,
   });
-  
+
   @override
   Widget build(BuildContext context) {
+    final sizeW = MediaQuery.of(context).size.width / 100;
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
+      width: sizeW * 100,
       child: GestureDetector(
-        onTap:  () async {
-          //Obtiene el token
-          String? tk= await UserRepository().getToken();
-          if(tk!=null){
-            //Sacar el token largo, el; corto ya esta
-            Navigator.of(context,rootNavigator: true).push(
-              MaterialPageRoute(
-                settings: RouteSettings(),
-                builder: (context) => InboxScreen(receiver: receiver,token:'$tk')
-              )
-            );
-          }else{
-            print("Token no provisto o no valido");
-          }
-        },
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage: NetworkImage(photoUrl),
-            ),
+          onTap: () async {
+            //Obtiene el token
+            String? tk = await UserRepository().getToken();
+            if (tk != null) {
+              //Sacar el token largo, el; corto ya esta
+              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                  settings: RouteSettings(),
+                  builder: (context) =>
+                      InboxScreen(receiver: receiver, token: '$tk')));
+            } else {
+              print("Token no provisto o no valido");
+            }
+          },
+          child: Row(children: [
+            CircularAvatarW(
+                externalRadius: Offset(56, 56),
+                internalRadius: Offset(48, 48),
+                sizeText: 24,
+                nameAvatar: name.substring(0, 1) + lastName.substring(0, 1),
+                isCompany: false),
             SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: TextStyle(fontSize: 18),
-                ),
-                Text(
-                  lastMessage,
-                  style: TextStyle(fontSize: 14),
-                ),
-                Text(
-                  lastMessageTime.substring(11, 16),
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '$name $lastName',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                  Text(
+                    lastMessage,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                  Text(
+                    lastMessageTime.substring(11, 16),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                ],
+              ),
             ),
             Spacer()
-          ]
-        )
-      ),
+          ])),
     );
   }
-
-  
 }

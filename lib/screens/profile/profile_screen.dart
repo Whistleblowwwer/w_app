@@ -45,6 +45,8 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   void dispose() {
+    _tabController?.dispose();
+
     super.dispose();
   }
 
@@ -62,16 +64,20 @@ class _ProfileScreenState extends State<ProfileScreen>
   Future<void> loadReviews() async {
     try {
       var reviewsList = await ApiService().getUserReviews(widget.user.idUser);
-      setState(() {
-        reviews = reviewsList;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          reviews = reviewsList;
+          isLoading = false;
+        });
+      }
     } catch (e) {
       // Handle the error or set state to show an error message
       showErrorSnackBar(context, e.toString());
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 

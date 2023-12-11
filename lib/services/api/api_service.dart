@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -330,7 +328,7 @@ class ApiService {
     return response.statusCode;
   }
 
-  Future<dynamic> getChats() async{
+  Future<dynamic> getChats() async {
     try {
       var response = await _utils.get('messages/conversations');
       print(response.statusCode);
@@ -347,13 +345,13 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getConversationMessages(String id_receiver) async{
-    try{
+  Future<dynamic> getConversationMessages(String id_receiver) async {
+    try {
       var response = await _utils.get('messages/?_id_receiver=$id_receiver');
-      final List<dynamic> messages=
+      final List<dynamic> messages =
           _utils.handleResponse(response)['messages'];
       return messages;
-    }catch(e) {
+    } catch (e) {
       return Future.error(e);
     }
   }

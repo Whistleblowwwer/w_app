@@ -144,7 +144,6 @@ class AuthHandler extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is AuthAuthenticated) {
-          print(state);
           return StartPage(userRepository: userRepository);
         } else if (state is AuthUnauthenticated || state is AuthError) {
           return SignInScreen();

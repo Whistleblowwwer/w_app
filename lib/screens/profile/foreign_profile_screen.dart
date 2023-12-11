@@ -122,6 +122,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
             alignment: Alignment.bottomCenter,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
                   onTap: () {
@@ -132,15 +133,35 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                     child: Icon(FeatherIcons.arrowLeft),
                   ),
                 ),
-                Text(
-                  '${widget.user.name} ${widget.user.lastName}',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      fontFamily: 'Montserrat'),
+                Expanded(
+                  child: Text(
+                    '${widget.user.name} ${widget.user.lastName}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        fontFamily: 'Montserrat'),
+                  ),
                 ),
+
+                PressTransform(
+                  onPressed: () {
+                    //call to action chat
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(right: 8),
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: ColorStyle.borderGrey)),
+                    child: Icon(
+                      FeatherIcons.mail,
+                      size: 20,
+                    ),
+                  ),
+                )
 
                 // Padding(
                 //   padding: EdgeInsets.only(left: 8, right: 16),
