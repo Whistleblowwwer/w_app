@@ -222,8 +222,9 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                     return null;
                   },
                 )),
-            Padding(
-              padding: const EdgeInsets.only(left: 16, bottom: 8),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.only(left: 16, bottom: 8),
               child: Row(
                 children: List.generate(
                   images.length + 1,
