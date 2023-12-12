@@ -34,9 +34,9 @@ SnackBar customSnackBar(
   );
 }
 
-void showSuccessSnackBar(BuildContext context) {
+void showSuccessSnackBar(BuildContext context, {String? message}) {
   ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
-    'Se agregó una consulta exitosamente',
+    message ?? 'Se agregó una consulta exitosamente',
     Colors.lightGreen,
     Icons.check,
   ));

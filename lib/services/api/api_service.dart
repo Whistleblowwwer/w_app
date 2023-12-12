@@ -67,7 +67,7 @@ class ApiService {
     return response;
   }
 
-  Future<Map<String, dynamic>> commentReview(
+  Future<Comment> commentReview(
       {required String content,
       required String idReview,
       String? idParent}) async {
@@ -84,9 +84,12 @@ class ApiService {
 
     // Realizar la petición POST al endpoint para registrar usuarios
     var response = await _utils.post('comments', body);
+    final comment = await _utils.handleResponse(response)["comment"];
+    print(comment);
+    print(Comment.fromJson(comment));
 
     // Devolver la respuesta procesada
-    return _utils.handleResponse(response);
+    return Comment.fromJson(comment);
   }
 
   Future<Map<String, dynamic>> signIn(String email, String password) async {
@@ -209,6 +212,15 @@ class ApiService {
       print(companyData);
 
       return companyData.map((data) => Review.fromJson(data)).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<int> deleteReview(String idReview) async {
+    try {
+      var response = await _utils.patch('reviews/?_id_review=$idReview', {});
+      return response.statusCode;
     } catch (e) {
       return Future.error(e);
     }
@@ -390,6 +402,15 @@ class ApiServerUtils {
   Future<http.Response> get(String endpoint) async {
     final headers = await _getDefaultHeaders();
     return await http.get(Uri.parse('$baseUrl/$endpoint'), headers: headers);
+  }
+
+  Future<http.Response> patch(String endpoint, Map body) async {
+    final headers = await _getDefaultHeaders();
+    return await http.patch(
+      Uri.parse('$baseUrl/$endpoint'),
+      headers: headers,
+      body: jsonEncode(body),
+    );
   }
 
   Future<http.Response> delete(String endpoint) async {

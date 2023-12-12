@@ -67,7 +67,7 @@ class CommentWidget extends StatelessWidget {
                           bottom: 0,
                           right: 0,
                           child: Visibility(
-                            visible: user.idUser == comment.idUser
+                            visible: user.idUser == comment.user.idUser
                                 ? false
                                 : !comment.user.followed,
                             child: PressTransform(

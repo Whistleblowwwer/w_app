@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_event.dart';
@@ -20,19 +21,34 @@ class FeedBloc extends Bloc<FeedBlocEvent, FeedState> {
     on<FollowUser>(_onFollowUser);
     on<FollowBusiness>(_onFollowBusiness);
     on<AddReview>(_onAddReview);
+    on<DeleteReview>(_onDeleteReview);
   }
 
   FutureOr<void> _onAddReview(AddReview event, Emitter<FeedState> emit) async {
     final currentState = state;
     if (currentState is FeedLoaded) {
       try {
-        // Llamada a la API para agregar la reseña
-        // Actualizar la lista de reseñas con la nueva
         final updatedReviews = List<Review>.from(currentState.reviews)
-          ..add(event.review);
+          ..insert(0, event.review);
+
+        print(event.review);
+        print(updatedReviews);
         emit(FeedLoaded(updatedReviews));
       } catch (e) {
         emit(FeedError('Failed to add review: ${e.toString()}'));
+      }
+    }
+  }
+
+  FutureOr<void> _onDeleteReview(
+      DeleteReview event, Emitter<FeedState> emit) async {
+    final currentState = state;
+    if (currentState is FeedLoaded) {
+      try {
+        final updatedReviews = currentState.deleteReview(event.reviewId);
+        emit(FeedLoaded(updatedReviews));
+      } catch (e) {
+        emit(FeedError('Failed to delete review: ${e.toString()}'));
       }
     }
   }
@@ -142,13 +158,9 @@ class FeedBloc extends Bloc<FeedBlocEvent, FeedState> {
     final currentState = state;
 
     try {
-      final response = await apiService.commentReview(
-          content: event.content, idReview: event.reviewId);
-      final comment = Comment.fromJson(response["comment"]);
-
       if (currentState is FeedLoaded) {
         final updatedReviews =
-            currentState.addCommentToReview(event.reviewId, comment);
+            currentState.addCommentToReview(event.reviewId, event.comment);
         emit(FeedLoaded(updatedReviews));
       }
 

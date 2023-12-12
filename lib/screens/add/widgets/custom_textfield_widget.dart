@@ -49,6 +49,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
         decoration: InputDecoration(
           hintText: 'Escribe algo...',
           contentPadding: const EdgeInsets.only(bottom: 16),
+          errorStyle: TextStyle(
+              fontFamily: 'Montserrat',
+              color: ColorStyle.accentRed,
+              fontSize: 12),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
             borderSide: BorderSide.none,

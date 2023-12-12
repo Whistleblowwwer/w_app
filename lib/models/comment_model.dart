@@ -10,7 +10,7 @@ class Comment extends Equatable {
   final DateTime updatedAt;
   final String idReview;
   final String? idParent;
-  final String idUser;
+
   final int likes;
   final int comments;
   final UserData user;
@@ -25,7 +25,6 @@ class Comment extends Equatable {
       required this.updatedAt,
       required this.idReview,
       this.idParent,
-      required this.idUser,
       required this.comments,
       required this.likes,
       required this.isLiked,
@@ -39,9 +38,8 @@ class Comment extends Equatable {
       isValid: json['is_valid'] ?? false,
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      idReview: json['_id_review'],
-      idParent: json['_id_parent'],
-      idUser: json['_id_user'],
+      idReview: json['_id_review'] ?? json['Review']['_id_review'] ?? '',
+      idParent: json['_id_parent'] ?? '',
       comments: int.tryParse(json['comments']?.toString() ?? '0') ?? 0,
       likes: int.tryParse(json['likes']?.toString() ?? '0') ?? 0,
       isLiked: json['is_liked'] ?? false,
@@ -106,7 +104,6 @@ class Comment extends Equatable {
         updatedAt: updatedAt ?? this.updatedAt,
         idReview: idReview ?? this.idReview,
         idParent: idParent ?? this.idParent,
-        idUser: idUser ?? this.idUser,
         likes: likes ?? this.likes,
         comments: comments ?? this.comments,
         user: user ?? this.user,
@@ -123,7 +120,6 @@ class Comment extends Equatable {
         updatedAt,
         idReview,
         idParent,
-        idUser,
         likes,
         isLiked,
         user,
