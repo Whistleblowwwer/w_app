@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -24,6 +25,8 @@ import 'package:w_app/widgets/snackbar.dart';
 
 class ReviewCard extends StatelessWidget {
   final bool isActive;
+  final bool isActiveBusiness;
+
   final bool? showBusiness;
   final bool isThread;
   final Review review;
@@ -31,16 +34,19 @@ class ReviewCard extends StatelessWidget {
   final Future Function() onComment;
   final VoidCallback onFollowUser;
   final VoidCallback onFollowBusinnes;
+  final VoidCallback? onDelete;
 
   const ReviewCard(
       {Key? key,
       this.showBusiness,
       this.isThread = false,
       this.isActive = true,
+      this.isActiveBusiness = true,
       required this.review,
       required this.onComment,
       required this.onLike,
       required this.onFollowUser,
+      this.onDelete,
       required this.onFollowBusinnes})
       : super(key: key);
 
@@ -62,6 +68,7 @@ class ReviewCard extends StatelessWidget {
                                 onComment: onComment,
                                 onFollowUser: onFollowUser,
                                 onFollowBusiness: onFollowBusinnes,
+                                onDelete: onDelete,
                               )),
                     );
                   }
@@ -137,33 +144,33 @@ class ReviewCard extends StatelessWidget {
                               ),
                             )
                           : const SizedBox.shrink(),
-                      GestureDetector(
-                        onTap: () {
-                          ApiService()
-                              .getBusinessDetail(review.idBusiness)
-                              .then((value) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BusinessScreen(
-                                        business: value,
-                                      )),
-                            );
-                          }, onError: (e) {
-                            showErrorSnackBar(context, e.toString());
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 42,
-                                child: Stack(
-                                  children: [
-                                    CircularAvatarW(
+                      Container(
+                        color: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 42,
+                              child: Stack(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await ApiService()
+                                          .getProfileDetail(review.user.idUser)
+                                          .then((value) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ForeignProfileScreen(value)),
+                                        );
+                                      }, onError: (e) {
+                                        showErrorSnackBar(
+                                            context, e.toString());
+                                      });
+                                    },
+                                    child: CircularAvatarW(
                                       externalRadius: Offset(38, 38),
                                       internalRadius: Offset(34, 34),
                                       nameAvatar:
@@ -171,175 +178,224 @@ class ReviewCard extends StatelessWidget {
                                       isCompany: false,
                                       sizeText: 18,
                                     ),
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      child: Visibility(
-                                        visible: stateUser.user.idUser ==
-                                                review.user.idUser
-                                            ? false
-                                            : !review.user.followed,
-                                        child: PressTransform(
-                                          onPressed: onFollowUser,
-                                          child: Container(
-                                              width: 18,
-                                              height: 18,
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.white),
-                                              child: Icon(
-                                                Icons.add_circle_rounded,
-                                                size: 18,
-                                              )),
-                                        ),
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Visibility(
+                                      visible: stateUser.user.idUser ==
+                                              review.user.idUser
+                                          ? false
+                                          : !review.user.followed,
+                                      child: PressTransform(
+                                        onPressed: onFollowUser,
+                                        child: Container(
+                                            width: 18,
+                                            height: 18,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white),
+                                            child: Icon(
+                                              Icons.add_circle_rounded,
+                                              size: 18,
+                                            )),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Flexible(
-                                child: SizedBox(
-                                  width: double.maxFinite,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
+                            ),
+
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Flexible(
+                              child: SizedBox(
+                                width: double.maxFinite,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            if (isActiveBusiness) {
+                                              ApiService()
+                                                  .getBusinessDetail(
+                                                      review.idBusiness)
+                                                  .then((value) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          BusinessScreen(
+                                                            business: value,
+                                                          )),
+                                                );
+                                              }, onError: (e) {
+                                                showErrorSnackBar(
+                                                    context, e.toString());
+                                              });
+                                            }
+                                          },
+                                          child: Text(
                                             review.business?.name ?? '',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 16,
                                                 fontFamily: 'Montserrat'),
                                           ),
-                                          Visibility(
-                                            visible: showBusiness ?? true
-                                                ? !review.business!.followed
-                                                : false,
-                                            child: PressTransform(
-                                              onPressed: onFollowBusinnes,
-                                              child: const Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: ' • ',
+                                        ),
+                                        Visibility(
+                                          visible: showBusiness ?? true
+                                              ? !review.business!.followed
+                                              : false,
+                                          child: PressTransform(
+                                            onPressed: onFollowBusinnes,
+                                            child: const Text.rich(
+                                              TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: ' • ',
+                                                  ),
+                                                  TextSpan(
+                                                    text: 'Unirte',
+                                                    style: TextStyle(
+                                                      color:
+                                                          ColorStyle.solidBlue,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 16,
                                                     ),
-                                                    TextSpan(
-                                                      text: 'Unirte',
-                                                      style: TextStyle(
-                                                        color: ColorStyle
-                                                            .solidBlue,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 16,
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: 'Montserrat',
-                                                    color: ColorStyle.textGrey,
-                                                    fontSize: 14),
+                                                  )
+                                                ],
                                               ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'Montserrat',
+                                                  color: ColorStyle.textGrey,
+                                                  fontSize: 14),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          await ApiService()
-                                              .getProfileDetail(
-                                                  review.user.idUser)
-                                              .then((value) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ForeignProfileScreen(
-                                                          value)),
-                                            );
-                                          }, onError: (e) {
-                                            showErrorSnackBar(
-                                                context, e.toString());
-                                          });
-                                        },
-                                        child: Text.rich(
-                                          TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text:
-                                                    "@${review.user.name}${review.user.lastName} • ",
-                                              ),
-                                              TextSpan(
-                                                text: review.timeAgo,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Montserrat',
-                                              color: ColorStyle.textGrey,
-                                              fontSize: 14),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              PressTransform(
-                                onPressed: () async {
-                                  await showModalBottomSheet(
-                                    context: context,
-                                    useRootNavigator: true,
-                                    isScrollControlled:
-                                        true, // Permite que el contenido sea desplazable si es necesario
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20.0),
-                                        topRight: Radius.circular(20.0),
+                                      ],
+                                    ),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        await ApiService()
+                                            .getProfileDetail(
+                                                review.user.idUser)
+                                            .then((value) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ForeignProfileScreen(
+                                                        value)),
+                                          );
+                                        }, onError: (e) {
+                                          showErrorSnackBar(
+                                              context, e.toString());
+                                        });
+                                      },
+                                      child: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text:
+                                                  "@${review.user.name}${review.user.lastName} • ",
+                                            ),
+                                            TextSpan(
+                                              text: review.timeAgo,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w300,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Montserrat',
+                                            color: ColorStyle.textGrey,
+                                            fontSize: 14),
                                       ),
                                     ),
-                                    builder: (BuildContext context) {
-                                      return ReviewBottomSheet(
-                                        user: stateUser.user,
-                                        review: review,
-                                        onFollowUser: onFollowUser,
-                                        onFollowBusinnes: onFollowBusinnes,
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Icon(
-                                  FeatherIcons.moreHorizontal,
-                                  size: 18,
+                                  ],
                                 ),
-                              )
-                              // PressTransform(
-                              //   onPressed: () {},
-                              //   child: Container(
-                              //     padding:
-                              //         EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              //     decoration: BoxDecoration(
-                              //       borderRadius: BorderRadius.circular(20),
-                              //       color: ColorStyle.lightGrey,
-                              //     ),
-                              //     child: Icon(FeatherIcons.userCheck),
-                              //   ),
-                              // )
-                            ],
-                          ),
+                              ),
+                            ),
+                            PressTransform(
+                              onPressed: () async {
+                                await showModalBottomSheet(
+                                  context: context,
+                                  useRootNavigator: true,
+                                  isScrollControlled:
+                                      true, // Permite que el contenido sea desplazable si es necesario
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20.0),
+                                      topRight: Radius.circular(20.0),
+                                    ),
+                                  ),
+                                  builder: (BuildContext context) {
+                                    return ReviewBottomSheet(
+                                      user: stateUser.user,
+                                      review: review,
+                                      actions: [
+                                        ReviewAction(
+                                          text: review.business?.followed ??
+                                                  false
+                                              ? "Dejar de seguir a ${review.business?.name ?? ''}"
+                                              : "Seguir a ${review.business?.name ?? ''}",
+                                          onPressed: () {
+                                            onFollowBusinnes();
+                                          },
+                                        ),
+                                        if (stateUser.user.idUser !=
+                                            review.user.idUser)
+                                          ReviewAction(
+                                            text: review.user.followed
+                                                ? "Dejar de seguir a ${review.user.name}"
+                                                : "Seguir a ${review.user.name}",
+                                            onPressed: () {
+                                              onFollowUser();
+                                            },
+                                          ),
+                                        if (stateUser.user.idUser ==
+                                            review.user.idUser)
+                                          ReviewAction(
+                                              color: ColorStyle.accentRed,
+                                              text: "Eliminar",
+                                              onPressed: () {
+                                                onDelete?.call();
+                                              }),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Icon(
+                                FeatherIcons.moreHorizontal,
+                                size: 18,
+                              ),
+                            )
+                            // PressTransform(
+                            //   onPressed: () {},
+                            //   child: Container(
+                            //     padding:
+                            //         EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            //     decoration: BoxDecoration(
+                            //       borderRadius: BorderRadius.circular(20),
+                            //       color: ColorStyle.lightGrey,
+                            //     ),
+                            //     child: Icon(FeatherIcons.userCheck),
+                            //   ),
+                            // )
+                          ],
                         ),
                       ),
                       IntrinsicHeight(
@@ -385,7 +441,11 @@ class ReviewCard extends StatelessWidget {
                                             Row(
                                               children: [
                                                 PressTransform(
-                                                  onPressed: onLike,
+                                                  onPressed: () {
+                                                    HapticFeedback
+                                                        .lightImpact();
+                                                    onLike();
+                                                  },
                                                   child: SvgPicture.asset(
                                                     review.isLiked
                                                         ? 'assets/images/icons/likeActive.svg'
@@ -399,7 +459,11 @@ class ReviewCard extends StatelessWidget {
                                                 ),
 
                                                 PressTransform(
-                                                  onPressed: onComment,
+                                                  onPressed: () async {
+                                                    HapticFeedback
+                                                        .lightImpact();
+                                                    await onComment();
+                                                  },
                                                   child: SvgPicture.asset(
                                                     'assets/images/icons/commentReview.svg',
                                                     width: 20,
@@ -407,33 +471,15 @@ class ReviewCard extends StatelessWidget {
                                                   ),
                                                 ),
                                                 //                                             Flexible(
-                                                //   child: TextField(
-                                                //     controller: controllerReview,
 
-                                                //     maxLines: 8,
-                                                //     minLines: 1,
-
-                                                //     style: const TextStyle(
-                                                //         fontWeight: FontWeight.w400,
-                                                //         fontSize: 14,
-                                                //         fontFamily: 'Montserrat'),
-                                                //     decoration: InputDecoration(
-                                                //       hintText: 'Escribe algo...',
-                                                //       contentPadding: const EdgeInsets.only(bottom: 16),
-                                                //       border: OutlineInputBorder(
-                                                //         borderRadius: BorderRadius.circular(12.0),
-                                                //         borderSide: BorderSide.none,
-                                                //       ),
-                                                //       filled: true,
-                                                //       fillColor: Colors.grey[100],
-                                                //     ),
-                                                //   ),
-                                                // ),
                                                 SizedBox(
                                                   width: 16,
                                                 ),
                                                 PressTransform(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    HapticFeedback
+                                                        .lightImpact();
+                                                  },
                                                   child: SvgPicture.asset(
                                                     'assets/images/icons/send.svg',
                                                     width: 20,
@@ -722,7 +768,7 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                               height: 22,
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 16,
                                           ),
                                           PressTransform(
@@ -733,11 +779,13 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                               height: 22,
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 16,
                                           ),
                                           PressTransform(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              HapticFeedback.lightImpact();
+                                            },
                                             child: SvgPicture.asset(
                                               'assets/images/icons/send.svg',
                                               width: 22,
@@ -825,3 +873,27 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
     );
   }
 }
+
+
+  //   child: TextField(
+                                                //     controller: controllerReview,
+
+                                                //     maxLines: 8,
+                                                //     minLines: 1,
+
+                                                //     style: const TextStyle(
+                                                //         fontWeight: FontWeight.w400,
+                                                //         fontSize: 14,
+                                                //         fontFamily: 'Montserrat'),
+                                                //     decoration: InputDecoration(
+                                                //       hintText: 'Escribe algo...',
+                                                //       contentPadding: const EdgeInsets.only(bottom: 16),
+                                                //       border: OutlineInputBorder(
+                                                //         borderRadius: BorderRadius.circular(12.0),
+                                                //         borderSide: BorderSide.none,
+                                                //       ),
+                                                //       filled: true,
+                                                //       fillColor: Colors.grey[100],
+                                                //     ),
+                                                //   ),
+                                                // ),

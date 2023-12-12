@@ -19,6 +19,7 @@ import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
+import 'package:w_app/widgets/snackbar.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserRepository userRepository;
@@ -212,6 +213,32 @@ class _HomeScreenState extends State<HomeScreen> {
                               onLike: () {
                                 _feedBloc.add(LikeReview(state.reviews[index]));
                               },
+                              onDelete: () async {
+                                try {
+                                  final response = await ApiService()
+                                      .deleteReview(
+                                          state.reviews[index].idReview);
+                                  if (response == 200) {
+                                    _feedBloc.add(DeleteReview(
+                                        state.reviews[index].idReview));
+                                    if (mounted) {
+                                      showSuccessSnackBar(context,
+                                          message:
+                                              "Se elimino la reseña exitosamente");
+                                    }
+                                  } else {
+                                    if (mounted) {
+                                      showErrorSnackBar(context,
+                                          "No se pudo eliminar la reseña");
+                                    }
+                                  }
+                                } catch (e) {
+                                  if (mounted) {
+                                    showErrorSnackBar(context,
+                                        "No se pudo eliminar la reseña");
+                                  }
+                                }
+                              },
                               onComment: () async {
                                 final userState = _userBloc.state;
                                 if (userState is UserLoaded) {
@@ -240,10 +267,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ));
 
                                   if (response != null) {
-                                    _feedBloc.add(AddComment(
-                                        content: response['content'],
-                                        reviewId:
-                                            state.reviews[index].idReview));
+                                    try {
+                                      final commentResponse = await ApiService()
+                                          .commentReview(
+                                              content: response['content'],
+                                              idReview: state
+                                                  .reviews[index].idReview);
+
+                                      _feedBloc.add(AddComment(
+                                          comment: commentResponse,
+                                          reviewId:
+                                              state.reviews[index].idReview));
+                                      return 200;
+                                    } catch (e) {
+                                      if (mounted) {
+                                        showErrorSnackBar(context,
+                                            'No se pudo agregar el comentario');
+                                      }
+                                    }
                                   }
                                 }
                               },

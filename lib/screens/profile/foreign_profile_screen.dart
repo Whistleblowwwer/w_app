@@ -106,6 +106,19 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
     feedBloc.add(FollowBusiness(review.business?.idBusiness ?? ''));
   }
 
+  void addCommentToReview(String reviewId) {
+    setState(() {
+      reviews = reviews.map((review) {
+        if (review.idReview == reviewId) {
+          return review.copyWith(
+            comments: review.comments + 1,
+          );
+        }
+        return review;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final sizeW = MediaQuery.of(context).size.width / 100;
@@ -457,12 +470,32 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                                                 reviews[index]
                                                                     .content,
                                                           )));
-
                                           if (response != null) {
-                                            feedBloc.add(AddComment(
-                                                content: response['content'],
-                                                reviewId:
-                                                    reviews[index].idReview));
+                                            try {
+                                              final commentResponse =
+                                                  await ApiService()
+                                                      .commentReview(
+                                                          content: response[
+                                                              'content'],
+                                                          idReview:
+                                                              reviews[index]
+                                                                  .idReview);
+
+                                              addCommentToReview(
+                                                reviews[index].idReview,
+                                              );
+
+                                              feedBloc.add(AddComment(
+                                                  comment: commentResponse,
+                                                  reviewId:
+                                                      reviews[index].idReview));
+                                              return 200;
+                                            } catch (e) {
+                                              if (mounted) {
+                                                showErrorSnackBar(context,
+                                                    'No se pudo agregar el comentario');
+                                              }
+                                            }
                                           }
                                         }
                                       },

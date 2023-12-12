@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/review_model.dart';
 
 // User Events
@@ -25,6 +26,15 @@ class AddReview extends FeedBlocEvent {
 
   @override
   List<Object> get props => [review];
+}
+
+class DeleteReview extends FeedBlocEvent {
+  final String reviewId;
+
+  DeleteReview(this.reviewId);
+
+  @override
+  List<Object?> get props => [reviewId];
 }
 
 class LikeReview extends FeedBlocEvent {
@@ -56,10 +66,10 @@ class FollowBusiness extends FeedBlocEvent {
 
 class AddComment extends FeedBlocEvent {
   final String reviewId;
-  final String content;
+  final Comment comment;
 
-  AddComment({required this.reviewId, required this.content});
+  AddComment({required this.reviewId, required this.comment});
 
   @override
-  List<Object> get props => [reviewId, content];
+  List<Object> get props => [reviewId, comment];
 }

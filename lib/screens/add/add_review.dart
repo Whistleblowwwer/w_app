@@ -45,6 +45,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
   bool showAddCompanyPage = false;
 
   Business? selectedCompany;
+  bool ratingError = false;
   String searchTerm = '';
 
   List<File> images = [];
@@ -216,7 +217,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                     if (value == null ||
                         value.isEmpty ||
                         selectedCompany == null) {
-                      return 'Por favor escribe una reseña y elige una entidad';
+                      return 'Por favor escribe una reseña y elige un proyecto - empresa';
                     }
                     // Add more validation if necessary
                     return null;
@@ -297,7 +298,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
               child: RatingBar.builder(
                 maxRating: 5,
                 itemSize: 24,
-                initialRating: 0,
+                initialRating: ratingController,
                 glowColor: Colors.white,
 
                 minRating: 1,
@@ -316,6 +317,17 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                     ratingController = rating;
                   });
                 },
+              ),
+            ),
+            Visibility(
+              visible: ratingError,
+              child: Padding(
+                padding: EdgeInsets.only(left: 16, top: 4),
+                child: Text('Agrega un rating al review',
+                    style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: ColorStyle.accentRed,
+                        fontSize: 12)),
               ),
             ),
             Padding(
@@ -430,13 +442,17 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                   const SizedBox(
                                     width: 16,
                                   ),
-                                  Text(
-                                    "Selecciona una entidad",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        color: ColorStyle.textGrey,
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 14),
+                                  Flexible(
+                                    child: Text(
+                                      "Selecciona una proyecto / empresa",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: ColorStyle.textGrey,
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 14),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -445,8 +461,20 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                   ),
                   PressTransform(
                     onPressed: () async {
+                      if (ratingController <= 0.0) {
+                        setState(() {
+                          ratingError = true;
+                        });
+                        return;
+                      } else {
+                        setState(() {
+                          ratingError = false;
+                        });
+                      }
+
                       if (_formKeyReview.currentState!.validate()) {
                         final userState = _userBloc.state;
+
                         if (userState is UserLoaded) {
                           await ApiService()
                               .createReview(
@@ -461,7 +489,9 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                   BlocProvider.of<FeedBloc>(context);
                               Map<String, dynamic> json =
                                   jsonDecode(value.body);
+                              print("--a -sa-- a");
                               print(json['review']);
+                              print(Review.fromJson(json['review']));
                               print("viejo");
                               feedBloc.add(
                                   AddReview(Review.fromJson(json['review'])));

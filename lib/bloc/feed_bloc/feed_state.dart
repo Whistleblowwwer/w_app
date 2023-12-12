@@ -15,6 +15,11 @@ class FeedLoaded extends FeedState {
 
   FeedLoaded(this.reviews);
 
+  // Método para añadir una nueva reseña
+  void addReview(Review review) {
+    reviews.add(review); // Agregar la reseña directamente a la lista existente
+  }
+
   // Método para actualizar una reseña en la lista
   List<Review> like(Review updatedReview) {
     // Implementamos el método updateReview para actualizar la lista de reseñas.
@@ -70,6 +75,11 @@ class FeedLoaded extends FeedState {
       }
       return review;
     }).toList();
+  }
+
+  List<Review> deleteReview(String reviewId) {
+    // Filtramos las reseñas para excluir la que queremos eliminar
+    return reviews.where((review) => review.idReview != reviewId).toList();
   }
 
   @override
