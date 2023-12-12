@@ -8,15 +8,19 @@ import 'package:w_app/services/api/api_service.dart';
 
 class InboxScreen extends StatefulWidget {
   final String receiver;
-  final String token;
+  final String receiverName;
+  final String initials;
+  final IO.Socket socket;
 
   InboxScreen({
     required this.receiver,
-    required this.token,
+    required this.socket,
+    required this.receiverName,
+    required this.initials
   });
 
   @override
-  State<InboxScreen> createState() => _InboxScreenState(receiver, token);
+  State<InboxScreen> createState() => _InboxScreenState(receiver, socket, receiverName, initials);
 }
 
 class _InboxScreenState extends State<InboxScreen> {
@@ -25,12 +29,13 @@ class _InboxScreenState extends State<InboxScreen> {
 
   List<MessageContainer> messages = [];
   String msg = "";
-  late IO.Socket socket;
-  String token;
+  IO.Socket socket;
   String receiver;
+  String receiverName;
+  String initials;
   Map<String, dynamic> user = {};
 
-  _InboxScreenState(this.receiver, this.token);
+  _InboxScreenState(this.receiver, this.socket, this.receiverName, this.initials);
 
   Future<void> loadMessages() async {
     List<dynamic> msg = await ApiService().getConversationMessages(receiver);
@@ -64,8 +69,17 @@ class _InboxScreenState extends State<InboxScreen> {
 
   Future<void> initializeSocket() async {
     Map<String, dynamic> rsp = await ApiService().getUserProfile();
+    socket.on("newMessage", (message) {
+      if (!mounted) return;
+      print("Nuevo mensaje: $message");
+      if (message['_id_sender'] == user['user']['_id_user']) {
+        _addMessage(message['content'], true, DateTime.now());
+      } else {
+        _addMessage(message['content'], false, DateTime.now());
+      }
+    });
     // Configura la conexión con el servidor Socket.IO
-    socket = IO.io(
+    /*socket = IO.io(
       'http://3.135.121.50:4000',
       IO.OptionBuilder()
           .setTransports(['websocket'])
@@ -116,7 +130,7 @@ class _InboxScreenState extends State<InboxScreen> {
     });
 
     // Inicia la conexión
-    socket.connect();
+    socket.connect();*/
     socket.emit('joinConversation',
         {'_id_sender': rsp['user']['_id_user'], '_id_receiver': receiver});
   }
@@ -130,15 +144,8 @@ class _InboxScreenState extends State<InboxScreen> {
 
   @override
   void dispose() {
-    socket.off("newMessage");
-    socket.off("joinConversation");
-    socket.off("error");
-    socket.off("connect_error");
-    socket.off("authentication_error");
-    socket.off("connect");
-    socket.off("disconnect");
-    socket.off("userTyping");
-    socket.disconnect();
+    socket.emit('leaveConversation',
+        {'_id_sender': user['user']['_id_user'], '_id_receiver': receiver});
     super.dispose();
   }
 
@@ -151,7 +158,7 @@ class _InboxScreenState extends State<InboxScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Chat nombre usuario',
+          receiverName,
           style: TextStyle(
             fontFamily: 'Montserrat',
           ),
@@ -204,7 +211,7 @@ class _InboxScreenState extends State<InboxScreen> {
                     padding: EdgeInsets.only(left: 8),
                     child: CircleAvatar(
                       radius: 18,
-                      child: Text("HA",
+                      child: Text(initials.toUpperCase(),
                           style: TextStyle(color: Colors.deepOrangeAccent)),
                       backgroundColor: const Color.fromARGB(255, 254, 223, 214),
                     ),

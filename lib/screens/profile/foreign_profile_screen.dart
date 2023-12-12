@@ -146,8 +146,8 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                 ),
 
                 PressTransform(
-                  onPressed: () {
-                    //call to action chat
+                  onPressed: (){
+                  
                   },
                   child: Container(
                     margin: EdgeInsets.only(right: 8),

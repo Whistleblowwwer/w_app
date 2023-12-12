@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/chat/inbox_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatCard extends StatelessWidget {
   final String name;
@@ -14,6 +16,8 @@ class ChatCard extends StatelessWidget {
   final String lastMessageTime;
   final String photoUrl;
   final String receiver;
+  final String initials;
+  final IO.Socket socket;
 
   ChatCard({
     required this.name,
@@ -22,6 +26,8 @@ class ChatCard extends StatelessWidget {
     required this.lastMessageTime,
     required this.photoUrl,
     required this.receiver,
+    required this.socket,
+    required this.initials
   });
 
   @override
@@ -34,12 +40,12 @@ class ChatCard extends StatelessWidget {
           onTap: () async {
             //Obtiene el token
             String? tk = await UserRepository().getToken();
-            if (tk != null) {
+            if(tk != null) {
               //Sacar el token largo, el; corto ya esta
               Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
                   settings: RouteSettings(),
                   builder: (context) =>
-                      InboxScreen(receiver: receiver, token: '$tk')));
+                      InboxScreen(receiver: receiver, socket: socket, receiverName: name+" "+lastName, initials: initials)));
             } else {
               print("Token no provisto o no valido");
             }
