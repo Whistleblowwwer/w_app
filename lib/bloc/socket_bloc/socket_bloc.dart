@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:w_app/bloc/socket_bloc/socket_event.dart';
 import 'package:w_app/bloc/socket_bloc/socket_state.dart';
 import 'package:w_app/repository/user_repository.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
-  late final io.Socket _socket;
+  late final IO.Socket _socket;
 
   SocketBloc() : super(Initial()) {
     on<Connect>(_onConnect);
@@ -19,9 +19,9 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
   void _onConnect(Connect event, Emitter<SocketState> emit) async {
     String? tk = await UserRepository().getToken();
     if (tk != null) {
-      _socket = io.io(
+      _socket = IO.io(
           'http://3.135.121.50:4000',
-          io.OptionBuilder()
+          IO.OptionBuilder()
               .setTransports(['websocket'])
               .disableAutoConnect()
               .setAuth({'token': tk})
