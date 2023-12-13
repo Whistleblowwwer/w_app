@@ -305,7 +305,7 @@ class ReviewCard extends StatelessWidget {
                                           children: [
                                             TextSpan(
                                               text:
-                                                  "@${review.user.name}${review.user.lastName} • ",
+                                                  "@${review.user.userName} • ",
                                             ),
                                             TextSpan(
                                               text: review.timeAgo,

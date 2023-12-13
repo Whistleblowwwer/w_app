@@ -2,8 +2,8 @@ class User {
   final String idUser;
   final String name;
   final String lastName;
-  final String email;
-  final String phoneNumber;
+  final String? email;
+  final String? phoneNumber;
   final DateTime? birthDate;
   final String? gender;
   final String? profilePictureUrl;
@@ -13,13 +13,14 @@ class User {
   final DateTime? updatedAt;
   final int followings;
   final int followers;
+  final String? userName;
 
   User(
       {required this.idUser,
       required this.name,
       required this.lastName,
-      required this.email,
-      required this.phoneNumber,
+      this.email,
+      this.phoneNumber,
       this.birthDate,
       this.gender,
       this.profilePictureUrl,
@@ -28,7 +29,8 @@ class User {
       this.createdAt,
       this.updatedAt,
       required this.followers,
-      required this.followings});
+      required this.followings,
+      this.userName});
 
   String getFormattedCreationDate() {
     if (createdAt == null) {
@@ -60,25 +62,27 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      idUser: json['_id_user'],
-      name: json['name'],
-      lastName: json['last_name'],
-      email: json['email'],
-      phoneNumber: json['phone_number'],
-      birthDate: json['birth_date'] != null
-          ? DateTime.parse(json['birth_date'])
-          : null,
-      gender: json['gender'],
-      profilePictureUrl: json['profile_picture_url'],
-      role: json['role'],
-      isValid: json['is_valid'],
-      createdAt:
-          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt:
-          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
-      followers: json['followers'] ?? 0,
-      followings: json['followings'] ?? 0,
-    );
+        idUser: json['_id_user'],
+        name: json['name'],
+        lastName: json['last_name'],
+        email: json['email'] ?? '',
+        phoneNumber: json['phone_number'] ?? '',
+        birthDate: json['birth_date'] != null
+            ? DateTime.parse(json['birth_date'])
+            : null,
+        gender: json['gender'],
+        profilePictureUrl: json['profile_picture_url'],
+        role: json['role'],
+        isValid: json['is_valid'],
+        createdAt: json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'])
+            : null,
+        updatedAt: json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'])
+            : null,
+        followers: json['followers'] ?? 0,
+        followings: json['followings'] ?? 0,
+        userName: json['nick_name'] ?? '');
   }
 
   Map<String, dynamic> toJson() {

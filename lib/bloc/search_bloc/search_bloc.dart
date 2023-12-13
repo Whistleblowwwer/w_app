@@ -26,5 +26,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         emit(Searching(event.searchText, cacheSuggestions));
       }
     });
+
+    on<SearchCompleted>((event, emit) {
+      if (event.searchText.isEmpty) {
+        emit(SearchEmpty());
+      } else {
+        final searchTextLowerTrimmed = event.searchText.toLowerCase().trim();
+
+        emit(Searched(searchTextLowerTrimmed));
+      }
+    });
   }
 }

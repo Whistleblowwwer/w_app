@@ -196,6 +196,19 @@ class ApiService {
     }
   }
 
+  Future<List<User>> getSearchUsers(String name) async {
+    try {
+      var response = await _utils.get('users/search?searchTerm=$name');
+
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['users'];
+
+      return companyData.map((data) => User.fromJson(data)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
   Future<List<Review>> getReviews() async {
     List<dynamic> companyData = [];
     try {
