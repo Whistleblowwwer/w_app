@@ -143,7 +143,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 InterceptionTextWidget(
-                  text: "Ingresa tambien con",
+                  text: "Ingresa también con",
                 ),
                 GestureDetector(
                   onTap: () {},

@@ -118,7 +118,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                       height: 16,
                     ),
                     CustomDropdown(
-                      title: 'Categoria',
+                      title: 'Categoría',
                       hintText: 'Seleccionar',
                       list: const [
                         'Inmobiliaria',
