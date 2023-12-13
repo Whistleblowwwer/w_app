@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:w_app/bloc/socket_bloc/socket_event.dart';
 import 'package:w_app/bloc/socket_bloc/socket_state.dart';
+import 'package:w_app/repository/user_repository.dart';
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
   late final io.Socket _socket;
@@ -15,13 +16,17 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     // Agrega manejadores para otros eventos según sea necesario
   }
 
-  void _onConnect(Connect event, Emitter<SocketState> emit) {
-    _socket = io.io(
-        'http://3.135.121.50:4000',
-        io.OptionBuilder()
-            .setTransports(['websocket'])
-            .disableAutoConnect()
-            .build());
+  void _onConnect(Connect event, Emitter<SocketState> emit) async {
+    String? tk = await UserRepository().getToken();
+    if (tk != null) {
+      _socket = io.io(
+          'http://3.135.121.50:4000',
+          io.OptionBuilder()
+              .setTransports(['websocket'])
+              .disableAutoConnect()
+              .setAuth({'token': tk})
+              .build());
+    }
 
     _socket.onConnect((_) => emit(Connected()));
     _socket.onDisconnect((_) => emit(Disconnected()));
