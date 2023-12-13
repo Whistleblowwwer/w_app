@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
+import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
@@ -77,68 +78,74 @@ class StartPageState extends State<StartPage> {
           _authBloc.add(LogOutUser());
         } else if (state is UserLoaded) {}
       },
-      child: Scaffold(
-        extendBody: true,
-        backgroundColor: const Color.fromRGBO(226, 226, 226, 1),
-        body: BlocBuilder<UserBloc, UserState>(
-          builder: (context, state) {
-            if (state is UserLoading) {
-              return const Center(child: CircularProgressIndicator.adaptive());
-            } else if (state is UserLoaded) {
-              return IndexedStack(
-                index: currentIndex,
-                children: [
-                  Navigator(
-                    key: navigatorKeys[0],
-                    onGenerateRoute: (settings) {
-                      return MaterialPageRoute(
-                        builder: (context) => HomeScreen(widget.userRepository),
-                      );
-                    },
-                  ),
-                  Navigator(
-                    key: navigatorKeys[1],
-                    onGenerateRoute: (settings) {
-                      return MaterialPageRoute(
-                        builder: (context) =>
-                            SearchScreen(widget.userRepository),
-                      );
-                    },
-                  ),
-                  Navigator(
-                    key: navigatorKeys[2],
-                    onGenerateRoute: (settings) {
-                      return MaterialPageRoute(
-                        builder: (context) => HomeScreen(widget.userRepository),
-                      );
-                    },
-                  ),
-                  Navigator(
-                    key: navigatorKeys[3],
-                    onGenerateRoute: (settings) {
-                      return MaterialPageRoute(
-                        builder: (context) =>
-                            AlertScreen(widget.userRepository),
-                      );
-                    },
-                  ),
-                  Navigator(
-                    key: navigatorKeys[4],
-                    onGenerateRoute: (settings) {
-                      return MaterialPageRoute(
-                        builder: (context) => ProfileScreen(state.user),
-                      );
-                    },
-                  ),
-                ],
-              );
-            } else if (state is UserError) {
-              return Center(child: Text('Error: ${state.error}'));
-            }
-            return const SizedBox.shrink();
-          },
+      child: BlocProvider(
+        create: (context) => SocketBloc(),
+        child: Scaffold(
+          extendBody: true,
+          backgroundColor: const Color.fromRGBO(226, 226, 226, 1),
+          body: BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              if (state is UserLoading) {
+                return const Center(
+                    child: CircularProgressIndicator.adaptive());
+              } else if (state is UserLoaded) {
+                return IndexedStack(
+                  index: currentIndex,
+                  children: [
+                    Navigator(
+                      key: navigatorKeys[0],
+                      onGenerateRoute: (settings) {
+                        return MaterialPageRoute(
+                          builder: (context) =>
+                              HomeScreen(widget.userRepository),
+                        );
+                      },
+                    ),
+                    Navigator(
+                      key: navigatorKeys[1],
+                      onGenerateRoute: (settings) {
+                        return MaterialPageRoute(
+                          builder: (context) =>
+                              SearchScreen(widget.userRepository),
+                        );
+                      },
+                    ),
+                    Navigator(
+                      key: navigatorKeys[2],
+                      onGenerateRoute: (settings) {
+                        return MaterialPageRoute(
+                          builder: (context) =>
+                              HomeScreen(widget.userRepository),
+                        );
+                      },
+                    ),
+                    Navigator(
+                      key: navigatorKeys[3],
+                      onGenerateRoute: (settings) {
+                        return MaterialPageRoute(
+                          builder: (context) =>
+                              AlertScreen(widget.userRepository),
+                        );
+                      },
+                    ),
+                    Navigator(
+                      key: navigatorKeys[4],
+                      onGenerateRoute: (settings) {
+                        return MaterialPageRoute(
+                          builder: (context) => ProfileScreen(state.user),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              } else if (state is UserError) {
+                return Center(child: Text('Error: ${state.error}'));
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          bottomNavigationBar: _buildBottomNavigationBar(),
         ),
-        bottomNavigationBar: _buildBottomNavigationBar(),
       ),
     );
   }

@@ -15,8 +15,11 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   _ChatPageState();
+
   dynamic conversations = [];
   late IO.Socket socket;
+
+  //   late SocketBloc _socketBloc;
 
   @override
   void dispose() {
@@ -27,14 +30,17 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
+    // _socketBloc = BlocProvider.of<SocketBloc>(context);
+    //     _socketBloc.add(Connect()); // Conectar usando SocketBloc
     initializeSocket();
     loadChats();
+
     super.initState();
   }
 
   Future<void> initializeSocket() async {
     String? tk = await UserRepository().getToken();
-    if(tk != null) {
+    if (tk != null) {
       socket = IO.io(
         'http://3.135.121.50:4000',
         IO.OptionBuilder()
@@ -43,13 +49,13 @@ class _ChatPageState extends State<ChatPage> {
             .setAuth({'token': tk})
             .build(),
       );
-    }else{
+    } else {
       print("Token no provisto o no valido");
     }
 
     // Configura los listeners para manejar eventos
 
-    socket.on('updateConversations',(_) {
+    socket.on('updateConversations', (_) {
       print("Actualizando chats");
       loadChats();
     });
@@ -137,10 +143,9 @@ class _ChatPageState extends State<ChatPage> {
                               "${conversations[index]['Receiver']['profile_picture_url']}",
                           receiver:
                               "${conversations[index]['Receiver']['_id_user']}",
-                          socket:
-                            socket,
-                          initials: "${conversations[index]['Sender']['name'][0]}${conversations[index]['Sender']['last_name'][0]}"
-                          );
+                          socket: socket,
+                          initials:
+                              "${conversations[index]['Sender']['name'][0]}${conversations[index]['Sender']['last_name'][0]}");
                     } else {
                       return ChatCard(
                           name: "${conversations[index]['Sender']['name']}",
@@ -154,10 +159,9 @@ class _ChatPageState extends State<ChatPage> {
                               "${conversations[index]['Sender']['profile_picture_url']}",
                           receiver:
                               "${conversations[index]['Sender']['_id_user']}",
-                          socket:
-                            socket,
-                          initials: "${conversations[index]['Receiver']['name'][0]}${conversations[index]['Receiver']['last_name'][0]}"
-                        );
+                          socket: socket,
+                          initials:
+                              "${conversations[index]['Receiver']['name'][0]}${conversations[index]['Receiver']['last_name'][0]}");
                     }
                   },
                   itemCount: conversations.length,

@@ -12,15 +12,15 @@ class InboxScreen extends StatefulWidget {
   final String initials;
   final IO.Socket socket;
 
-  InboxScreen({
-    required this.receiver,
-    required this.socket,
-    required this.receiverName,
-    required this.initials
-  });
+  InboxScreen(
+      {required this.receiver,
+      required this.socket,
+      required this.receiverName,
+      required this.initials});
 
   @override
-  State<InboxScreen> createState() => _InboxScreenState(receiver, socket, receiverName, initials);
+  State<InboxScreen> createState() =>
+      _InboxScreenState(receiver, socket, receiverName, initials);
 }
 
 class _InboxScreenState extends State<InboxScreen> {
@@ -35,7 +35,8 @@ class _InboxScreenState extends State<InboxScreen> {
   String initials;
   Map<String, dynamic> user = {};
 
-  _InboxScreenState(this.receiver, this.socket, this.receiverName, this.initials);
+  _InboxScreenState(
+      this.receiver, this.socket, this.receiverName, this.initials);
 
   Future<void> loadMessages() async {
     List<dynamic> msg = await ApiService().getConversationMessages(receiver);
@@ -78,59 +79,7 @@ class _InboxScreenState extends State<InboxScreen> {
         _addMessage(message['content'], false, DateTime.now());
       }
     });
-    // Configura la conexión con el servidor Socket.IO
-    /*socket = IO.io(
-      'http://3.135.121.50:4000',
-      IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .disableAutoConnect()
-          .setAuth({'token': token})
-          .build(),
-    );
 
-    socket.on("newMessage", (message) {
-      if (!mounted) return;
-      print("Nuevo mensaje: $message");
-      if (message['_id_sender'] == user['user']['_id_user']) {
-        _addMessage(message['content'], true, DateTime.now());
-      } else {
-        _addMessage(message['content'], false, DateTime.now());
-      }
-    });
-
-    // Configura los listeners para manejar eventos
-
-    socket.on('joinConversation', (_) {
-      print("Uniendose a conexion");
-    });
-
-    socket.on("error", (err) {
-      print("Error mensaje:" + err);
-    });
-
-    socket.on("connect_error", (err) {
-      print("Error de conexión: $err");
-    });
-
-    socket.on('authentication_error', (data) {
-      print('Error de autenticación: $data');
-    });
-
-    socket.on('connect', (_) {
-      print('Conectado al servidor');
-      print(socket.connected);
-    });
-
-    socket.on("disconnect", (_) {
-      print("Desconectado del servidor");
-    });
-
-    socket.on("userTyping", (_) {
-      print("Escribiendo");
-    });
-
-    // Inicia la conexión
-    socket.connect();*/
     socket.emit('joinConversation',
         {'_id_sender': rsp['user']['_id_user'], '_id_receiver': receiver});
   }

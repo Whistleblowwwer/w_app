@@ -349,8 +349,6 @@ class ApiService {
       final List<dynamic> conversations =
           _utils.handleResponse(response)['conversations'];
 
-      await Future.delayed(Duration(seconds: 1));
-
       return conversations;
     } catch (e) {
       return Future.error(e);
