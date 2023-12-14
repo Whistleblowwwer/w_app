@@ -123,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               : r)
           .toList();
     });
-    feedBloc.add(FollowBusiness(review.idBusiness));
+    feedBloc.add(FollowBusiness(review.business!.idBusiness));
   }
 
   void addCommentToReview(String reviewId) {

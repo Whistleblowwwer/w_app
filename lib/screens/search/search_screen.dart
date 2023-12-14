@@ -1205,8 +1205,6 @@ class ForYouScreen extends StatelessWidget {
                   idReview: '',
                   content:
                       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
-                  idBusiness: '',
-                  idUser: '',
                   likes: 2,
                   rating: 2.5,
                   isLiked: true,

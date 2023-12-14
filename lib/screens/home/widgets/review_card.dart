@@ -83,7 +83,8 @@ class ReviewCard extends StatelessWidget {
                           ? GestureDetector(
                               onTap: () async {
                                 ApiService()
-                                    .getBusinessDetail(review.idBusiness)
+                                    .getBusinessDetail(
+                                        review.business!.idBusiness)
                                     .then((value) {
                                   Navigator.push(
                                     context,
@@ -220,8 +221,8 @@ class ReviewCard extends StatelessWidget {
                                           onTap: () {
                                             if (isActiveBusiness) {
                                               ApiService()
-                                                  .getBusinessDetail(
-                                                      review.idBusiness)
+                                                  .getBusinessDetail(review
+                                                      .business!.idBusiness)
                                                   .then((value) {
                                                 Navigator.push(
                                                   context,
