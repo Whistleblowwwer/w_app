@@ -204,6 +204,8 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                                 Business.fromJson(
                                     jsonDecode(response.body)['business']));
                           } else {
+                            print(response.statusCode);
+                            print(response.body);
                             showErrorSnackBar(
                                 context, "No se logró crear la empresa");
                           }

@@ -9,8 +9,7 @@ class Review extends Equatable {
   final bool? isValid;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final String idBusiness;
-  final String idUser;
+
   final int likes;
   final int comments;
   final BusinessData? business;
@@ -18,23 +17,22 @@ class Review extends Equatable {
   final bool isLiked;
   final double rating;
   final List<Comment>? children;
+  final List<String>? images;
 
-  const Review({
-    required this.idReview,
-    required this.content,
-    required this.isValid,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.idBusiness,
-    required this.idUser,
-    required this.likes,
-    required this.comments,
-    required this.business,
-    required this.user,
-    required this.isLiked,
-    required this.rating,
-    this.children,
-  });
+  const Review(
+      {required this.idReview,
+      required this.content,
+      required this.isValid,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.likes,
+      required this.comments,
+      required this.business,
+      required this.user,
+      required this.isLiked,
+      required this.rating,
+      this.children,
+      this.images});
 
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(
@@ -44,17 +42,16 @@ class Review extends Equatable {
       createdAt:
           json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt: DateTime.parse(json['updatedAt']),
-      idBusiness: json['_id_business'],
-      idUser: json['_id_user'],
-      likes: int.tryParse(json['likes']?.toString() ?? '0') ?? 0,
+      likes: int.tryParse(json['likesCount']?.toString() ?? '0') ?? 0,
       isLiked: json['is_liked'] ?? false,
-      comments: int.tryParse(json['comments']?.toString() ?? '0') ?? 0,
+      comments: int.tryParse(json['commentsCount']?.toString() ?? '0') ?? 0,
       business: BusinessData.fromJson(json['Business']),
       user: UserData.fromJson(json['User']),
       rating: double.tryParse(json['rating']?.toString() ?? '0') ?? 0,
       children: json['children'] != null
           ? (json['children'] as List).map((c) => Comment.fromJson(c)).toList()
           : null,
+      images: json['images'] != null ? List<String>.from(json['images']) : null,
     );
   }
 
@@ -106,8 +103,6 @@ class Review extends Equatable {
       'is_valid': isValid,
       'created_at': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
-      '_id_business': idBusiness,
-      '_id_user': idUser,
       'likes': likes,
       'comments': comments,
       'Business': business?.toJson() ?? '',
@@ -121,30 +116,28 @@ class Review extends Equatable {
       bool? isValid,
       DateTime? createdAt,
       DateTime? updatedAt,
-      String? idBusiness,
-      String? idUser,
       int? likes,
       int? comments,
       BusinessData? business,
       UserData? user,
       bool? isLiked,
       double? rating,
-      List<Comment>? children}) {
+      List<Comment>? children,
+      List<String>? images}) {
     return Review(
         idReview: idReview ?? this.idReview,
         content: content ?? this.content,
         isValid: isValid ?? this.isValid,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
-        idBusiness: idBusiness ?? this.idBusiness,
-        idUser: idUser ?? this.idUser,
         likes: likes ?? this.likes,
         comments: comments ?? this.comments,
         business: business ?? this.business,
         user: user ?? this.user,
         isLiked: isLiked ?? this.isLiked,
         rating: rating ?? this.rating,
-        children: children ?? this.children);
+        children: children ?? this.children,
+        images: images ?? this.images);
   }
 
   @override
@@ -154,15 +147,14 @@ class Review extends Equatable {
         isValid,
         createdAt,
         updatedAt,
-        idBusiness,
-        idUser,
         likes,
         comments,
         business,
         user,
         isLiked,
         rating,
-        children
+        children,
+        images
       ];
 }
 

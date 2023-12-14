@@ -252,18 +252,18 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                                     children: [
                                                       TextSpan(
                                                           text: widget
-                                                              .user.followers
+                                                              .user.followings
                                                               .toString(),
                                                           style: TextStyle(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold)),
                                                       TextSpan(
-                                                        text: ' Seguidos  ',
+                                                        text: ' Seguidos   ',
                                                       ),
                                                       TextSpan(
                                                           text: widget
-                                                              .user.followings
+                                                              .user.followers
                                                               .toString(),
                                                           style: TextStyle(
                                                               fontWeight:
@@ -312,7 +312,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    "Editar Perfil",
+                                                    "Seguir",
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w500,

@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/add/widgets/custom_textfield_widget.dart';
@@ -10,8 +12,21 @@ import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/dotters.dart';
+import 'package:w_app/widgets/image_expanded.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
 import 'package:w_app/widgets/snackbar.dart';
+
+Route navegarFadeIn(BuildContext context, Widget page) {
+  return PageRouteBuilder(
+      pageBuilder: (_, __, ___) => page,
+      transitionDuration: const Duration(milliseconds: 300),
+      transitionsBuilder: (context, animation, _, child) {
+        return FadeTransition(
+            opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeOut)),
+            child: child);
+      });
+}
 
 class CommentBottomSheet extends StatefulWidget {
   final User user;
@@ -34,6 +49,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
   TextEditingController controllerReview = TextEditingController();
   FocusNode focusNodeReview = FocusNode();
   final _formKeyReview = GlobalKey<FormState>();
+  List<File> images = [];
 
   @override
   void initState() {
@@ -199,13 +215,150 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                                     return null;
                                   },
                                 )),
-                            Padding(
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
                               padding:
-                                  const EdgeInsets.only(left: 28, bottom: 8),
-                              child: SvgPicture.asset(
-                                'assets/images/icons/addImage.svg',
-                                width: 24,
-                                height: 24,
+                                  EdgeInsets.only(left: 24, bottom: 88, top: 8),
+                              child: Row(
+                                children: List.generate(
+                                  images.length + 1,
+                                  (index) {
+                                    if (index == 0) {
+                                      return PressTransform(
+                                        onPressed: () async {
+                                          if (images.length >= 6) return;
+                                          try {
+                                            final ImagePicker picker =
+                                                ImagePicker();
+                                            final XFile? image =
+                                                await picker.pickImage(
+                                              source: ImageSource.gallery,
+                                              imageQuality: 100,
+                                            );
+                                            if (image != null) {
+                                              File file = File(image.path);
+
+                                              setState(() {
+                                                images.add(file);
+                                              });
+                                              // _uploadFile(
+                                              //     file); // Llama a la función para subir el archivo
+                                            }
+                                          } catch (e) {
+                                            debugPrint(e.toString());
+                                          }
+                                        },
+                                        child: images.isEmpty
+                                            ? SvgPicture.asset(
+                                                'assets/images/icons/addImage.svg',
+                                                width: 32,
+                                                height: 32,
+                                              )
+                                            : RoundedDotterRectangleBorder(
+                                                width: 144,
+                                                height: 256,
+                                                color: ColorStyle.borderGrey,
+                                                backgroundcolor: Colors.white,
+                                                borderRadius: 8,
+                                                borderWidth: 1,
+                                                icon: SvgPicture.asset(
+                                                  'assets/images/icons/addImage.svg',
+                                                  width: 48,
+                                                  height: 48,
+                                                ),
+                                              ),
+                                      );
+                                    } else {
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: PressTransform(
+                                            onPressed: () async {
+                                              try {
+                                                if (images.length >= 6) return;
+                                                final ImagePicker picker =
+                                                    ImagePicker();
+                                                final XFile? image =
+                                                    await picker.pickImage(
+                                                  source: ImageSource.gallery,
+                                                  imageQuality: 100,
+                                                );
+                                                if (image != null) {
+                                                  File file = File(image.path);
+
+                                                  setState(() {
+                                                    images.add(file);
+                                                  });
+                                                  // _uploadFile(
+                                                  //     file); // Llama a la función para subir el archivo
+                                                }
+                                              } catch (e) {
+                                                debugPrint(e.toString());
+                                              }
+                                              // Navigator.of(context).push(
+                                              //     navegarFadeIn(
+                                              //         context,
+                                              //         ImageCarousel(
+                                              //             initialPage:
+                                              //                 index - 1,
+                                              //             images: images)));
+                                            },
+                                            child: Hero(
+                                              tag: images[index - 1].path,
+                                              child: Stack(
+                                                children: [
+                                                  Container(
+                                                    constraints: BoxConstraints(
+                                                        minWidth: 144),
+                                                    child: Image.file(
+                                                      images[index - 1],
+                                                      fit: BoxFit.cover,
+                                                      height: 256,
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                    right: 0,
+                                                    top: 0,
+                                                    child: PressTransform(
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          images.removeAt(
+                                                              index - 1);
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 8,
+                                                                vertical: 8),
+                                                        padding:
+                                                            EdgeInsets.all(2),
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 0.5),
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.close_rounded,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
                               ),
                             ),
                           ],
@@ -223,7 +376,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
               child: Container(
                 color: Colors.white,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

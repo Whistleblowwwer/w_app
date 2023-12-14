@@ -1,4 +1,6 @@
-class User {
+import 'package:equatable/equatable.dart';
+
+class User extends Equatable {
   final String idUser;
   final String name;
   final String lastName;
@@ -14,8 +16,9 @@ class User {
   final int followings;
   final int followers;
   final String? userName;
+  final bool? isFollowed;
 
-  User(
+  const User(
       {required this.idUser,
       required this.name,
       required this.lastName,
@@ -30,7 +33,8 @@ class User {
       this.updatedAt,
       required this.followers,
       required this.followings,
-      this.userName});
+      this.userName,
+      this.isFollowed});
 
   String getFormattedCreationDate() {
     if (createdAt == null) {
@@ -61,6 +65,7 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
+    print(json);
     return User(
         idUser: json['_id_user'],
         name: json['name'],
@@ -82,7 +87,8 @@ class User {
             : null,
         followers: json['followers'] ?? 0,
         followings: json['followings'] ?? 0,
-        userName: json['nick_name'] ?? '');
+        userName: json['nick_name'] ?? '',
+        isFollowed: json['is_followed'] ?? false);
   }
 
   Map<String, dynamic> toJson() {
@@ -99,7 +105,70 @@ class User {
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'followers': followers,
-      'followings': followings
+      'followings': followings,
+      'is_followed': isFollowed
     };
   }
+
+  User copyWith({
+    String? idUser,
+    String? name,
+    String? lastName,
+    String? email,
+    String? phoneNumber,
+    DateTime? birthDate,
+    String? gender,
+    String? profilePictureUrl,
+    String? role,
+    bool? isValid,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? followings,
+    int? followers,
+    String? userName,
+    bool? isFollowed,
+  }) {
+    return User(
+      idUser: idUser ?? this.idUser,
+      name: name ?? this.name,
+      lastName: lastName ?? this.lastName,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      birthDate: birthDate ?? this.birthDate,
+      gender: gender ?? this.gender,
+      profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
+      role: role ?? this.role,
+      isValid: isValid ?? this.isValid,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      followings: followings ?? this.followings,
+      followers: followers ?? this.followers,
+      userName: userName ?? this.userName,
+      isFollowed: isFollowed ?? this.isFollowed,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        idUser,
+        name,
+        lastName,
+        email,
+        phoneNumber,
+        birthDate,
+        gender,
+        profilePictureUrl,
+        role,
+        isValid,
+        createdAt,
+        updatedAt,
+        followings,
+        followers,
+        userName,
+        isFollowed
+      ];
+
+  // Método stringify para una representación en string más detallada
+  @override
+  bool get stringify => true;
 }

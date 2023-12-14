@@ -125,401 +125,513 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
   Widget _reviewPage(BuildContext context) {
     return Form(
       key: _formKeyReview,
-      child: SizedBox(
+      child: Container(
         width: double.maxFinite,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.54,
+        ),
+        child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 16, right: 16, top: 16, bottom: 12),
-              child: Stack(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text(
-                      "Cancelar",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Montserrat',
-                          fontSize: 15),
-                    ),
-                  ),
-                  const Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Nueva reseña",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Montserrat',
-                            fontSize: 15),
-                      )),
-                  const Positioned(
-                      right: 0, child: Icon(FeatherIcons.moreHorizontal))
-                ],
-              ),
-            ),
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              child: Row(
-                children: [
-                  const CircularAvatarW(
-                    externalRadius: Offset(42, 42),
-                    internalRadius: Offset(36, 36),
-                    nameAvatar: "J",
-                    isCompany: false,
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Flexible(
-                    child: SizedBox(
-                      width: double.maxFinite,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${widget.user.name} ${widget.user.lastName}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Montserrat',
-                                fontSize: 14),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            "Oct 25",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: ColorStyle.grey,
-                                fontFamily: 'Montserrat',
-                                fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: CustomTextField(
-                  focusNode: focusNodeReview,
-                  controller: controllerReview,
-                  validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        selectedCompany == null) {
-                      return 'Por favor escribe una reseña y elige un proyecto - empresa';
-                    }
-                    // Add more validation if necessary
-                    return null;
-                  },
-                )),
             SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.only(left: 16, bottom: 8),
-              child: Row(
-                children: List.generate(
-                  images.length + 1,
-                  (index) {
-                    if (index == 0) {
-                      return PressTransform(
-                        onPressed: () async {
-                          FocusScope.of(context).unfocus();
-                          try {
-                            final ImagePicker picker = ImagePicker();
-                            final XFile? image = await picker.pickImage(
-                              source: ImageSource.gallery,
-                              imageQuality: 100,
-                            );
-                            if (image != null) {
-                              File file = File(image.path);
-
-                              setState(() {
-                                images.add(file);
-                              });
-                              // _uploadFile(
-                              //     file); // Llama a la función para subir el archivo
-                            }
-                          } catch (e) {
-                            debugPrint(e.toString());
-                          }
-                          Future.delayed(Duration(milliseconds: 100), () {
-                            focusNodeReview.requestFocus();
-                          });
-                        },
-                        child: images.isEmpty
-                            ? SvgPicture.asset(
-                                'assets/images/icons/addImage.svg',
-                                width: 24,
-                                height: 24,
-                              )
-                            : RoundedDotterRectangleBorder(
-                                width: 48,
-                                height: 64,
-                                color: ColorStyle.borderGrey,
-                                borderRadius: 8,
-                                borderWidth: 1,
-                                icon: SvgPicture.asset(
-                                  'assets/images/icons/addImage.svg',
-                                  width: 24,
-                                  height: 24,
+              padding: EdgeInsets.only(top: 64, bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: Row(
+                      children: [
+                        const CircularAvatarW(
+                          externalRadius: Offset(42, 42),
+                          internalRadius: Offset(36, 36),
+                          nameAvatar: "J",
+                          isCompany: false,
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        Flexible(
+                          child: SizedBox(
+                            width: double.maxFinite,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${widget.user.name} ${widget.user.lastName}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 14),
                                 ),
-                              ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            images.reversed.toList()[index - 1].path,
-                            fit: BoxFit.cover,
-                            width: 48,
-                            height: 64,
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Text(
+                                  "Oct 25",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorStyle.grey,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 12),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      );
-                    }
-                  },
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: RatingBar.builder(
-                maxRating: 5,
-                itemSize: 24,
-                initialRating: ratingController,
-                glowColor: Colors.white,
+                      ],
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      child: CustomTextField(
+                        focusNode: focusNodeReview,
+                        controller: controllerReview,
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              selectedCompany == null) {
+                            return 'Por favor escribe una reseña y elige un proyecto - empresa';
+                          }
+                          // Add more validation if necessary
+                          return null;
+                        },
+                      )),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.only(
+                        left: 24, bottom: 16, top: images.isNotEmpty ? 8 : 0),
+                    child: Row(
+                      children: List.generate(
+                        images.length + 1,
+                        (index) {
+                          if (index == 0) {
+                            return PressTransform(
+                              onPressed: () async {
+                                if (images.length >= 6) return;
+                                try {
+                                  final ImagePicker picker = ImagePicker();
+                                  final XFile? image = await picker.pickImage(
+                                    source: ImageSource.gallery,
+                                    imageQuality: 100,
+                                  );
+                                  if (image != null) {
+                                    File file = File(image.path);
 
-                minRating: 1,
-                direction: Axis.horizontal,
-                unratedColor: Colors.grey[200],
-                // ignoreGestures: true,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 0.5),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: ColorStyle.solidBlue,
-                ),
-                onRatingUpdate: (rating) {
-                  setState(() {
-                    ratingController = rating;
-                  });
-                },
-              ),
-            ),
-            Visibility(
-              visible: ratingError,
-              child: Padding(
-                padding: EdgeInsets.only(left: 16, top: 4),
-                child: Text('Agrega un rating al review',
-                    style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: ColorStyle.accentRed,
-                        fontSize: 12)),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: PressTransform(
-                      onPressed: () {
-                        setState(() {
-                          showReviewPageNotifier.value = false;
-                        });
-                      },
-                      child: Container(
-                        width: double.maxFinite,
-                        color: Colors.transparent,
-                        child: selectedCompany != null
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  CircularAvatarW(
-                                    externalRadius: Offset(42, 42),
-                                    internalRadius: Offset(36, 36),
-                                    nameAvatar:
-                                        selectedCompany!.name.substring(0, 1),
-                                    isCompany: false,
-                                  ),
-                                  const SizedBox(
-                                    width: 12,
-                                  ),
-                                  Flexible(
-                                    child: SizedBox(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            selectedCompany!.name,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14,
-                                                fontFamily: 'Montserrat'),
-                                          ),
-                                        ],
+                                    setState(() {
+                                      images.add(file);
+                                    });
+                                    // _uploadFile(
+                                    //     file); // Llama a la función para subir el archivo
+                                  }
+                                } catch (e) {
+                                  debugPrint(e.toString());
+                                }
+                              },
+                              child: images.isEmpty
+                                  ? SvgPicture.asset(
+                                      'assets/images/icons/addImage.svg',
+                                      width: 32,
+                                      height: 32,
+                                    )
+                                  : RoundedDotterRectangleBorder(
+                                      width: 90,
+                                      height: 160,
+                                      color: ColorStyle.borderGrey,
+                                      backgroundcolor: Colors.white,
+                                      borderRadius: 8,
+                                      borderWidth: 1,
+                                      icon: SvgPicture.asset(
+                                        'assets/images/icons/addImage.svg',
+                                        width: 32,
+                                        height: 32,
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  SizedBox(
-                                    width: 56,
+                            );
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: PressTransform(
+                                  onPressed: () async {
+                                    if (images.length >= 6) return;
+                                    try {
+                                      final ImagePicker picker = ImagePicker();
+                                      final XFile? image =
+                                          await picker.pickImage(
+                                        source: ImageSource.gallery,
+                                        imageQuality: 100,
+                                      );
+                                      if (image != null) {
+                                        File file = File(image.path);
+
+                                        setState(() {
+                                          images.add(file);
+                                        });
+                                        // _uploadFile(
+                                        //     file); // Llama a la función para subir el archivo
+                                      }
+                                    } catch (e) {
+                                      debugPrint(e.toString());
+                                    }
+
+                                    // Navigator.of(context).push(
+                                    //     navegarFadeIn(
+                                    //         context,
+                                    //         ImageCarousel(
+                                    //             initialPage:
+                                    //                 index - 1,
+                                    //             images: images)));
+                                  },
+                                  child: Hero(
+                                    tag: images[index - 1].path,
                                     child: Stack(
                                       children: [
-                                        Positioned(
-                                          right: 8,
-                                          child: CircularAvatarW(
-                                            externalRadius: Offset(32, 32),
-                                            internalRadius: Offset(28, 28),
-                                            nameAvatar: "S",
-                                            isCompany: true,
-                                            sizeIcon: 16,
+                                        Container(
+                                          constraints: BoxConstraints(
+                                            minWidth: 90,
+                                          ),
+                                          child: Image.file(
+                                            images[index - 1],
+                                            fit: BoxFit.cover,
+                                            height: 160,
                                           ),
                                         ),
                                         Positioned(
-                                          child: Container(
-                                            width: 32,
-                                            height: 32,
-                                            decoration: BoxDecoration(
-                                                color: ColorStyle.lightGrey,
-                                                shape: BoxShape.circle),
-                                            child: DottedCircularBorder(
-                                              color: ColorStyle.borderGrey,
-                                              diameter: 26,
-                                              borderWidth: 1.2,
-                                              icon: Container(
-                                                decoration: const BoxDecoration(
-                                                    shape: BoxShape.circle),
-                                                child: Icon(
-                                                  Icons.cached,
-                                                  color: ColorStyle.solidBlue,
-                                                  size: 20,
-                                                ),
+                                          right: 0,
+                                          top: 0,
+                                          child: PressTransform(
+                                            onPressed: () {
+                                              setState(() {
+                                                images.removeAt(index - 1);
+                                              });
+                                            },
+                                            child: Container(
+                                              margin: EdgeInsets.symmetric(
+                                                  horizontal: 8, vertical: 8),
+                                              padding: EdgeInsets.all(2),
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Color.fromRGBO(
+                                                    0, 0, 0, 0.5),
+                                              ),
+                                              child: Icon(
+                                                Icons.close_rounded,
+                                                size: 20,
+                                                color: Colors.white,
                                               ),
                                             ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: RatingBar.builder(
+                      maxRating: 5,
+                      itemSize: 24,
+                      initialRating: ratingController,
+                      glowColor: Colors.white,
+
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      unratedColor: Colors.grey[200],
+                      // ignoreGestures: true,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 0.5),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: ColorStyle.solidBlue,
+                      ),
+                      onRatingUpdate: (rating) {
+                        setState(() {
+                          ratingController = rating;
+                        });
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: ratingError,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 16, top: 4),
+                      child: Text('Agrega un rating al review',
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: ColorStyle.accentRed,
+                              fontSize: 12)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: PressTransform(
+                            onPressed: () {
+                              setState(() {
+                                showReviewPageNotifier.value = false;
+                              });
+                            },
+                            child: Container(
+                              width: double.maxFinite,
+                              color: Colors.transparent,
+                              child: selectedCompany != null
+                                  ? Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        CircularAvatarW(
+                                          externalRadius: Offset(42, 42),
+                                          internalRadius: Offset(36, 36),
+                                          nameAvatar: selectedCompany!.name
+                                              .substring(0, 1),
+                                          isCompany: false,
+                                        ),
+                                        const SizedBox(
+                                          width: 12,
+                                        ),
+                                        Flexible(
+                                          child: SizedBox(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  selectedCompany!.name,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Montserrat'),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 12,
+                                        ),
+                                        SizedBox(
+                                          width: 56,
+                                          child: Stack(
+                                            children: [
+                                              Positioned(
+                                                right: 8,
+                                                child: CircularAvatarW(
+                                                  externalRadius:
+                                                      Offset(32, 32),
+                                                  internalRadius:
+                                                      Offset(28, 28),
+                                                  nameAvatar: "S",
+                                                  isCompany: true,
+                                                  sizeIcon: 16,
+                                                ),
+                                              ),
+                                              Positioned(
+                                                child: Container(
+                                                  width: 32,
+                                                  height: 32,
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          ColorStyle.lightGrey,
+                                                      shape: BoxShape.circle),
+                                                  child: DottedCircularBorder(
+                                                    color:
+                                                        ColorStyle.borderGrey,
+                                                    diameter: 26,
+                                                    borderWidth: 1.2,
+                                                    icon: Container(
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle),
+                                                      child: Icon(
+                                                        Icons.cached,
+                                                        color: ColorStyle
+                                                            .solidBlue,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        DottedCircularBorder(
+                                          color: ColorStyle.borderGrey,
+                                          diameter: 32,
+                                          borderWidth: 1.5,
+                                          icon: Container(
+                                            decoration: const BoxDecoration(
+                                                shape: BoxShape.circle),
+                                            child: Icon(
+                                              FeatherIcons.plus,
+                                              color: ColorStyle.borderGrey,
+                                              size: 24,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 16,
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            "Selecciona una proyecto / empresa",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                color: ColorStyle.textGrey,
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 14),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  )
-                                ],
-                              )
-                            : Row(
-                                children: [
-                                  DottedCircularBorder(
-                                    color: ColorStyle.borderGrey,
-                                    diameter: 32,
-                                    borderWidth: 1.5,
-                                    icon: Container(
-                                      decoration: const BoxDecoration(
-                                          shape: BoxShape.circle),
-                                      child: Icon(
-                                        FeatherIcons.plus,
-                                        color: ColorStyle.borderGrey,
-                                        size: 24,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 16,
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      "Selecciona una proyecto / empresa",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: ColorStyle.textGrey,
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 14),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                      ),
-                    ),
-                  ),
-                  PressTransform(
-                    onPressed: () async {
-                      if (ratingController <= 0.0) {
-                        setState(() {
-                          ratingError = true;
-                        });
-                        return;
-                      } else {
-                        setState(() {
-                          ratingError = false;
-                        });
-                      }
-
-                      if (_formKeyReview.currentState!.validate()) {
-                        final userState = _userBloc.state;
-
-                        if (userState is UserLoaded) {
-                          await ApiService()
-                              .createReview(
-                                  content: controllerReview.text,
-                                  idBusiness: selectedCompany!.idBusiness,
-                                  idUser: userState.user.idUser,
-                                  rating: ratingController)
-                              .then((value) {
-                            if (value.statusCode == 201) {
-                              showSuccessSnackBar(context);
-                              FeedBloc feedBloc =
-                                  BlocProvider.of<FeedBloc>(context);
-                              Map<String, dynamic> json =
-                                  jsonDecode(value.body);
-                              print("--a -sa-- a");
-                              print(json['review']);
-                              print(Review.fromJson(json['review']));
-                              print("viejo");
-                              feedBloc.add(
-                                  AddReview(Review.fromJson(json['review'])));
-
-                              Navigator.pop(context);
+                            ),
+                          ),
+                        ),
+                        PressTransform(
+                          onPressed: () async {
+                            if (ratingController <= 0.0) {
+                              setState(() {
+                                ratingError = true;
+                              });
+                              return;
                             } else {
-                              showErrorSnackBar(
-                                  context, "No se logró crear la reseña");
-                              Navigator.pop(context);
+                              setState(() {
+                                ratingError = false;
+                              });
                             }
-                          });
-                        }
-                      }
-                    },
-                    child: Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                          color: ColorStyle.lightGrey, shape: BoxShape.circle),
-                      child: Icon(
-                        FeatherIcons.arrowRight,
-                        color: ColorStyle.midToneGrey,
-                      ),
+
+                            if (_formKeyReview.currentState!.validate()) {
+                              final userState = _userBloc.state;
+
+                              if (userState is UserLoaded) {
+                                await ApiService()
+                                    .createReview(
+                                        content: controllerReview.text,
+                                        idBusiness: selectedCompany!.idBusiness,
+                                        idUser: userState.user.idUser,
+                                        rating: ratingController)
+                                    .then((value) {
+                                  if (value.statusCode == 201) {
+                                    showSuccessSnackBar(context);
+                                    FeedBloc feedBloc =
+                                        BlocProvider.of<FeedBloc>(context);
+                                    Map<String, dynamic> json =
+                                        jsonDecode(value.body);
+                                    print("--a -sa-- a");
+                                    print(json['review']);
+                                    print(Review.fromJson(json['review']));
+                                    print("viejo");
+                                    feedBloc.add(AddReview(
+                                        Review.fromJson(json['review'])));
+
+                                    Navigator.pop(context);
+                                  } else {
+                                    showErrorSnackBar(
+                                        context, "No se logró crear la reseña");
+                                    Navigator.pop(context);
+                                  }
+                                });
+                              }
+                            }
+                          },
+                          child: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                                color: ColorStyle.lightGrey,
+                                shape: BoxShape.circle),
+                            child: Icon(
+                              FeatherIcons.arrowRight,
+                              color: ColorStyle.midToneGrey,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                  )
                 ],
               ),
-            )
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0),
+                ),
+                child: Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Stack(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                "Cancelar",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 15),
+                              ),
+                            ),
+                            const Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Nueva reseña",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 15),
+                                )),
+                            const Positioned(
+                                right: 0,
+                                child: Icon(FeatherIcons.moreHorizontal))
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: double.maxFinite,
+                        height: 0.8,
+                        margin: EdgeInsets.only(top: 12),
+                        color: ColorStyle.lightGrey,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

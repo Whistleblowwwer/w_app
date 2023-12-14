@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/home/comment_screen.dart';
+import 'package:w_app/screens/home/widgets/images_dimension_widget.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
@@ -166,6 +167,19 @@ class CommentWidget extends StatelessWidget {
                             ),
                           ),
                         ),
+                        if (comment.images?.isNotEmpty ?? false)
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: 16, right: 16, bottom: 16),
+                            height: 200,
+                            width: double.maxFinite,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: buildDynamicLayout(
+                                comment.images ?? [], context),
+                          ),
                         Padding(
                             padding: EdgeInsets.only(left: 16, right: 16),
                             child: SizedBox(

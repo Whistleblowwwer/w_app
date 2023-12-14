@@ -4,21 +4,23 @@ import 'package:flutter/material.dart';
 
 class RoundedDotterRectangleBorder extends StatelessWidget {
   final Color color;
+  final Color? backgroundcolor;
   final double width;
   final double height;
   final double borderRadius;
   final double borderWidth; // Nuevo parámetro para el grosor del borde
   final Widget? icon;
 
-  const RoundedDotterRectangleBorder({
-    Key? key,
-    this.color = Colors.blue,
-    this.width = 100.0,
-    this.height = 50.0,
-    this.borderRadius = 10.0,
-    this.borderWidth = 2.0, // Valor por defecto para el grosor del borde
-    this.icon,
-  }) : super(key: key);
+  const RoundedDotterRectangleBorder(
+      {Key? key,
+      this.color = Colors.blue,
+      this.width = 100.0,
+      this.height = 50.0,
+      this.borderRadius = 10.0,
+      this.borderWidth = 2.0, // Valor por defecto para el grosor del borde
+      this.icon,
+      this.backgroundcolor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,13 @@ class RoundedDotterRectangleBorder extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
+          Container(
+            height: height,
+            width: width,
+            decoration: BoxDecoration(
+                color: backgroundcolor,
+                borderRadius: BorderRadius.circular(borderRadius)),
+          ),
           icon ?? Container(),
           CustomPaint(
             size: Size(width, height),

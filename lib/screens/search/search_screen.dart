@@ -755,7 +755,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                                   'Montserrat'),
                                                         ),
                                                         Text(
-                                                          '@${snapshot.data![index].userName!.isEmpty ? 'User${index}' : snapshot.data![index].userName!}',
+                                                          '@${snapshot.data![index].userName!.isEmpty ? 'User$index' : snapshot.data![index].userName!}',
                                                           style: TextStyle(
                                                               fontWeight:
                                                                   FontWeight
@@ -1122,14 +1122,18 @@ class ForYouScreen extends StatelessWidget {
             height: 256,
             width: double.maxFinite,
             padding: EdgeInsets.only(left: 24, bottom: 16),
-            decoration: BoxDecoration(gradient: GradientStyle().grayGradient),
+            decoration: BoxDecoration(
+                // gradient: GradientStyle().grayGradient,
+                image: DecorationImage(
+                    image: AssetImage(
+                        'assets/images/ilustrations/Banner 1 - W.jpg'))),
             child: Stack(
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("Encabeza",
+                    Text("Encabezado",
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Montserrat',
@@ -1201,8 +1205,6 @@ class ForYouScreen extends StatelessWidget {
                   idReview: '',
                   content:
                       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
-                  idBusiness: '',
-                  idUser: '',
                   likes: 2,
                   rating: 2.5,
                   isLiked: true,
