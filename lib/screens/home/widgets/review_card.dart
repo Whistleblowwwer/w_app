@@ -9,14 +9,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/review_model.dart';
-import 'package:w_app/models/user.dart';
-import 'package:w_app/repository/user_repository.dart';
-import 'package:w_app/screens/actions/comments_screen.dart';
 import 'package:w_app/screens/actions/review_bottom_sheet.dart';
 import 'package:w_app/screens/business_screen.dart';
 import 'package:w_app/screens/home/review_screen.dart';
+import 'package:w_app/screens/home/widgets/images_dimension_widget.dart';
 import 'package:w_app/screens/profile/foreign_profile_screen.dart';
-import 'package:w_app/screens/profile/profile_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
@@ -52,6 +49,8 @@ class ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sizeW = MediaQuery.of(context).size.width / 100;
+    final sizeH = MediaQuery.of(context).size.height / 100;
     final stateUser = BlocProvider.of<UserBloc>(context).state;
     return stateUser is UserLoaded
         ? Column(
@@ -427,6 +426,19 @@ class ReviewCard extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+                                  if (review.images?.isNotEmpty ?? false)
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          left: 16, right: 16, bottom: 16),
+                                      height: 200,
+                                      width: double.maxFinite,
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: buildDynamicLayout(
+                                          review.images ?? [], context),
+                                    ),
                                   Padding(
                                       padding:
                                           EdgeInsets.only(left: 16, right: 16),
@@ -519,7 +531,7 @@ class ReviewCard extends StatelessWidget {
                                     padding: EdgeInsets.only(
                                         left: 16,
                                         right: 16,
-                                        top: 16,
+                                        top: 8,
                                         bottom: 16),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
@@ -558,7 +570,7 @@ class ReviewCard extends StatelessWidget {
                             )
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -897,3 +909,6 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                                 //     ),
                                                 //   ),
                                                 // ),
+
+
+

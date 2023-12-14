@@ -10,12 +10,12 @@ class Comment extends Equatable {
   final DateTime updatedAt;
   final String idReview;
   final String? idParent;
-
   final int likes;
   final int comments;
   final UserData user;
   final bool isLiked;
   final List<Comment>? children;
+  final List<String>? images;
 
   const Comment(
       {required this.idComment,
@@ -29,7 +29,8 @@ class Comment extends Equatable {
       required this.likes,
       required this.isLiked,
       required this.user,
-      this.children});
+      this.children,
+      this.images});
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
@@ -53,6 +54,7 @@ class Comment extends Equatable {
       children: json['children'] != null
           ? (json['children'] as List).map((c) => Comment.fromJson(c)).toList()
           : null,
+      images: json['images'] != null ? List<String>.from(json['images']) : null,
     );
   }
 
@@ -81,21 +83,21 @@ class Comment extends Equatable {
     }
   }
 
-  Comment copyWith({
-    String? idComment,
-    String? content,
-    bool? isValid,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? idReview,
-    String? idParent,
-    String? idUser,
-    int? likes,
-    int? comments,
-    UserData? user,
-    bool? isLiked,
-    List<Comment>? children,
-  }) {
+  Comment copyWith(
+      {String? idComment,
+      String? content,
+      bool? isValid,
+      DateTime? createdAt,
+      DateTime? updatedAt,
+      String? idReview,
+      String? idParent,
+      String? idUser,
+      int? likes,
+      int? comments,
+      UserData? user,
+      bool? isLiked,
+      List<Comment>? children,
+      List<String>? images}) {
     return Comment(
         idComment: idComment ?? this.idComment,
         content: content ?? this.content,
@@ -108,7 +110,8 @@ class Comment extends Equatable {
         comments: comments ?? this.comments,
         user: user ?? this.user,
         isLiked: isLiked ?? this.isLiked,
-        children: children ?? this.children);
+        children: children ?? this.children,
+        images: images ?? this.images);
   }
 
   @override
@@ -123,7 +126,8 @@ class Comment extends Equatable {
         likes,
         isLiked,
         user,
-        children
+        children,
+        images
       ];
 }
 
