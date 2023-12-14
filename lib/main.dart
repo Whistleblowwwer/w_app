@@ -9,6 +9,7 @@ import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_state.dart';
 import 'package:w_app/bloc/lifecycle_bloc/lifecycle_bloc.dart';
 import 'package:w_app/bloc/search_bloc/search_bloc.dart';
+import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/screens/signInUp/sign_in_screen.dart';
@@ -90,6 +91,9 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
         providers: [
           BlocProvider<AuthBloc>(
             create: (context) => widget.authBloc,
+          ),
+          BlocProvider<SocketBloc>(
+            create: (context) => SocketBloc(),
           ),
           // BlocProvider<AppLifecycleBloc>(
           //   create: (context) => widget.appLifecycleBloc,

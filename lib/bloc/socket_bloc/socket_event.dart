@@ -5,6 +5,12 @@ class Connect extends SocketEvent {}
 
 class Disconnect extends SocketEvent {}
 
+class NewMessage extends SocketEvent {
+   final Message message;
+
+   NewMessage(this.message);
+}
+
 class SendMessage extends SocketEvent {
   final String content;
   final String idSender;
@@ -28,3 +34,31 @@ class LeaveConversation extends SocketEvent {
 }
 
 // Agrega más eventos según sea necesario...
+
+class Message {
+  String content;
+  String idSender;
+  String idReceiver;
+  DateTime createdAt;
+
+  Message({
+    required this.content,
+    required this.idSender,
+    required this.idReceiver,
+    required this.createdAt,
+  });
+
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      content: json['content'],
+      idSender: json['_id_sender'],
+      idReceiver: json['_id_receiver'],
+      createdAt: DateTime.parse(json['createdAt']),
+    );
+  }
+
+  String getFormattedTime() {
+    return '${createdAt.hour.toString().padLeft(2, '0')}:${createdAt.minute.toString().padLeft(2, '0')}';
+  }
+
+}

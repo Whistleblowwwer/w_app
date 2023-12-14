@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:w_app/bloc/socket_bloc/socket_event.dart';
 import 'package:w_app/styles/gradient_style.dart';
 
 class MessageContainer extends StatelessWidget {
-  final String message;
+  final Message message;
   final bool isMine;
-  final DateTime date; //Cambiable a hora
+
 
   MessageContainer(
-      {required this.message, required this.isMine, required this.date});
+      {required this.message, required this.isMine});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class MessageContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              message,
+              message.content,
               style: TextStyle(
                 fontSize: 16.0,
                 fontFamily: 'Montserrat',
@@ -31,7 +32,7 @@ class MessageContainer extends StatelessWidget {
               ),
             ),
             Text(
-              date.toString().substring(11, 16),
+              message.getFormattedTime(),
               style: TextStyle(
                 fontSize: 12.0,
                 fontFamily: 'Montserrat',

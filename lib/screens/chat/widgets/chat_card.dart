@@ -17,7 +17,6 @@ class ChatCard extends StatelessWidget {
   final String photoUrl;
   final String receiver;
   final String initials;
-  final IO.Socket socket;
 
   ChatCard({
     required this.name,
@@ -26,7 +25,6 @@ class ChatCard extends StatelessWidget {
     required this.lastMessageTime,
     required this.photoUrl,
     required this.receiver,
-    required this.socket,
     required this.initials
   });
 
@@ -45,7 +43,7 @@ class ChatCard extends StatelessWidget {
               Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
                   settings: RouteSettings(),
                   builder: (context) =>
-                      InboxScreen(receiver: receiver, socket: socket, receiverName: name+" "+lastName, initials: initials)));
+                      InboxScreen(receiver: receiver, receiverName: name+" "+lastName, initials: initials)));
             } else {
               print("Token no provisto o no valido");
             }

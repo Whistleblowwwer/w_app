@@ -9,7 +9,9 @@ import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
+import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/actions/comments_screen.dart';
+import 'package:w_app/screens/chat/inbox_screen.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
@@ -159,8 +161,17 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                 ),
 
                 PressTransform(
-                  onPressed: (){
-                  
+                  onPressed: () async{
+                    String? tk = await UserRepository().getToken();
+                    if(tk != null) {
+                      //Sacar el token largo, el; corto ya esta
+                      Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                          settings: RouteSettings(),
+                          builder: (context) =>
+                              InboxScreen(receiver: widget.user.idUser, receiverName: widget.user.name+" "+widget.user.lastName, initials: widget.user.name[0]+widget.user.lastName[0])));
+                    } else {
+                      print("Token no provisto o no valido");
+                    }
                   },
                   child: Container(
                     margin: EdgeInsets.only(right: 8),
