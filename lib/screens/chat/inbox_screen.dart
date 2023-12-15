@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -16,6 +17,7 @@ import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/styles/gradient_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/glassmorphism.dart';
+import 'package:w_app/widgets/press_transform_widget.dart';
 
 class InboxScreen extends StatefulWidget {
   final String receiver;
@@ -164,6 +166,7 @@ class _InboxScreenState extends State<InboxScreen> {
                         right: 8,
                         top: 8,
                         bottom: focusNodeTextField.hasFocus ? 8 : 32),
+                    padding: EdgeInsets.only(right: 8),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         color: Colors.grey[100],
@@ -200,14 +203,17 @@ class _InboxScreenState extends State<InboxScreen> {
                             ),
                           ),
                         ),
-                        IconButton(
+                        PressTransform(
                           onPressed: () {
+                            HapticFeedback.lightImpact();
                             _socketBloc.add(
                                 SendMessage(msg, user.idUser, widget.receiver));
                             _textFieldController.clear();
                           },
-                          icon: Icon(Icons.send),
-                          color: ColorStyle.solidBlue,
+                          child: Icon(
+                            Icons.send,
+                            color: ColorStyle.solidBlue,
+                          ),
                         ),
                       ],
                     ),

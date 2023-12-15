@@ -82,98 +82,105 @@ class _ChatPageState extends State<ChatPage> {
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            SizedBox(
+            Container(
                 width: sizeW * 100,
                 height: sizeH * 100,
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Container(
-                        height: 40,
-                        width: double.maxFinite,
-                        margin: EdgeInsets.only(
-                            left: 16, right: 16, bottom: 8, top: 96),
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8)),
-                        child: TextField(
-                          controller: controllerSearch,
-                          maxLines: 1,
-                          focusNode: focusNodeSearch,
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Buscar',
-                            hintStyle: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: ColorStyle.textGrey),
-                            contentPadding: const EdgeInsets.only(),
-                            border: const OutlineInputBorder(
-                              borderSide: BorderSide.none,
+                padding: EdgeInsets.only(top: 88),
+                child: RefreshIndicator.adaptive(
+                  color: ColorStyle.darkPurple,
+                  onRefresh: () async {
+                    await loadChats();
+                  },
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Container(
+                          height: 40,
+                          width: double.maxFinite,
+                          margin: EdgeInsets.only(
+                              left: 16, right: 16, bottom: 8, top: 8),
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8)),
+                          child: TextField(
+                            controller: controllerSearch,
+                            maxLines: 1,
+                            focusNode: focusNodeSearch,
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
                             ),
-                            filled: true,
-                            fillColor: ColorStyle.lightGrey,
-                            prefixIcon: Icon(FeatherIcons.search,
-                                size: 18, color: ColorStyle.textGrey),
-                            suffixIcon: controllerSearch.text.isNotEmpty
-                                ? IconButton(
-                                    onPressed: () {
-                                      controllerSearch.clear();
-                                    },
-                                    icon: Icon(Icons.clear,
-                                        size: 20, color: ColorStyle.textGrey),
-                                  )
-                                : null,
+                            decoration: InputDecoration(
+                              hintText: 'Buscar',
+                              hintStyle: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorStyle.textGrey),
+                              contentPadding: const EdgeInsets.only(),
+                              border: const OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              filled: true,
+                              fillColor: ColorStyle.lightGrey,
+                              prefixIcon: Icon(FeatherIcons.search,
+                                  size: 18, color: ColorStyle.textGrey),
+                              suffixIcon: controllerSearch.text.isNotEmpty
+                                  ? IconButton(
+                                      onPressed: () {
+                                        controllerSearch.clear();
+                                      },
+                                      icon: Icon(Icons.clear,
+                                          size: 20, color: ColorStyle.textGrey),
+                                    )
+                                  : null,
+                            ),
+                            onChanged: (value) {},
                           ),
-                          onChanged: (value) {},
                         ),
                       ),
-                    ),
-                    SliverList.builder(
-                      itemCount: listFilter.length,
-                      itemBuilder: (context, index) {
-                        if (listFilter[index]['Sender']['_id_user'] ==
-                            widget.user.idUser) {
-                          return ChatCard(
-                            name: "${listFilter[index]['Receiver']['name']}",
-                            lastName:
-                                "${listFilter[index]['Receiver']['last_name']}",
-                            lastMessage:
-                                "Tú: ${listFilter[index]['Message']['content']}",
-                            lastMessageTime:
-                                "${listFilter[index]['Message']['createdAt']}",
-                            photoUrl:
-                                "${listFilter[index]['Receiver']['profile_picture_url']}",
-                            receiver:
-                                "${listFilter[index]['Receiver']['_id_user']}",
-                            initials:
-                                "${listFilter[index]['Sender']['name'][0]}${listFilter[index]['Sender']['last_name'][0]}",
-                          );
-                        } else {
-                          return ChatCard(
-                            name: "${listFilter[index]['Sender']['name']}",
-                            lastName:
-                                "${listFilter[index]['Sender']['last_name']}",
-                            lastMessage:
-                                "${listFilter[index]['Message']['content']}",
-                            lastMessageTime:
-                                "${listFilter[index]['Message']['createdAt']}",
-                            photoUrl:
-                                "${listFilter[index]['Sender']['profile_picture_url']}",
-                            receiver:
-                                "${listFilter[index]['Sender']['_id_user']}",
-                            initials:
-                                "${listFilter[index]['Receiver']['name'][0]}${listFilter[index]['Receiver']['last_name'][0]}",
-                          );
-                        }
-                      },
-                    )
-                  ],
+                      SliverList.builder(
+                        itemCount: listFilter.length,
+                        itemBuilder: (context, index) {
+                          if (listFilter[index]['Sender']['_id_user'] ==
+                              widget.user.idUser) {
+                            return ChatCard(
+                              name: "${listFilter[index]['Receiver']['name']}",
+                              lastName:
+                                  "${listFilter[index]['Receiver']['last_name']}",
+                              lastMessage:
+                                  "Tú: ${listFilter[index]['Message']['content']}",
+                              lastMessageTime:
+                                  "${listFilter[index]['Message']['createdAt']}",
+                              photoUrl:
+                                  "${listFilter[index]['Receiver']['profile_picture_url']}",
+                              receiver:
+                                  "${listFilter[index]['Receiver']['_id_user']}",
+                              initials:
+                                  "${listFilter[index]['Sender']['name'][0]}${listFilter[index]['Sender']['last_name'][0]}",
+                            );
+                          } else {
+                            return ChatCard(
+                              name: "${listFilter[index]['Sender']['name']}",
+                              lastName:
+                                  "${listFilter[index]['Sender']['last_name']}",
+                              lastMessage:
+                                  "${listFilter[index]['Message']['content']}",
+                              lastMessageTime:
+                                  "${listFilter[index]['Message']['createdAt']}",
+                              photoUrl:
+                                  "${listFilter[index]['Sender']['profile_picture_url']}",
+                              receiver:
+                                  "${listFilter[index]['Sender']['_id_user']}",
+                              initials:
+                                  "${listFilter[index]['Receiver']['name'][0]}${listFilter[index]['Receiver']['last_name'][0]}",
+                            );
+                          }
+                        },
+                      )
+                    ],
+                  ),
                 )),
             Container(
               width: double.maxFinite,

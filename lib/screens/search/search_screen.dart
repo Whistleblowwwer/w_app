@@ -1115,7 +1115,7 @@ class ForYouScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.only(top: 170, bottom: 160),
+      padding: EdgeInsets.only(top: 162, bottom: 160),
       child: Column(
         children: [
           Container(

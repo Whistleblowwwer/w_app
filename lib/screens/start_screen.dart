@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,9 +54,9 @@ class StartPageState extends State<StartPage> {
         // Es seguro usar el context aquí
         _authBloc = BlocProvider.of<AuthBloc>(context);
         _userBloc = BlocProvider.of<UserBloc>(context);
+        _fetchUserProfile();
         _socketBloc = BlocProvider.of<SocketBloc>(context);
         _socketBloc.add(Connect());
-        _fetchUserProfile();
       }
     });
   }
@@ -88,8 +89,7 @@ class StartPageState extends State<StartPage> {
         body: BlocBuilder<UserBloc, UserState>(
           builder: (context, state) {
             if (state is UserLoading) {
-              return const Center(
-                  child: CircularProgressIndicator.adaptive());
+              return const Center(child: CircularProgressIndicator.adaptive());
             } else if (state is UserLoaded) {
               return IndexedStack(
                 index: currentIndex,
@@ -98,8 +98,7 @@ class StartPageState extends State<StartPage> {
                     key: navigatorKeys[0],
                     onGenerateRoute: (settings) {
                       return MaterialPageRoute(
-                        builder: (context) =>
-                            HomeScreen(widget.userRepository),
+                        builder: (context) => HomeScreen(widget.userRepository),
                       );
                     },
                   ),
@@ -116,8 +115,7 @@ class StartPageState extends State<StartPage> {
                     key: navigatorKeys[2],
                     onGenerateRoute: (settings) {
                       return MaterialPageRoute(
-                        builder: (context) =>
-                            HomeScreen(widget.userRepository),
+                        builder: (context) => HomeScreen(widget.userRepository),
                       );
                     },
                   ),
@@ -154,8 +152,8 @@ class StartPageState extends State<StartPage> {
   Widget _buildBottomNavigationBar() {
     double displayWidth = MediaQuery.of(context).size.width / 100;
     return Container(
-      height: 88,
-      padding: const EdgeInsets.only(top: 8, left: 24, right: 24),
+      height: Platform.isIOS ? 80 : 72,
+      padding: const EdgeInsets.only(top: 4, left: 24, right: 24),
       decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [

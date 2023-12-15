@@ -59,8 +59,8 @@ class MessageContainer extends StatelessWidget {
             margin: EdgeInsets.only(
                 top: showSender ? 4 : 0,
                 bottom: isMine ? 0 : 1,
-                left: isMine ? 40 : 0,
-                right: isMine ? 0 : 40),
+                left: isMine ? MediaQuery.of(context).size.width * 0.20 : 0,
+                right: isMine ? 0 : MediaQuery.of(context).size.width * 0.20),
             constraints: BoxConstraints(minWidth: 96),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
@@ -80,13 +80,25 @@ class MessageContainer extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(bottom: 2),
-                  child: Text(
-                    '${message.content}               ',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontFamily: 'Montserrat',
-                      color: isMine ? Colors.white : Colors.black,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: message.content,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontFamily: 'Montserrat',
+                            color: isMine ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '\u00A0' * 15, // 10 espacios no rompibles
+                          style: const TextStyle(
+                            color: Colors
+                                .transparent, // Hace los espacios transparentes
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
