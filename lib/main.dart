@@ -80,7 +80,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      widget.authBloc.add(AppResumed());
+      // widget.authBloc.add(AppResumed());
       // widget.appLifecycleBloc.add(AppLifecycleEvent.resumed);
     }
   }

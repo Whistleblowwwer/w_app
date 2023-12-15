@@ -33,6 +33,8 @@ class Comment extends Equatable {
       this.images});
 
   factory Comment.fromJson(Map<String, dynamic> json) {
+    print('comentariooo');
+    print(json);
     return Comment(
       idComment: json['_id_comment'],
       content: json['content'],

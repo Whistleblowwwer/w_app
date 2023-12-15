@@ -1,4 +1,6 @@
 // Define los eventos adicionales
+import 'package:intl/intl.dart';
+
 abstract class SocketEvent {}
 
 class Connect extends SocketEvent {}
@@ -6,9 +8,9 @@ class Connect extends SocketEvent {}
 class Disconnect extends SocketEvent {}
 
 class NewMessage extends SocketEvent {
-   final Message message;
+  final Message message;
 
-   NewMessage(this.message);
+  NewMessage(this.message);
 }
 
 class SendMessage extends SocketEvent {
@@ -49,16 +51,19 @@ class Message {
   });
 
   factory Message.fromJson(Map<String, dynamic> json) {
+    // final date = DateFormat('yyyy-MM-dd HH:mm:ss')
+    //     .format(DateTime.parse(json['createdAt']).toLocal());
+    // print('-----');
+    // print(date);
     return Message(
       content: json['content'],
       idSender: json['_id_sender'],
       idReceiver: json['_id_receiver'],
-      createdAt: DateTime.parse(json['createdAt']),
+      createdAt: DateTime.parse(json['createdAt']).toLocal(),
     );
   }
 
   String getFormattedTime() {
     return '${createdAt.hour.toString().padLeft(2, '0')}:${createdAt.minute.toString().padLeft(2, '0')}';
   }
-
 }

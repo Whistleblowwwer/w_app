@@ -20,6 +20,26 @@ class GradientStyle {
         Color.fromRGBO(28, 79, 200, 1),
         Color.fromRGBO(39, 110, 241, 1),
       ]);
+  LinearGradient oneGradient = const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      tileMode: TileMode.repeated,
+      colors: <Color>[Color(0xFFFB9188), Color(0xFFFEAB93)]);
+  LinearGradient twoGradient = const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      tileMode: TileMode.repeated,
+      colors: <Color>[Color(0xFF6C7EE3), Color(0xFF5E63DC)]);
+  LinearGradient threeGradient = const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      tileMode: TileMode.repeated,
+      colors: <Color>[Color(0xFFFE7BA3), Color(0xFFFD5F90)]);
+  LinearGradient fourGradient = const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      tileMode: TileMode.repeated,
+      colors: <Color>[Color(0xFFFF6E40), Color(0xFFFF8F00), Color(0xFFFFA726)]);
 
   LinearGradient accesoryGradient = const LinearGradient(
       begin: Alignment.topLeft,

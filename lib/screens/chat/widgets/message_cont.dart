@@ -1,48 +1,133 @@
 import 'package:flutter/material.dart';
 import 'package:w_app/bloc/socket_bloc/socket_event.dart';
+import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/styles/gradient_style.dart';
 
 class MessageContainer extends StatelessWidget {
   final Message message;
   final bool isMine;
-
+  final bool showSender;
+  final String name;
 
   MessageContainer(
-      {required this.message, required this.isMine});
+      {required this.message,
+      required this.isMine,
+      required this.showSender,
+      required this.name});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: isMine ? Colors.blue : Color.fromARGB(255, 174, 207, 235),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              message.content,
-              style: TextStyle(
-                fontSize: 16.0,
-                fontFamily: 'Montserrat',
-                color: isMine ? Colors.white : Colors.black,
-              ),
+    return Column(
+      children: [
+        // if (showSender)
+        //   Padding(
+        //     padding: EdgeInsets.only(
+        //       bottom: 4,
+        //       top: 0,
+        //       left: isMine ? 0 : 0,
+        //       right: isMine ? 0 : 0,
+        //     ),
+        //     child: Row(
+        //       mainAxisAlignment:
+        //           isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+        //       children: [
+        //         if (!isMine)
+        //           Text(
+        //             name,
+        //             style: TextStyle(
+        //               fontSize: 14,
+        //               fontWeight: FontWeight.bold,
+        //               color: Colors.grey[900],
+        //               fontFamily: 'Montserrat',
+        //             ),
+        //           ),
+        //         if (isMine)
+        //           Text(
+        //             ' Me',
+        //             style: TextStyle(
+        //               fontSize: 14,
+        //               fontWeight: FontWeight.bold,
+        //               color: Colors.grey[900],
+        //             ),
+        //           ),
+        //       ],
+        //     ),
+        //   ),
+        Container(
+          alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container(
+            margin: EdgeInsets.only(
+                top: showSender ? 4 : 0,
+                bottom: isMine ? 0 : 1,
+                left: isMine ? 40 : 0,
+                right: isMine ? 0 : 40),
+            constraints: BoxConstraints(minWidth: 96),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topRight: isMine
+                      ? const Radius.circular(0)
+                      : const Radius.circular(16),
+                  topLeft: isMine
+                      ? const Radius.circular(16)
+                      : const Radius.circular(0),
+                  bottomLeft: const Radius.circular(16),
+                  bottomRight: const Radius.circular(16),
+                ),
+                color: isMine ? ColorStyle.solidBlue : Colors.white,
+                gradient: isMine ? GradientStyle().twoGradient : null),
+            child: Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 2),
+                  child: Text(
+                    '${message.content}               ',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontFamily: 'Montserrat',
+                      color: isMine ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Row(
+                    children: [
+                      Text(
+                        '${message.getFormattedTime()}  ',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'Montserrat',
+                          color: isMine
+                              ? Colors.white.withOpacity(0.6)
+                              : Colors.grey[600],
+                        ),
+                      ),
+                      if (isMine)
+                        Icon(Icons.done_all_rounded,
+                            size: 16, color: Colors.white.withOpacity(0.6)),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Text(
-              message.getFormattedTime(),
-              style: TextStyle(
-                fontSize: 12.0,
-                fontFamily: 'Montserrat',
-                color: isMine ? Colors.white : Colors.black,
-              ),
-              textAlign: TextAlign.end,
-            ),
-          ],
+          ),
         ),
-      ),
+        // Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Text(
+        //     message.getFormattedTime(),
+        //     style: TextStyle(
+        //       fontSize: 12.0,
+        //       fontFamily: 'Montserrat',
+        //       color: isMine ? Colors.white : Colors.black,
+        //     ),
+        //     textAlign: TextAlign.end,
+        //   ),
+        // ),
+      ],
     );
   }
 }

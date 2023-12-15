@@ -7,8 +7,15 @@ import 'package:socket_io_common/src/util/event_emitter.dart';
 import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
 import 'package:w_app/bloc/socket_bloc/socket_event.dart';
 import 'package:w_app/bloc/socket_bloc/socket_state.dart';
+import 'package:w_app/bloc/user_bloc/user_bloc.dart';
+import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
+import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/chat/widgets/message_cont.dart';
 import 'package:w_app/services/api/api_service.dart';
+import 'package:w_app/styles/color_style.dart';
+import 'package:w_app/styles/gradient_style.dart';
+import 'package:w_app/widgets/circularAvatar.dart';
+import 'package:w_app/widgets/glassmorphism.dart';
 
 class InboxScreen extends StatefulWidget {
   final String receiver;
@@ -21,179 +28,306 @@ class InboxScreen extends StatefulWidget {
       required this.initials});
 
   @override
-  State<InboxScreen> createState() =>
-      _InboxScreenState(receiver, receiverName, initials);
+  State<InboxScreen> createState() => _InboxScreenState();
 }
 
 class _InboxScreenState extends State<InboxScreen> {
   // final _keyboardVisibilityController = KeyboardVisibilityController();
   TextEditingController _textFieldController = TextEditingController();
+  FocusNode focusNodeTextField = FocusNode();
 
   List<MessageContainer> messages = [];
   String msg = "";
-  String receiver;
-  String receiverName;
-  String initials;
-  Map<String, dynamic> user = {};
+
+  late User user;
+  late UserBloc _userBloc;
   late SocketBloc _socketBloc;
-
-  _InboxScreenState(
-      this.receiver, this.receiverName, this.initials);
-
-  Future<void> loadMessages() async {
-    List<dynamic> msg = await ApiService().getConversationMessages(receiver);
-    print(msg);
-    Map<String, dynamic> rsp = await ApiService().getUserProfile();
-    List<MessageContainer> messageContainers = [];
-    for (int i = msg.length - 1; i >= 0; i--) {
-      final message = Message.fromJson(msg[i]);
-      messageContainers.add(MessageContainer(
-          message: message,
-          isMine: message.idSender==user['user']['_id_user']
-      ));    
-    }
-    if (mounted) {
-      setState(() {
-        messages = messageContainers;
-        user = rsp;
-      });
-    }
-  }
-
-  void _addMessage(Message message) {
-    messages
-        .add(MessageContainer(message: message, isMine: message.idSender==user['user']['_id_user']));
-    if (mounted) {
-      setState(() {});
-    }
-  }
 
   @override
   void initState() {
     super.initState();
+    _userBloc = BlocProvider.of<UserBloc>(context);
+    final stateUser = _userBloc.state;
+    if (stateUser is UserLoaded) {
+      user = stateUser.user;
+    }
+
     loadMessages();
     _socketBloc = BlocProvider.of<SocketBloc>(context);
     _joinConversation();
     //Usa el socket para manejar los mensajes nuevos
     final state = _socketBloc.state;
-    if(state is Connected){
-      state.socket.on('newMessage',(msg) {
+    if (state is Connected) {
+      state.socket.on('newMessage', (msg) {
         final message = Message.fromJson(msg);
         _addMessage(message);
       });
     }
   }
 
-  Future<void> _joinConversation() async{
-    Map<String, dynamic> rsp = await ApiService().getUserProfile();
-    _socketBloc.add(JoinConversation(rsp['user']['_id_user'], receiver));
+  Future<void> loadMessages() async {
+    List<dynamic> msg =
+        await ApiService().getConversationMessages(widget.receiver);
+    print(msg);
+
+    List<MessageContainer> messageContainers = [];
+    for (int i = msg.length - 1; i >= 0; i--) {
+      final message = Message.fromJson(msg[i]);
+      bool isMine = message.idSender == user.idUser;
+
+      // Comprobar si el mensaje anterior tiene un remitente diferente (o si es el primer mensaje)
+      bool showSender = i == msg.length - 1 ||
+          msg[i]['_id_sender'] != msg[i + 1]['_id_sender'];
+
+      messageContainers.add(MessageContainer(
+        message: message,
+        isMine: isMine,
+        showSender: showSender,
+        name: isMine ? 'Me' : widget.receiverName,
+      ));
+    }
+
+    if (mounted) {
+      setState(() {
+        messages = messageContainers;
+      });
+    }
   }
 
-  
+  void _addMessage(Message message) {
+    messages.add(MessageContainer(
+      message: message,
+      isMine: message.idSender == user.idUser,
+      showSender: messages.last.message.idSender != message.idSender,
+      name: message.idSender == user.idUser ? 'Me' : widget.receiverName,
+    ));
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _joinConversation() async {
+    _socketBloc.add(JoinConversation(user.idUser, widget.receiver));
+  }
+
   @override
   void dispose() {
-    _socketBloc.add(LeaveConversation(user['user']['_id_user'], receiver));
+    _socketBloc.add(LeaveConversation(user.idUser, widget.receiver));
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SocketBloc,SocketState>(
-      listener: (context, state) {
-      },
+    return BlocListener<SocketBloc, SocketState>(
+      listener: (context, state) {},
       child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: Text(
-            receiverName,
-            style: TextStyle(
-              fontFamily: 'Montserrat',
-            ),
-          ),
-          centerTitle: true,
-        ),
-        body: Container(
-          width: double.maxFinite,
-          height: double.maxFinite,
-          child: Column(children: [
-            Flexible(
-              child: ListView.builder(
-                reverse: true,
-                scrollDirection: Axis.vertical,
-                padding: EdgeInsets.all(16.0),
-                itemBuilder: (context, index) {
-                  return Container(
-                    child: Column(children: [
-                      messages[messages.length - 1 - index],
-                      SizedBox(height: 5.0)
-                    ]),
-                  );
-                },
-                itemCount: messages.length,
-              ),
-            ),
+        backgroundColor: Colors.grey[100],
+        body: Stack(
+          children: [
             Container(
               width: double.maxFinite,
-              height: 88,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                // border: Border(
-                //   top: BorderSide(
-                //     color: Colors.grey[200]!,
-                //     width: 1,
-                //   ),
-                // ),
-              ),
-              child: Container(
-                margin: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 32),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(56)),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: CircleAvatar(
-                        radius: 18,
-                        child: Text(initials.toUpperCase(),
-                            style: TextStyle(color: Colors.deepOrangeAccent)),
-                        backgroundColor: const Color.fromARGB(255, 254, 223, 214),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8,
+              height: double.maxFinite,
+              child: Column(children: [
+                Flexible(
+                  child: ListView.builder(
+                    reverse: true,
+                    scrollDirection: Axis.vertical,
+                    padding: EdgeInsets.only(
+                        left: 16, right: 16, top: 128, bottom: 16),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        child: Column(children: [
+                          messages[messages.length - 1 - index],
+                          SizedBox(height: 5.0)
+                        ]),
+                      );
+                    },
+                    itemCount: messages.length,
+                  ),
+                ),
+                Container(
+                  width: double.maxFinite,
+                  height: focusNodeTextField.hasFocus ? 64 : 88,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    // border: Border(
+                    //   top: BorderSide(
+                    //     color: Colors.grey[200]!,
+                    //     width: 1,
+                    //   ),
+                    // ),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.only(
+                        left: 8,
+                        right: 8,
+                        top: 8,
+                        bottom: focusNodeTextField.hasFocus ? 8 : 32),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(56)),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                          child: CircleAvatar(
+                            radius: 18,
+                            child: Text(widget.initials.toUpperCase(),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    fontFamily: 'Montserrat')),
+                            backgroundColor: ColorStyle.solidBlue,
+                          ),
                         ),
-                        child: TextField(
-                          controller: _textFieldController,
-                          onChanged: (content) => msg = content,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Type a message...',
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8,
+                            ),
+                            child: TextField(
+                              controller: _textFieldController,
+                              focusNode: focusNodeTextField,
+                              onChanged: (content) => msg = content,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Type a message...',
+                              ),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            _socketBloc.add(
+                                SendMessage(msg, user.idUser, widget.receiver));
+                            _textFieldController.clear();
+                          },
+                          icon: Icon(Icons.send),
+                          color: ColorStyle.solidBlue,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+            //AppBarChat
+            Positioned(
+              top: 0,
+              child: GlassMorphism(
+                blur: 10,
+                opacity: 0.7,
+                borderRadius: 0,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 104,
+                  padding: EdgeInsets.only(top: 32),
+                  child: Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Positioned(
+                        left: 42,
+                        right: 0,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: 104,
+                          child: Row(
+                            children: [
+                              CircularAvatarW(
+                                  externalRadius: Offset(42, 42),
+                                  internalRadius: Offset(38, 38),
+                                  nameAvatar:
+                                      widget.receiverName.substring(0, 1),
+                                  isCompany: false),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      widget.receiverName,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          color: Colors.grey[900],
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    "Offline",
+                                    style: TextStyle(
+                                        color: Colors.grey[400],
+                                        fontSize: 16,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _socketBloc.add(SendMessage(msg, user['user']['_id_user'], receiver));
-                        _textFieldController.clear();
-                      },
-                      icon: Icon(Icons.send),
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ],
+                      Positioned(
+                        left: 16,
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Icon(
+                                Icons.arrow_back_ios,
+                                size: 26,
+                                color: Colors.grey[900],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        right: 16,
+                        child: Row(
+                          children: [
+                            // GestureDetector(
+                            //   onTap: () {},
+                            //   child: Icon(
+                            //     Icons.info_outline_rounded,
+                            //     size: 26,
+                            //     color: Colors.grey[800],
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   width: sizeH * 2.4,
+                            // ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Icon(
+                                Icons.more_vert,
+                                size: 26,
+                                color: Colors.grey[900],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ]),
+          ],
         ),
       ),
     );

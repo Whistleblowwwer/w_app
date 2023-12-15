@@ -353,7 +353,7 @@ class ApiService {
     return response.statusCode;
   }
 
-  Future<dynamic> getChats() async {
+  Future<List<dynamic>> getChats() async {
     try {
       var response = await _utils.get('messages/conversations');
       print(response.statusCode);
@@ -371,6 +371,9 @@ class ApiService {
   Future<dynamic> getConversationMessages(String id_receiver) async {
     try {
       var response = await _utils.get('messages/?_id_receiver=$id_receiver');
+      if (response.statusCode == 404) {
+        return [];
+      }
       final List<dynamic> messages =
           _utils.handleResponse(response)['messages'];
       return messages;

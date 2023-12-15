@@ -225,7 +225,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                                     // _feedBloc.add(AddComment(
                                                     //     content: response['content'],
                                                     //    ));
-
+                                                    print(
+                                                        '-- ${comments[index].idParent}');
                                                     ApiService().commentReview(
                                                         content:
                                                             response['content'],
