@@ -11,6 +11,7 @@ import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/actions/comments_screen.dart';
+import 'package:w_app/screens/chat/chat_screen.dart';
 import 'package:w_app/screens/chat/inbox_screen.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/services/api/api_service.dart';
@@ -163,12 +164,28 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                 PressTransform(
                   onPressed: () async{
                     String? tk = await UserRepository().getToken();
-                    if(tk != null) {
-                      //Sacar el token largo, el; corto ya esta
-                      Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-                          settings: RouteSettings(),
-                          builder: (context) =>
-                              InboxScreen(receiver: widget.user.idUser, receiverName: widget.user.name+" "+widget.user.lastName, initials: widget.user.name[0]+widget.user.lastName[0])));
+                    if(tk!=null){
+                      final _userBloc = BlocProvider.of<UserBloc>(context);
+                      final userState = _userBloc.state;
+                      User? user;
+                      if (userState is UserLoaded) {
+                        user = userState.user;
+                        if(user!.idUser != widget.user.idUser) {
+                          //Sacar el token largo, el; corto ya esta
+                          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                              settings: RouteSettings(),
+                              builder: (context) =>
+                                  InboxScreen(receiver: widget.user.idUser, receiverName: widget.user.name+" "+widget.user.lastName, initials: user!.name[0]+ user!.lastName[0])));
+                        }else{
+                          Navigator.of(context, rootNavigator: true)
+                            .push(MaterialPageRoute(
+                                settings: RouteSettings(),
+                                builder: (context) => ChatPage(
+                                  user: user!,
+                                )
+                              ));
+                        }
+                      }   
                     } else {
                       print("Token no provisto o no valido");
                     }

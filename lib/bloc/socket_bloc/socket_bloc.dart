@@ -65,6 +65,10 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
       print("Uniendose a conexion");
     });
 
+    _socket.on('leaveConversation', (_) {
+      print("Saliendo de sala");
+    });
+
     _socket.on("error", (err) {
       print("Error mensaje:" + err);
     });

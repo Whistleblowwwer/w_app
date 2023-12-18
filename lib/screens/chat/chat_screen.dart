@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
 import 'package:w_app/bloc/socket_bloc/socket_event.dart';
+import 'package:w_app/bloc/socket_bloc/socket_state.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
+import 'package:w_app/screens/chat/new_chat_screen.dart';
 import 'package:w_app/screens/chat/widgets/chat_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -24,6 +28,7 @@ class _ChatPageState extends State<ChatPage> {
   List<dynamic> listFilter = [];
   TextEditingController controllerSearch = TextEditingController();
   FocusNode focusNodeSearch = FocusNode();
+  late SocketBloc _socketBloc;
 
   //   late SocketBloc _socketBloc;
 
@@ -37,10 +42,19 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     // _socketBloc = BlocProvider.of<SocketBloc>(context);
     //     _socketBloc.add(Connect()); // Conectar usando SocketBloc
-    loadChats();
     super.initState();
-
+    loadChats();
     controllerSearch.addListener(_filterChats);
+
+    _socketBloc = BlocProvider.of<SocketBloc>(context);
+    final state = _socketBloc.state;
+    if (state is Connected) {
+      state.socket.on('updateConversations',(_){
+        print("Actualizando chats");
+        loadChats();
+      });
+    }
+
   }
 
   // Función para filtrar chats
@@ -218,7 +232,22 @@ class _ChatPageState extends State<ChatPage> {
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  Positioned(right: 16, child: Icon(FeatherIcons.edit))
+                  //Aca redirecciona a new chat
+                  Positioned(
+                    right: 16,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true)
+                          .push(MaterialPageRoute(
+                            settings: RouteSettings(),
+                            builder: (context) => NewChatPage()));
+                      },
+                      child: Icon(
+                        FeatherIcons.edit,
+                        size: 24,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
