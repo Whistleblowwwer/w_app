@@ -374,6 +374,20 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> getNewChats() async {
+    try {
+      var response = await _utils.get('messages/users-list');
+      print(response.statusCode);
+      print("__________________");
+
+      final List<dynamic> newChats = json.decode(response.body);
+
+      return newChats;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getConversationMessages(String id_receiver) async {
     try {
       var response = await _utils.get('messages/?_id_receiver=$id_receiver');
