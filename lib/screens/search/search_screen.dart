@@ -100,7 +100,7 @@ class _SearchScreenState extends State<SearchScreen>
               } else if (state is Searching) {
                 return SingleChildScrollView(
                   physics: BouncingScrollPhysics(), //ClampingScrollPhysics(),
-                  padding: EdgeInsets.only(bottom: 600, top: 200),
+                  padding: EdgeInsets.only(bottom: 128, top: 200),
                   child: Column(
                     children: [
                       Container(
@@ -488,7 +488,7 @@ class _SearchScreenState extends State<SearchScreen>
                             );
                           } else {
                             return SingleChildScrollView(
-                              padding: EdgeInsets.only(top: 184),
+                              padding: EdgeInsets.only(top: 184, bottom: 128),
                               child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: List.generate(
@@ -1044,59 +1044,63 @@ class NoticeScreen extends StatelessWidget {
           Column(
             children: List.generate(
                 3,
-                (index) => Container(
-                      margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 102,
-                            width: double.maxFinite,
-                            padding: EdgeInsets.only(left: 24, bottom: 16),
-                            margin: EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                                color: ColorStyle.borderGrey,
-                                borderRadius: BorderRadius.circular(8)),
-                          ),
-                          Text(
-                            "Titulo increible",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              "Nov 17. 2023",
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                  color: ColorStyle.textGrey,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
+                (index) => PressTransform(
+                      onPressed: () {},
+                      child: Container(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 102,
+                              width: double.maxFinite,
+                              padding: EdgeInsets.only(left: 24, bottom: 16),
+                              margin: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                  color: ColorStyle.borderGrey,
+                                  borderRadius: BorderRadius.circular(8)),
                             ),
-                          ),
-                        ],
+                            Text(
+                              "Titulo increible",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                "Nov 17. 2023",
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: ColorStyle.textGrey,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )),
           ),

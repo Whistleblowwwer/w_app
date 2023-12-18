@@ -256,7 +256,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     : SizedBox(),
               ),
               Positioned(
-                bottom: 88,
+                bottom: 80,
                 child: Container(
                   width: sizeW * 100,
                   decoration: BoxDecoration(

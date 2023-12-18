@@ -417,7 +417,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
               ),
             ),
             Positioned(
-                bottom: 86,
+                bottom: 80,
                 child: Container(
                   width: sizeW * 100,
                   decoration: BoxDecoration(

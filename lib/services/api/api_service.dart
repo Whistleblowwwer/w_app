@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -7,6 +9,8 @@ import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ApiService {
   static final ApiService _singleton = ApiService._internal();
@@ -241,8 +245,10 @@ class ApiService {
 
   Future<List<Review>> getUserReviews(String idUser) async {
     try {
+      print(idUser);
       var response = await _utils.get('users/reviews?_id_user=$idUser');
       print(response.statusCode);
+      print(response.body);
       final List<dynamic> companyData =
           _utils.handleResponse(response)['reviews'];
       print("-----b-----b---");
@@ -381,6 +387,19 @@ class ApiService {
       return Future.error(e);
     }
   }
+
+  Future<http.Response> uploadUserImages(
+      String userId, List<String> filePaths, String photoType) async {
+    var responseStream = await _utils.postMultipart(
+        'bucket?id=$userId&photo_type=$photoType',
+        filePaths, {} // Campos adicionales si los necesitas
+        );
+
+    // Obtener la respuesta completa
+    var response = await http.Response.fromStream(responseStream);
+
+    return response;
+  }
 }
 
 class ApiServerUtils {
@@ -430,6 +449,55 @@ class ApiServerUtils {
   Future<http.Response> delete(String endpoint) async {
     final headers = await _getDefaultHeaders();
     return await http.delete(Uri.parse('$baseUrl/$endpoint'), headers: headers);
+  }
+
+  Future<http.StreamedResponse> postMultipart(String endpoint,
+      List<String> filePaths, Map<String, String> additionalFields) async {
+    final headers = await _getDefaultHeaders();
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl/$endpoint'),
+    );
+
+    // Agregar campos adicionales si los hay
+    request.fields.addAll(additionalFields);
+
+    // Agregar cada archivo a la solicitud con la misma clave 'fileN'
+    for (var filePath in filePaths) {
+      request.files.add(await http.MultipartFile.fromPath('fileN', filePath));
+    }
+
+    // Agregar headers
+    request.headers.addAll(headers);
+
+    // Enviar la solicitud y devolver la respuesta
+    return await request.send();
+  }
+
+  Future<http.Response> postMultipartMedicFlow(
+      String endpoint, File file) async {
+    final headers = await _getDefaultHeaders();
+    // Obtén el tipo MIME del archivo
+
+    var request =
+        http.MultipartRequest('POST', Uri.parse('$baseUrl/$endpoint'));
+    var mimeType = lookupMimeType(file.path);
+    request.files.add(await http.MultipartFile.fromPath('fileN', file.path,
+        contentType: MediaType.parse(mimeType ?? '')));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse streamedResponse = await request.send();
+
+    // Convertir el StreamedResponse en un Response
+
+    print(streamedResponse.statusCode);
+    if (streamedResponse.statusCode == 200) {}
+    final response = await http.Response.fromStream(streamedResponse);
+
+    //  var response = await http.Response.fromStream(streamedResponse);
+
+    return response;
   }
 
   Map<String, dynamic> handleResponse(http.Response response) {

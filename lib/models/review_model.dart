@@ -51,7 +51,7 @@ class Review extends Equatable {
       children: json['children'] != null
           ? (json['children'] as List).map((c) => Comment.fromJson(c)).toList()
           : null,
-      images: json['images'] != null ? List<String>.from(json['images']) : null,
+      images: json['Images'] != null ? List<String>.from(json['Images']) : null,
     );
   }
 

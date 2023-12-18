@@ -36,6 +36,8 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
   final _formKeyBusiness = GlobalKey<FormState>();
   late UserBloc _userBloc;
 
+  bool isProcessing = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -164,11 +166,14 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                     ),
                     PressTransform(
                       onPressed: () async {
+                        if (isProcessing) return; // Evita múltiples presiones
+
                         if (!_formKeyBusiness.currentState!.validate()) {
                           showErrorSnackBar(context,
                               "Por favor, completa todos los campos requeridos.");
                           return;
                         }
+                        _formKeyBusiness.currentState!.save();
 
                         if (selecteCategory == null ||
                             selectedCity == null ||
@@ -187,6 +192,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                         }
 
                         try {
+                          isProcessing = true; // Comienza el procesamiento
                           final response = await ApiService().createBusiness(
                               name: controllerCompanyName.text,
                               entity: controllerEntity.text,

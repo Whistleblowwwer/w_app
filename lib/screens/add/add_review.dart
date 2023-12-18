@@ -535,7 +535,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                         idBusiness: selectedCompany!.idBusiness,
                                         idUser: userState.user.idUser,
                                         rating: ratingController)
-                                    .then((value) {
+                                    .then((value) async {
                                   if (value.statusCode == 201) {
                                     showSuccessSnackBar(context);
                                     FeedBloc feedBloc =
@@ -548,8 +548,25 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                     print("viejo");
                                     feedBloc.add(AddReview(
                                         Review.fromJson(json['review'])));
-
-                                    Navigator.pop(context);
+                                    List<String> filePaths = images
+                                        .map((file) => file.path)
+                                        .toList();
+                                    try {
+                                      await ApiService().uploadUserImages(
+                                          userState.user.idUser,
+                                          filePaths,
+                                          'reviews_img');
+                                    } catch (e) {
+                                      print("suuu");
+                                      print(e);
+                                      if (mounted) {
+                                        showErrorSnackBar(context,
+                                            "No se logró subir imagenes");
+                                      }
+                                    }
+                                    if (mounted) {
+                                      Navigator.pop(context);
+                                    }
                                   } else {
                                     showErrorSnackBar(
                                         context, "No se logró crear la reseña");
@@ -710,13 +727,22 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                         focusNodeSearch.unfocus();
                         FocusScope.of(context).unfocus();
 
-                        await Navigator.push(
+                        final businessResponse = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => AddBusinessScreen()),
                         );
+
                         if (mounted) {
-                          FocusScope.of(context).requestFocus(focusNodeSearch);
+                          if (businessResponse != null &&
+                              businessResponse is Business) {
+                            setState(() {
+                              showReviewPageNotifier.value = true;
+                              selectedCompany = businessResponse;
+                            });
+                          }
+
+                          FocusScope.of(context).requestFocus(focusNodeReview);
                         }
                       },
                       child: RoundedDotterRectangleBorder(
