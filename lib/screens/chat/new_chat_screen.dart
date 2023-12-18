@@ -18,6 +18,7 @@ class NewChatPage extends StatefulWidget {
 
 class _NewChatPageState extends State<NewChatPage> {
   List<dynamic> users = [];
+  
 
   @override
   void initState() {
