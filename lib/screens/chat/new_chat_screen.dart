@@ -1,13 +1,14 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:w_app/bloc/user_bloc/user_bloc.dart';
+import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/chat/widgets/user_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
-
-
 
 class NewChatPage extends StatefulWidget {
   NewChatPage({super.key});
@@ -18,10 +19,16 @@ class NewChatPage extends StatefulWidget {
 
 class _NewChatPageState extends State<NewChatPage> {
   List<dynamic> users = [];
-  
+  late UserBloc _userBloc;
+  late User user;
 
   @override
   void initState() {
+    _userBloc = BlocProvider.of<UserBloc>(context);
+    final stateUser = _userBloc.state;
+    if(stateUser is UserLoaded){
+      user=stateUser.user;
+    }
     loadUsers();
     super.initState();
   }
@@ -108,7 +115,7 @@ class _NewChatPageState extends State<NewChatPage> {
                           lastName: users[index]['last_name'],
                           receiver: users[index]['_id_user'],
                           photoUrl: users[index]['profile_picture_url'],
-                          initials: users[index]['name'][0]+users[index]['last_name'][0],
+                          initials: user.name[0]+user.lastName[0],
                           username: users[index]['nick_name']);
                       },
                     )
