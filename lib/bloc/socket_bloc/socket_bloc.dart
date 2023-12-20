@@ -31,7 +31,7 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     String? tk = await UserRepository().getToken();
     if (tk != null) {
       _socket = IO.io(
-          'http://3.135.121.50:4000',
+          'http://3.18.112.92:4000',
           IO.OptionBuilder()
               .setTransports(['websocket'])
               .disableAutoConnect()

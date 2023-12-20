@@ -8,12 +8,14 @@ class MessageContainer extends StatelessWidget {
   final bool isMine;
   final bool showSender;
   final String name;
+  final bool showDate;
 
   MessageContainer(
       {required this.message,
       required this.isMine,
       required this.showSender,
-      required this.name});
+      required this.name,
+      required this.showDate});
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,29 @@ class MessageContainer extends StatelessWidget {
         //       ],
         //     ),
         //   ),
+        if (showDate)
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    message.getFormattedDate(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         Container(
           alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(

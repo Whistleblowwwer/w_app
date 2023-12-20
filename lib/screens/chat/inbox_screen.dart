@@ -83,11 +83,17 @@ class _InboxScreenState extends State<InboxScreen> {
       bool showSender = i == msg.length - 1 ||
           msg[i]['_id_sender'] != msg[i + 1]['_id_sender'];
 
+      bool showDate = i == msg.length - 1 ||
+          !(DateTime.parse(msg[i]['createdAt']).year == DateTime.parse(msg[i+1]['createdAt']).year && 
+            DateTime.parse(msg[i]['createdAt']).month == DateTime.parse(msg[i+1]['createdAt']).month &&
+            DateTime.parse(msg[i]['createdAt']).day == DateTime.parse(msg[i+1]['createdAt']).day);
+
       messageContainers.add(MessageContainer(
         message: message,
         isMine: isMine,
         showSender: showSender,
         name: isMine ? 'Me' : widget.receiverName,
+        showDate: showDate,
       ));
     }
 
@@ -99,11 +105,15 @@ class _InboxScreenState extends State<InboxScreen> {
   }
 
   void _addMessage(Message message) {
+    bool showDate = messages.isEmpty? true :  !(message.createdAt.year == messages.last.message.createdAt.year && 
+                                                message.createdAt.month == messages.last.message.createdAt.month &&
+                                                message.createdAt.day == messages.last.message.createdAt.day);
     messages.add(MessageContainer(
       message: message,
       isMine: message.idSender == user.idUser,
       showSender: messages.isEmpty? true : messages.last.message.idSender != message.idSender,
       name: message.idSender == user.idUser ? 'Me' : widget.receiverName,
+      showDate: showDate,
     ));
     print(messages);
     if (mounted) {
