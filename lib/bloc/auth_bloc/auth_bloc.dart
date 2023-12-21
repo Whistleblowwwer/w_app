@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
@@ -76,6 +77,7 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
     emit(AuthLoading());
     try {
       final response = await apiService.createUser(
+        userName: event.userName,
         name: event.name,
         lastName: event.lastName,
         phone: event.phone,

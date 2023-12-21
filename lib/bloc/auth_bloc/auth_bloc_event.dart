@@ -24,6 +24,7 @@ class LogOutUser extends AuthBlocEvent {
 }
 
 class CreateUser extends AuthBlocEvent {
+  final String userName;
   final String name;
   final String lastName;
   final String phone;
@@ -36,6 +37,7 @@ class CreateUser extends AuthBlocEvent {
   // ... (otros parámetros necesarios para crear un usuario)
 
   CreateUser({
+    required this.userName,
     required this.name,
     required this.lastName,
     required this.phone,
@@ -49,6 +51,7 @@ class CreateUser extends AuthBlocEvent {
   @override
   // TODO: implement props
   List<Object> get props => [
+        userName,
         name,
         lastName,
         phone,

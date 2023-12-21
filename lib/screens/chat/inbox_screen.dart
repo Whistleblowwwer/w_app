@@ -62,7 +62,7 @@ class _InboxScreenState extends State<InboxScreen> {
     if (state is Connected) {
       state.socket.on('newMessage', (msg) {
         final message = Message.fromJson(msg);
-        print("POr mandar add message");
+        print("Por mandar add message");
         print(messages);
         _addMessage(message);
       });
@@ -102,7 +102,9 @@ class _InboxScreenState extends State<InboxScreen> {
     messages.add(MessageContainer(
       message: message,
       isMine: message.idSender == user.idUser,
-      showSender: messages.isEmpty? true : messages.last.message.idSender != message.idSender,
+      showSender: messages.isEmpty
+          ? true
+          : messages.last.message.idSender != message.idSender,
       name: message.idSender == user.idUser ? 'Me' : widget.receiverName,
     ));
     print(messages);

@@ -4,6 +4,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/comment_model.dart';
+import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/actions/comments_screen.dart';
 import 'package:w_app/screens/home/widgets/comment_card.dart';
@@ -92,6 +93,31 @@ class _CommentPageState extends State<CommentPage> {
     }
   }
 
+  void addCommentToComment() {
+    setState(() {
+      comment = comment.copyWith(comments: comment.comments + 1);
+    });
+  }
+
+  void _followUser(UserData user) {
+    setState(() {
+      // Actualizar el estado de 'followed' del usuario en la reseña si corresponde
+      if (comment.user.idUser == user.idUser) {
+        comment = comment.copyWith(
+            user: comment.user.copyWith(followed: !comment.user.followed));
+      }
+
+      // Actualizar el estado de 'followed' del usuario en los comentarios
+      comments = comments.map((comment) {
+        if (comment.user.idUser == user.idUser) {
+          return comment.copyWith(
+              user: comment.user.copyWith(followed: !comment.user.followed));
+        }
+        return comment;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final sizeW = MediaQuery.of(context).size.width / 100;
@@ -116,10 +142,19 @@ class _CommentPageState extends State<CommentPage> {
                           ),
                           SliverToBoxAdapter(
                               child: CommentWidget(
+                                  isThread: true,
+                                  isActive: false,
                                   comment: comment,
                                   user: widget.user,
-                                  onComment: widget.onComment,
-                                  onFollowUser: widget.onFollowUser,
+                                  onComment: () async {
+                                    await widget.onComment();
+                                    await _loadReviews();
+                                    addCommentToComment();
+                                  },
+                                  onFollowUser: () {
+                                    _followUser(comment.user);
+                                    widget.onFollowUser();
+                                  },
                                   onLike: () {
                                     setState(() {
                                       comment = comment.copyWith(
@@ -222,7 +257,7 @@ class _CommentPageState extends State<CommentPage> {
                                                       idReview: comments[index]
                                                           .idReview,
                                                       idParent: comments[index]
-                                                          .idParent);
+                                                          .idComment);
                                                 }
                                                 print(response);
                                               }

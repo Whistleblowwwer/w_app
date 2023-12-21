@@ -3,6 +3,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/user.dart';
+import 'package:w_app/screens/actions/review_bottom_sheet.dart';
 import 'package:w_app/screens/home/comment_screen.dart';
 import 'package:w_app/screens/home/widgets/images_dimension_widget.dart';
 import 'package:w_app/styles/color_style.dart';
@@ -11,23 +12,31 @@ import 'package:w_app/widgets/press_transform_widget.dart';
 
 class CommentWidget extends StatelessWidget {
   final User user;
+  final bool isThread;
+  final bool isActive;
   final Comment comment;
   final VoidCallback onLike;
   final Future Function() onComment;
   final VoidCallback onFollowUser;
+  final VoidCallback? onDelete;
 
-  const CommentWidget(
-      {super.key,
-      required this.comment,
-      required this.user,
-      required this.onComment,
-      required this.onFollowUser,
-      required this.onLike});
+  const CommentWidget({
+    super.key,
+    required this.comment,
+    required this.user,
+    this.isActive = true,
+    this.isThread = false,
+    required this.onComment,
+    required this.onFollowUser,
+    required this.onLike,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        if (!isActive) return;
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -119,9 +128,48 @@ class CommentWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Icon(
-                    FeatherIcons.moreHorizontal,
-                    size: 18,
+                  GestureDetector(
+                    onTap: () async {
+                      await showModalBottomSheet(
+                        context: context,
+                        useRootNavigator: true,
+                        isScrollControlled:
+                            true, // Permite que el contenido sea desplazable si es necesario
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(20.0),
+                          ),
+                        ),
+                        builder: (BuildContext context) {
+                          return ReviewBottomSheet(
+                            user: user,
+                            actions: [
+                              if (user.idUser != comment.user.idUser)
+                                ReviewAction(
+                                  text: comment.user.followed
+                                      ? "Dejar de seguir a ${comment.user.name}"
+                                      : "Seguir a ${comment.user.name}",
+                                  onPressed: () {
+                                    onFollowUser();
+                                  },
+                                ),
+                              if (user.idUser == comment.user.idUser)
+                                ReviewAction(
+                                    color: ColorStyle.accentRed,
+                                    text: "Eliminar",
+                                    onPressed: () {
+                                      onDelete?.call();
+                                    }),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Icon(
+                      FeatherIcons.moreHorizontal,
+                      size: 18,
+                    ),
                   )
                   // PressTransform(
                   //   onPressed: () {},
@@ -143,19 +191,19 @@ class CommentWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Visibility(
-                      visible: true,
+                      visible: isThread,
                       child: Container(
-                          width: 1.5,
-                          margin: EdgeInsets.only(left: 46.5, bottom: 0),
-                          color: null //ColorStyle.borderGrey,
-                          )),
+                        width: 1.5,
+                        margin: EdgeInsets.only(left: 34, bottom: 16),
+                        color: ColorStyle.borderGrey,
+                      )),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding:
-                              EdgeInsets.only(left: 16, right: 18, bottom: 12),
+                              EdgeInsets.only(left: 24, right: 18, bottom: 12),
                           child: Text(
                             comment.content,
                             textAlign: TextAlign.start,
@@ -181,7 +229,7 @@ class CommentWidget extends StatelessWidget {
                                 comment.images ?? [], context),
                           ),
                         Padding(
-                            padding: EdgeInsets.only(left: 16, right: 16),
+                            padding: EdgeInsets.only(left: 24, right: 16),
                             child: SizedBox(
                               width: double.maxFinite,
                               child: Row(
@@ -231,7 +279,7 @@ class CommentWidget extends StatelessWidget {
                             )),
                         Padding(
                           padding: EdgeInsets.only(
-                              left: 16, right: 16, top: 8, bottom: 16),
+                              left: 24, right: 16, top: 8, bottom: 16),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Row(

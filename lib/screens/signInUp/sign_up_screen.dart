@@ -1,16 +1,14 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_state.dart';
-import 'package:w_app/screens/add/add_review.dart';
+import 'package:w_app/data/countries_data.dart';
 import 'package:w_app/screens/signInUp/widgets/custom_textfield_widget.dart';
-import 'package:w_app/screens/signInUp/widgets/password_input_widget.dart';
-import 'package:w_app/screens/signInUp/sign_in_screen.dart';
 import 'package:w_app/styles/color_style.dart';
-import 'package:w_app/styles/gradient_style.dart';
 import 'package:w_app/widgets/custom_dropdown_menu.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
 import 'package:w_app/widgets/snackbar.dart';
@@ -25,6 +23,9 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final controllerPage = PageController(initialPage: 0);
+
+  final controllerUserName = TextEditingController();
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   final controllerConfirmPassword = TextEditingController();
@@ -33,6 +34,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final controllerCodePhone = TextEditingController();
   final controllerPhone = TextEditingController();
 
+  final _focusNodeUserName = FocusNode();
   final _focusNodeName = FocusNode();
   final _focusNodeLastName = FocusNode();
   final _focusNodeEmail = FocusNode();
@@ -43,8 +45,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
   String? gender;
   DateTime? birthdate;
+  String preffix = '52';
 
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
 
   late AuthBloc _authBloc;
 
@@ -53,6 +57,15 @@ class _SignUpPageState extends State<SignUpPage> {
   void initState() {
     super.initState();
     _authBloc = BlocProvider.of<AuthBloc>(context);
+  }
+
+  bool isEighteenYearsOrOlder(DateTime birthdate) {
+    DateTime currentDate = DateTime.now();
+    DateTime eighteenYearsAgo =
+        DateTime(currentDate.year - 18, currentDate.month, currentDate.day);
+
+    return birthdate.isBefore(eighteenYearsAgo) ||
+        birthdate.isAtSameMomentAs(eighteenYearsAgo);
   }
 
   @override
@@ -67,306 +80,477 @@ class _SignUpPageState extends State<SignUpPage> {
       },
       child: Scaffold(
         key: _scaffoldKey,
-        body: Form(
-          key: _formKey,
-          child: Container(
-            width: sizeW * 100,
-            height: sizeH * 100,
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: 104),
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        body: Container(
+          width: sizeW * 100,
+          height: sizeH * 100,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 88, right: 24, left: 24, bottom: 0),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 88, bottom: 0),
-                      child: Row(
-                        children: [],
+                    Container(
+                      width: 20,
+                      height: 20,
+                      margin: const EdgeInsets.only(right: 8, left: 24),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                              color: ColorStyle.darkPurple, width: 1.5)),
+                      child: Icon(
+                        Icons.arrow_back,
+                        size: 14,
+                        color: ColorStyle.darkPurple,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 20,
-                            height: 20,
-                            margin: const EdgeInsets.only(right: 8),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: ColorStyle.darkPurple, width: 1.5)),
-                            child: Icon(
-                              Icons.arrow_back,
-                              size: 14,
-                              color: ColorStyle.darkPurple,
-                            ),
-                          ),
-                          Text("Regresar",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: ColorStyle.darkPurple,
-                                  fontFamily: "Montserrat")),
-                        ],
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 24, bottom: 8),
-                      child: Center(
-                        child: Text("Crear cuenta",
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Montserrat")),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 0, bottom: 36),
-                      child: Center(
-                        child: Text(
-                            "Completa los datos y únete a la comunidad de Whistleblowwer",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: ColorStyle.textGrey,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: "Montserrat")),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: CustomTextFormField(
-                            labelText: 'Nombre',
-                            controller: controllerName,
-                            // inputType: TextInputType.name,
-                            // hintText: '',
-                            focusNode: _focusNodeName,
-                            onFieldSubmitted: (_) {
-                              FocusScope.of(context).requestFocus(
-                                  _focusNodeLastName); // esto mueve el foco al siguiente campo de texto cuando se presiona Enter.
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your name';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Expanded(
-                          child: CustomTextFormField(
-                            labelText: 'Apellidos',
-                            controller: controllerLastName,
-                            focusNode: _focusNodeLastName,
-                            onFieldSubmitted: (_) {
-                              FocusScope.of(context).requestFocus(
-                                  _focusNodePhone); // esto mueve el foco al siguiente campo de texto cuando se presiona Enter.
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your last name';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: CustomTextFormField(
-                            labelText: 'Teléfono',
-                            controller: controllerPhone,
-                            focusNode: _focusNodePhone,
-                            onFieldSubmitted: (_) {
-                              FocusScope.of(context).requestFocus(
-                                  _focusNodeEmail); // esto mueve el foco al siguiente campo de texto cuando se presiona Enter.
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your phone number';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    CustomTextFormField(
-                      labelText: 'Email',
-                      controller: controllerEmail,
-                      type: TextInputType.emailAddress,
-                      focusNode: _focusNodeEmail,
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(
-                            _focusNodePassword); // esto mueve el foco al siguiente campo de texto cuando se presiona Enter.
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
-                        } else if (!EmailValidator.validate(value)) {
-                          return 'Please enter a valid email';
-                        }
-                        return null;
-                      },
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: CustomDropdown(
-                            title: 'Género',
-                            style: const TextStyle(
-                                color: ColorStyle.textGrey,
-                                fontFamily: 'Montserrat',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600),
-                            hintText: 'Selecciona un género',
-                            list: const ['Masculino', 'Femenino'],
-                            padding: EdgeInsets.only(bottom: 0, top: 0),
-                            onSelected: (selected) {
-                              setState(() {
-                                gender = selected;
-                              });
-                            },
-                          ),
-                        ),
-                        Expanded(
-                            child: CustomDatePicker(
-                          title: 'Fecha de nacimiento',
-                          style: const TextStyle(
-                              color: ColorStyle.textGrey,
-                              fontFamily: 'Montserrat',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600),
-                          onDateSelected: (onDateSelected) {
-                            setState(() {
-                              birthdate = onDateSelected;
-                            });
-                          },
-                        ))
-                      ],
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    CustomTextFormField(
-                      controller: controllerPassword,
-                      focusNode: _focusNodePassword,
-                      labelText: 'Contraseña',
-                      obscureText: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a password';
-                        }
-                        return null;
-                      },
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context)
-                            .requestFocus(_focusNodeConfirmPassword);
-                      },
-                    ),
-                    CustomTextFormField(
-                      controller: controllerConfirmPassword,
-                      focusNode: _focusNodeConfirmPassword,
-                      labelText: 'Contraseña',
-                      obscureText: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a confirm password';
-                        }
-                        return null;
-                      },
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context)
-                            .requestFocus(_focusNodeConfirmPassword);
-                      },
-                    ),
-                    SizedBox(
-                      height: 32,
-                    ),
-                    PressTransform(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate() &&
-                            gender != null &&
-                            birthdate != null) {
-                          _formKey.currentState!.save();
-                          if (controllerPassword.text ==
-                              controllerConfirmPassword.text) {
-                            BlocProvider.of<AuthBloc>(context).add(CreateUser(
-                              name: controllerName.text,
-                              lastName: controllerLastName.text,
-                              phone: controllerPhone.text,
-                              email: controllerEmail.text,
-                              birthdate: birthdate!,
-                              password: controllerConfirmPassword.text,
-                              role: "admin",
-                              gender: gender == 'Masculino' ? 'M' : 'F',
-                            ));
-                          } else {
-                            showErrorSnackBar(
-                                context, "Las contraseñas no son iguales");
-                          }
-                        }
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 16),
-                        width: double.maxFinite,
-                        height: 48,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: ColorStyle.darkPurple),
-                        child: Text(
-                          "Ingresar",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Montserrat',
-                              fontSize: 16),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 16),
-                        width: double.maxFinite,
-                        height: 48,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: ColorStyle.sectionBase),
-                        child: Text(
-                          "Cancelar",
-                          style: TextStyle(
-                              color: ColorStyle.textGrey,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Montserrat',
-                              fontSize: 16),
-                        ),
-                      ),
-                    ),
+                    Text("Regresar",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: ColorStyle.darkPurple,
+                            fontFamily: "Montserrat")),
                   ],
                 ),
               ),
-            ),
+              Expanded(
+                child: PageView(
+                  controller: controllerPage,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    Form(
+                      key: _formKey1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top: 24, bottom: 8),
+                              child: Center(
+                                child: Text("Crear cuenta",
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: "Montserrat")),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 0, bottom: 36),
+                              child: Center(
+                                child: Text(
+                                    "Completa los datos y únete a la comunidad de Whistleblowwer",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: ColorStyle.textGrey,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: "Montserrat")),
+                              ),
+                            ),
+
+                            CustomTextFormField(
+                              labelText: 'Username',
+                              controller: controllerUserName,
+                              // inputType: TextInputType.name,
+                              // hintText: '',
+                              focusNode: _focusNodeUserName,
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context).requestFocus(
+                                    _focusNodeName); // esto mueve el foco al siguiente campo de texto cuando se presiona Enter.
+                              },
+                            ),
+
+                            CustomTextFormField(
+                              labelText: 'Nombre',
+                              controller: controllerName,
+                              // inputType: TextInputType.name,
+                              // hintText: '',
+                              focusNode: _focusNodeName,
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context).requestFocus(
+                                    _focusNodeLastName); // esto mueve el foco al siguiente campo de texto cuando se presiona Enter.
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your name';
+                                }
+                                return null;
+                              },
+                            ),
+
+                            CustomTextFormField(
+                              labelText: 'Apellidos',
+                              controller: controllerLastName,
+                              focusNode: _focusNodeLastName,
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context).requestFocus(
+                                    _focusNodePhone); // esto mueve el foco al siguiente campo de texto cuando se presiona Enter.
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your last name';
+                                }
+                                return null;
+                              },
+                            ),
+                            CustomTextFormField(
+                              labelText: 'Email',
+                              controller: controllerEmail,
+                              type: TextInputType.emailAddress,
+                              focusNode: _focusNodeEmail,
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context).requestFocus(
+                                    _focusNodePassword); // esto mueve el foco al siguiente campo de texto cuando se presiona Enter.
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your email';
+                                } else if (!EmailValidator.validate(value)) {
+                                  return 'Please enter a valid email';
+                                }
+                                return null;
+                              },
+                            ),
+
+                            // CustomDatePicker(
+                            //   title: 'Fecha de nacimiento',
+                            //   margin: EdgeInsets.only(top: 4),
+                            //   style: const TextStyle(
+                            //       color: ColorStyle.textGrey,
+                            //       fontFamily: 'Montserrat',
+                            //       fontSize: 14,
+                            //       fontWeight: FontWeight.w600),
+                            //   onDateSelected: (onDateSelected) {
+                            //     setState(() {
+                            //       birthdate = onDateSelected;
+                            //     });
+                            //   },
+                            // ),
+
+                            SizedBox(
+                              height: 32,
+                            ),
+                            PressTransform(
+                              onPressed: () async {
+                                if (_formKey1.currentState!.validate()) {
+                                  _formKey1.currentState!.save();
+                                  controllerPage.jumpToPage(
+                                    1,
+                                    // duration: Duration(milliseconds: 400),
+                                    // curve: Curves.bounceInOut);
+                                  );
+                                }
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 16),
+                                width: double.maxFinite,
+                                height: 48,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: ColorStyle.darkPurple),
+                                child: Text(
+                                  "Siguiente",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                  padding: EdgeInsets.only(top: 24, bottom: 32),
+                                  child: Center(
+                                      child: Text("Completa los datos",
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: "Montserrat")))),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: CustomDropdown(
+                                      title: '',
+                                      hintText: '52',
+                                      initialValue: preffix,
+                                      type: "phone_code",
+                                      // showIcon: true,
+                                      list: countries
+                                          .map((country) =>
+                                              country["phone_code"].toString())
+                                          .toList()
+                                        ..sort((a, b) => a.compareTo(b)),
+                                      padding:
+                                          EdgeInsets.only(bottom: 16, right: 8),
+                                      onSelected: (selected) {
+                                        setState(() {
+                                          preffix = selected;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: CustomTextFormField(
+                                      labelText: 'Teléfono',
+                                      controller: controllerPhone,
+                                      onFieldSubmitted: (_) {},
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter your phone number';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              CustomDropdown(
+                                title: 'Género',
+                                style: const TextStyle(
+                                    color: ColorStyle.textGrey,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                                hintText: 'Selecciona un género',
+                                list: const ['Masculino', 'Femenino'],
+                                padding: EdgeInsets.only(bottom: 16, top: 0),
+                                onSelected: (selected) {
+                                  setState(() {
+                                    gender = selected;
+                                  });
+                                },
+                              ),
+                              CustomDatePicker(
+                                title: 'Fecha de nacimiento',
+                                margin: EdgeInsets.only(top: 2, bottom: 16),
+                                style: const TextStyle(
+                                    color: ColorStyle.textGrey,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                                onDateSelected: (onDateSelected) {
+                                  setState(() {
+                                    birthdate = onDateSelected;
+                                  });
+                                },
+                              ),
+
+                              Form(
+                                key: _formKey2,
+                                child: Column(
+                                  children: [
+                                    CustomTextFormField(
+                                      controller: controllerPassword,
+                                      focusNode: _focusNodePassword,
+                                      labelText: 'Contraseña',
+                                      obscureText: true,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter a password';
+                                        }
+                                        return null;
+                                      },
+                                      onFieldSubmitted: (_) {
+                                        FocusScope.of(context).requestFocus(
+                                            _focusNodeConfirmPassword);
+                                      },
+                                    ),
+                                    CustomTextFormField(
+                                      controller: controllerConfirmPassword,
+                                      focusNode: _focusNodeConfirmPassword,
+                                      labelText: 'Contraseña',
+                                      obscureText: true,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter a confirm password';
+                                        }
+                                        return null;
+                                      },
+                                      onFieldSubmitted: (_) {
+                                        FocusScope.of(context).requestFocus(
+                                            _focusNodeConfirmPassword);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 32,
+                              ),
+                              // Row(
+                              //   crossAxisAlignment: CrossAxisAlignment.start,
+                              //   children: [
+                              //     SizedBox(
+                              //       width: 8,
+                              //     ),
+                              //   ],
+                              // ),
+
+                              Text.rich(TextSpan(
+                                  children: [
+                                    TextSpan(
+                                        text: "Al registrarte, aceptas los"),
+                                    TextSpan(
+                                        text: "Términos de servicio",
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            final Uri url = Uri.parse(
+                                                'https://www.whistleblowwer.com/admin');
+                                            if (!await launchUrl(url)) {
+                                              print('Could not launch $url');
+                                            }
+                                          },
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline)),
+                                    TextSpan(text: " y la "),
+                                    TextSpan(
+                                        text: "Política de privacidad",
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            final Uri url = Uri.parse(
+                                                'https://www.whistleblowwer.com/admin');
+                                            if (!await launchUrl(url)) {
+                                              print('Could not launch $url');
+                                            }
+                                          },
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline)),
+                                    TextSpan(
+                                        text: ", incluida la política de "),
+                                    TextSpan(
+                                        text: "Uso de Cookies.",
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            final Uri url = Uri.parse(
+                                                'https://www.whistleblowwer.com/admin');
+                                            if (!await launchUrl(url)) {
+                                              print('Could not launch $url');
+                                            }
+                                          },
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline)),
+                                  ],
+                                  style: TextStyle(
+                                      fontFamily: 'Montserrat', fontSize: 13))),
+                              SizedBox(
+                                height: 24,
+                              ),
+
+                              PressTransform(
+                                onPressed: () async {
+                                  if (_formKey2.currentState!.validate() &&
+                                      birthdate != null) {
+                                    _formKey2.currentState!.save();
+
+                                    if (!isEighteenYearsOrOlder(birthdate!)) {
+                                      showErrorSnackBar(
+                                          context, "Es menor de 18 años");
+                                      return;
+                                    }
+
+                                    if (controllerPassword.text !=
+                                        controllerConfirmPassword.text) {
+                                      showErrorSnackBar(context,
+                                          "Las contraseñas no son iguales");
+                                      return;
+                                    }
+
+                                    String phoneNumber = '';
+
+                                    if (controllerPhone.text.isNotEmpty) {
+                                      phoneNumber = preffix.startsWith('+')
+                                          ? preffix + controllerPhone.text
+                                          : '+$preffix${controllerPhone.text}';
+                                    }
+
+                                    print(phoneNumber);
+
+                                    BlocProvider.of<AuthBloc>(context)
+                                        .add(CreateUser(
+                                      userName: controllerUserName.text,
+                                      name: controllerName.text,
+                                      lastName: controllerLastName.text,
+                                      phone: controllerPhone.text,
+                                      email: controllerEmail.text,
+                                      birthdate: birthdate!,
+                                      password: controllerConfirmPassword.text,
+                                      role: "admin",
+                                      gender: gender == 'Masculino' ? 'M' : 'F',
+                                    ));
+                                  } else {
+                                    showErrorSnackBar(
+                                        context, "Ingresa una fecha");
+                                  }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 16),
+                                  width: double.maxFinite,
+                                  height: 48,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: ColorStyle.darkPurple),
+                                  child: Text(
+                                    "Crear cuenta",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 16),
+                                  width: double.maxFinite,
+                                  height: 48,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: ColorStyle.sectionBase),
+                                  child: Text(
+                                    "Cancelar",
+                                    style: TextStyle(
+                                        color: ColorStyle.textGrey,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                            ])),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -429,6 +613,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           widget.title,

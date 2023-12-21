@@ -18,6 +18,7 @@ import 'package:w_app/screens/add/add_business_screen.dart';
 import 'package:w_app/screens/business_screen.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/screens/profile/foreign_profile_screen.dart';
+import 'package:w_app/screens/search/notice_detail_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/styles/gradient_style.dart';
@@ -1008,29 +1009,32 @@ class NoticeScreen extends StatelessWidget {
           Container(
             height: 256,
             width: double.maxFinite,
-            padding: EdgeInsets.only(left: 24, bottom: 16),
-            decoration: BoxDecoration(gradient: GradientStyle().grayGradient),
+            padding: EdgeInsets.only(left: 24, bottom: 4),
+            decoration: BoxDecoration(
+                gradient: GradientStyle().grayGradient,
+                image: DecorationImage(
+                    image: AssetImage('assets/images/ilustrations/169.jpg'))),
             child: Stack(
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("Encabezado",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Montserrat',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500)),
-                    SizedBox(
-                      height: 4,
-                    ),
+                    // Text("Encabezado",
+                    //     style: TextStyle(
+                    //         color: Colors.white,
+                    //         fontFamily: 'Montserrat',
+                    //         fontSize: 14,
+                    //         fontWeight: FontWeight.w500)),
+                    // SizedBox(
+                    //   height: 4,
+                    // ),
                     Text(
-                      "Noticia Principal",
+                      "Publicidad",
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.white.withOpacity(0.5),
                           fontFamily: 'Montserrat',
-                          fontSize: 26,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -1045,7 +1049,15 @@ class NoticeScreen extends StatelessWidget {
             children: List.generate(
                 3,
                 (index) => PressTransform(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                                builder: (context) => NoticeDetailScreen(
+                                    index: index,
+                                    image: index == 0
+                                        ? 'assets/images/logos/Whistle.png'
+                                        : 'assets/images/ilustrations/169.jpg')));
+                      },
                       child: Container(
                         margin:
                             EdgeInsets.symmetric(horizontal: 24, vertical: 8),
@@ -1058,13 +1070,24 @@ class NoticeScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              height: 102,
                               width: double.maxFinite,
-                              padding: EdgeInsets.only(left: 24, bottom: 16),
                               margin: EdgeInsets.only(bottom: 10),
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
                               decoration: BoxDecoration(
                                   color: ColorStyle.borderGrey,
                                   borderRadius: BorderRadius.circular(8)),
+                              child: Hero(
+                                tag: index,
+                                child: index == 0
+                                    ? Image.asset(
+                                        'assets/images/logos/Whistle.png',
+                                        width: double.maxFinite,
+                                      )
+                                    : Image.asset(
+                                        'assets/images/ilustrations/169.jpg',
+                                        width: double.maxFinite,
+                                      ),
+                              ),
                             ),
                             Text(
                               "Titulo increible",
@@ -1125,7 +1148,7 @@ class ForYouScreen extends StatelessWidget {
           Container(
             height: 256,
             width: double.maxFinite,
-            padding: EdgeInsets.only(left: 24, bottom: 16),
+            padding: EdgeInsets.only(left: 24, bottom: 8),
             decoration: BoxDecoration(
                 // gradient: GradientStyle().grayGradient,
                 image: DecorationImage(
@@ -1137,21 +1160,21 @@ class ForYouScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("Encabezado",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Montserrat',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500)),
+                    // Text("Encabezado",
+                    //     style: TextStyle(
+                    //         color: Colors.white,
+                    //         fontFamily: 'Montserrat',
+                    //         fontSize: 14,
+                    //         fontWeight: FontWeight.w500)),
                     SizedBox(
                       height: 4,
                     ),
                     Text(
                       "Publicidad",
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.white.withOpacity(0.5),
                           fontFamily: 'Montserrat',
-                          fontSize: 26,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -1204,29 +1227,29 @@ class ForYouScreen extends StatelessWidget {
           Divider(
             color: ColorStyle.midToneGrey,
           ),
-          ReviewCardDefault(
-              review: Review(
-                  idReview: '',
-                  content:
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
-                  likes: 2,
-                  rating: 2.5,
-                  isLiked: true,
-                  isValid: true,
-                  createdAt: null,
-                  updatedAt: null,
-                  comments: 4,
-                  business: BusinessData(
-                      idBusiness: '',
-                      name: 'Starbucks',
-                      entity: 'Alsea',
-                      rating: 4,
-                      followed: true),
-                  user: UserData(
-                      idUser: '',
-                      name: 'Harold',
-                      lastName: 'Lancheros',
-                      followed: true)))
+          // ReviewCardDefault(
+          //     review: Review(
+          //         idReview: '',
+          //         content:
+          //             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
+          //         likes: 2,
+          //         rating: 2.5,
+          //         isLiked: true,
+          //         isValid: true,
+          //         createdAt: null,
+          //         updatedAt: null,
+          //         comments: 4,
+          //         business: BusinessData(
+          //             idBusiness: '',
+          //             name: 'Starbucks',
+          //             entity: 'Alsea',
+          //             rating: 4,
+          //             followed: true),
+          //         user: UserData(
+          //             idUser: '',
+          //             name: 'Harold',
+          //             lastName: 'Lancheros',
+          //             followed: true)))
         ],
       ),
     );

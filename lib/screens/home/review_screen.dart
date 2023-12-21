@@ -235,7 +235,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                                                 .idReview,
                                                         idParent:
                                                             comments[index]
-                                                                .idParent);
+                                                                .idComment);
                                                   }
 
                                                   await _loadReviews();

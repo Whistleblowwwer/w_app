@@ -142,15 +142,16 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                 ),
-                InterceptionTextWidget(
-                  text: "Ingresa también con",
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: SignInWithButton(
-                    text: "Ingresa con Google",
-                  ),
-                ),
+                // InterceptionTextWidget(
+                //   text: "Ingresa también con",
+                // ),
+                // GestureDetector(
+                //   onTap: () {},
+                //   child: SignInWithButton(
+                //     text: "Ingresa con Google",
+                //   ),
+                // ),
+
                 GestureDetector(
                   onTap: () {
                     Navigator.push(

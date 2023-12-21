@@ -23,6 +23,7 @@ import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/dotters.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
+import 'package:w_app/widgets/showLoadingModal.dart';
 import 'package:w_app/widgets/snackbar.dart';
 
 class CombinedBottomSheet extends StatefulWidget {
@@ -529,6 +530,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                               final userState = _userBloc.state;
 
                               if (userState is UserLoaded) {
+                                showLoadingDialog(context);
                                 await ApiService()
                                     .createReview(
                                         content: controllerReview.text,
@@ -540,37 +542,58 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                     showSuccessSnackBar(context);
                                     FeedBloc feedBloc =
                                         BlocProvider.of<FeedBloc>(context);
-                                    Map<String, dynamic> json =
+                                    Map<String, dynamic> jsonResponse =
                                         jsonDecode(value.body);
-                                    print("--a -sa-- a");
-                                    print(json['review']);
-                                    print(Review.fromJson(json['review']));
-                                    print("viejo");
-                                    feedBloc.add(AddReview(
-                                        Review.fromJson(json['review'])));
+
+                                    Review newReview =
+                                        Review.fromJson(jsonResponse['review']);
+
                                     List<String> filePaths = images
                                         .map((file) => file.path)
                                         .toList();
                                     try {
-                                      await ApiService().uploadUserImages(
-                                          userState.user.idUser,
-                                          filePaths,
-                                          'reviews_img');
+                                      final imagesResponse = await ApiService()
+                                          .uploadUserImages(
+                                              newReview
+                                                  .idReview, // userState.user.idUser,
+                                              filePaths,
+                                              'reviews_img');
+
+                                      if (imagesResponse.statusCode == 201 ||
+                                          imagesResponse.statusCode == 200) {
+                                        final jsonImageResponse =
+                                            json.decode(imagesResponse.body);
+
+                                        List<dynamic> dynamicList =
+                                            jsonImageResponse['Images'];
+
+                                        List<String> stringList = dynamicList
+                                            .map((item) => item.toString())
+                                            .toList();
+
+                                        newReview = newReview.copyWith(
+                                            images: stringList);
+                                      }
                                     } catch (e) {
-                                      print("suuu");
+                                      print('=---');
                                       print(e);
                                       if (mounted) {
                                         showErrorSnackBar(context,
                                             "No se logró subir imagenes");
                                       }
                                     }
+                                    feedBloc.add(AddReview(newReview));
                                     if (mounted) {
-                                      Navigator.pop(context);
+                                      Navigator.of(context)
+                                        ..pop()
+                                        ..pop();
                                     }
                                   } else {
                                     showErrorSnackBar(
                                         context, "No se logró crear la reseña");
-                                    Navigator.pop(context);
+                                    Navigator.of(context)
+                                      ..pop()
+                                      ..pop();
                                   }
                                 });
                               }

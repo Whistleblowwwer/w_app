@@ -19,10 +19,8 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     on<NewMessage>(_newMessage);
 
     // Agrega manejadores para otros eventos según sea necesario
-
   }
-  
-  
+
   void _newMessage(NewMessage event, Emitter<SocketState> emit) {
     //emit(ArrivedMessage(event.message));
   }
@@ -31,7 +29,7 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     String? tk = await UserRepository().getToken();
     if (tk != null) {
       _socket = IO.io(
-          'http://3.135.121.50:4000',
+          'http://3.18.112.92:4000',
           IO.OptionBuilder()
               .setTransports(['websocket'])
               .disableAutoConnect()
@@ -54,7 +52,7 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     });
 
     _socket.on('newMessage', (msg) {
-      print("Nuevo Mensaje");   
+      print("Nuevo Mensaje");
     });
 
     _socket.on('updateConversations', (_) {
@@ -112,7 +110,8 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     });
   }
 
-  FutureOr<void> _onJoinConversation(JoinConversation event, Emitter<SocketState> emit) {
+  FutureOr<void> _onJoinConversation(
+      JoinConversation event, Emitter<SocketState> emit) {
     _socket.emit('joinConversation',
         {'_id_sender': event.idSender, '_id_receiver': event.idReceiver});
   }

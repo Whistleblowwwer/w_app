@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:w_app/data/countries_data.dart';
 import 'package:w_app/styles/color_style.dart';
 
 class CustomDropdown extends StatefulWidget {
+  final String? initialValue;
   final String title;
   final String hintText;
   final List<String> list;
   final ValueChanged<String> onSelected;
+  final String? type;
   final EdgeInsetsGeometry? padding;
   final bool? showIcon;
   final TextStyle? style;
@@ -16,6 +19,8 @@ class CustomDropdown extends StatefulWidget {
       required this.onSelected,
       required this.title,
       required this.hintText,
+      this.initialValue,
+      this.type,
       this.padding,
       this.style,
       this.showIcon});
@@ -26,6 +31,11 @@ class CustomDropdown extends StatefulWidget {
 
 class _CustomDropdownState extends State<CustomDropdown> {
   String _selected = '';
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.initialValue ?? '';
+  }
 
   @override
   void didUpdateWidget(CustomDropdown oldWidget) {
@@ -47,16 +57,18 @@ class _CustomDropdownState extends State<CustomDropdown> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.title,
-            textAlign: TextAlign.center,
-            style: widget.style ??
-                const TextStyle(
-                    fontFamily: "Montserrat",
-                    color: Colors.grey,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-          ),
+          widget.title.isNotEmpty
+              ? Text(
+                  widget.title,
+                  textAlign: TextAlign.center,
+                  style: widget.style ??
+                      const TextStyle(
+                          fontFamily: "Montserrat",
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400),
+                )
+              : SizedBox(),
           Container(
             width: double.maxFinite,
             height: 48,
@@ -85,21 +97,17 @@ class _CustomDropdownState extends State<CustomDropdown> {
                   });
                   widget.onSelected(_selected);
                 },
-                icon: Icon(
-                  FeatherIcons.chevronDown,
-                  size: 20,
-                  color: ColorStyle.textGrey,
-                ),
                 items:
                     widget.list.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                       value: value,
                       child: ListTile(
                           leading: widget.showIcon ?? false
-                              ? Icon(
-                                  Icons.flag,
-                                  size: 24,
-                                )
+                              ? Text(countries
+                                  .firstWhere((c) =>
+                                      c[widget.type ?? "name"] ==
+                                      value)["emoji"]
+                                  .toString())
                               : null,
                           minLeadingWidth: 0,
                           contentPadding: EdgeInsets.only(),

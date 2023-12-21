@@ -14,12 +14,12 @@ if (localPropertiesFile.exists()) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = '4'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '1.1.1'
 }
 
 def keystoreProperties = new Properties()
@@ -77,5 +77,5 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.google.android.material:material:1.4.0'
+  
 }

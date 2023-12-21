@@ -174,7 +174,7 @@ class ReviewCard extends StatelessWidget {
                                       externalRadius: Offset(38, 38),
                                       internalRadius: Offset(34, 34),
                                       nameAvatar:
-                                          '${review.user.name.substring(0, 1).toUpperCase()}${review.user.lastName.substring(0, 1).toUpperCase()}',
+                                          '${review.user.name[0].toUpperCase()}${review.user.lastName[0].toUpperCase()}',
                                       isCompany: false,
                                       sizeText: 18,
                                     ),
@@ -344,7 +344,6 @@ class ReviewCard extends StatelessWidget {
                                   builder: (BuildContext context) {
                                     return ReviewBottomSheet(
                                       user: stateUser.user,
-                                      review: review,
                                       actions: [
                                         ReviewAction(
                                           text: review.business?.followed ??
@@ -406,7 +405,7 @@ class ReviewCard extends StatelessWidget {
                                 visible: isThread,
                                 child: Container(
                                   width: 1.5,
-                                  margin: EdgeInsets.only(left: 36, bottom: 16),
+                                  margin: EdgeInsets.only(left: 34, bottom: 16),
                                   color: ColorStyle.borderGrey,
                                 )),
                             Expanded(
@@ -427,19 +426,19 @@ class ReviewCard extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  // if (review.images?.isNotEmpty ?? false)
-                                  //   Container(
-                                  //     margin: EdgeInsets.only(
-                                  //         left: 16, right: 16, bottom: 16),
-                                  //     height: 200,
-                                  //     width: double.maxFinite,
-                                  //     clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  //     decoration: BoxDecoration(
-                                  //       borderRadius: BorderRadius.circular(8),
-                                  //     ),
-                                  //     child: buildDynamicLayout(
-                                  //         review.images ?? [], context),
-                                  //   ),
+                                  if (review.images?.isNotEmpty ?? false)
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          left: 16, right: 16, bottom: 16),
+                                      height: 200,
+                                      width: double.maxFinite,
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: buildDynamicLayout(
+                                          review.images ?? [], context),
+                                    ),
                                   Padding(
                                       padding:
                                           EdgeInsets.only(left: 16, right: 16),

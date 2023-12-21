@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:w_app/styles/color_style.dart';
 
 Widget buildAspectRatioWidget(double aspectRatio, String urlImage) {
   return AspectRatio(
     aspectRatio: aspectRatio,
     child: Image.network(
       urlImage,
-      headers: {'token': 'asa'},
       fit: BoxFit.cover,
       // Manejador de carga
       loadingBuilder: (BuildContext context, Widget child,
           ImageChunkEvent? loadingProgress) {
         if (loadingProgress == null) return child; // Imagen cargada
         return Center(
-          child: CircularProgressIndicator(
+          child: CircularProgressIndicator.adaptive(
+            backgroundColor: ColorStyle.darkPurple,
             value: loadingProgress.expectedTotalBytes != null
                 ? loadingProgress.cumulativeBytesLoaded /
                     loadingProgress.expectedTotalBytes!
@@ -24,7 +25,9 @@ Widget buildAspectRatioWidget(double aspectRatio, String urlImage) {
       errorBuilder:
           (BuildContext context, Object error, StackTrace? stackTrace) {
         // Aquí puedes agregar lógica adicional si necesitas manejar diferentes tipos de errores de manera diferente
-        return Image.asset("assets/images/ilustrations/Banner 1 - W.jpg");
+        return Center(
+          child: Icon(Icons.error_outline_outlined),
+        );
       },
     ),
   );

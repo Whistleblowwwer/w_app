@@ -16,13 +16,12 @@ class ReviewAction {
 
 class ReviewBottomSheet extends StatelessWidget {
   final User user;
-  final Review review;
+
   final List<ReviewAction> actions; // Lista de acciones
 
   const ReviewBottomSheet({
     super.key,
     required this.user,
-    required this.review,
     required this.actions, // Acepta la lista de acciones
   });
 

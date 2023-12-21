@@ -49,12 +49,11 @@ class _ChatPageState extends State<ChatPage> {
     _socketBloc = BlocProvider.of<SocketBloc>(context);
     final state = _socketBloc.state;
     if (state is Connected) {
-      state.socket.on('updateConversations',(_){
+      state.socket.on('updateConversations', (_) {
         print("Actualizando chats");
         loadChats();
       });
     }
-
   }
 
   // Función para filtrar chats
@@ -214,18 +213,11 @@ class _ChatPageState extends State<ChatPage> {
                           padding: EdgeInsets.only(left: 16, right: 8),
                           child: Icon(FeatherIcons.arrowLeft),
                         ),
-                        Text(
-                          "Atrás",
-                          style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600),
-                        ),
                       ],
                     ),
                   ),
                   Text(
-                    "Inbox",
+                    "Mensajes",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: 'Montserrat',
@@ -237,10 +229,10 @@ class _ChatPageState extends State<ChatPage> {
                     right: 16,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.of(context, rootNavigator: true)
-                          .push(MaterialPageRoute(
-                            settings: RouteSettings(),
-                            builder: (context) => NewChatPage()));
+                        Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                                settings: RouteSettings(),
+                                builder: (context) => NewChatPage()));
                       },
                       child: Icon(
                         FeatherIcons.edit,

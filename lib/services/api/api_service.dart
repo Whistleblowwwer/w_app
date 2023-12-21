@@ -114,26 +114,36 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> createUser({
+    String? userName,
     required String name,
     required String lastName,
-    required String phone,
+    String? phone,
     required String email,
     required String birthdate,
     required String password,
-    required String gender,
+    String? gender,
     required String role,
   }) async {
-    // Construir el cuerpo del POST request con todos los argumentos
+    // Construir el cuerpo del POST request condicionalmente
     var body = {
       "name": name,
       "last_name": lastName,
       "email": email,
-      "phone_number": phone,
       "birth_date": birthdate,
-      "gender": gender,
       "password": password,
-      "role": role
+      "role": role,
     };
+
+    if (userName != null && userName.isNotEmpty) {
+      body["nick_name"] = userName;
+    }
+    if (phone != null && phone.isNotEmpty) {
+      body["phone_number"] = phone;
+    }
+    if (gender != null && gender.isNotEmpty) {
+      body["gender"] = gender;
+    }
+
     print(body);
 
     // Realizar la petición POST al endpoint para registrar usuarios
@@ -476,8 +486,8 @@ class ApiServerUtils {
     // Agregar campos adicionales si los hay
     request.fields.addAll(additionalFields);
 
-    // Agregar cada archivo a la solicitud con la misma clave 'fileN'
-    for (var filePath in filePaths) {
+    // Agregar cada archivo a la solicitud
+    for (String filePath in filePaths) {
       request.files.add(await http.MultipartFile.fromPath('fileN', filePath));
     }
 
