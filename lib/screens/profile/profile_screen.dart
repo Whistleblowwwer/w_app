@@ -9,6 +9,9 @@ import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
 import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_event.dart';
 import 'package:w_app/bloc/feed_bloc/feed_state.dart';
+import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
+import 'package:w_app/bloc/socket_bloc/socket_event.dart';
+import 'package:w_app/bloc/socket_bloc/socket_state.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
@@ -42,6 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool isLoading = true;
   late AuthBloc authBloc;
   late FeedBloc feedBloc;
+  late SocketBloc socketBloc;
   TabController? _tabController;
 
   @override
@@ -57,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     _tabController = TabController(length: 3, vsync: this);
     feedBloc = BlocProvider.of<FeedBloc>(context);
     authBloc = BlocProvider.of<AuthBloc>(context);
+    socketBloc = BlocProvider.of<SocketBloc>(context);
     loadReviews();
     // futureCommentsFromReviewsByUser =
     //     ApiService().getCommentsByUser(widget.user.idUser);
@@ -108,6 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               },
                               onTapOk: () async {
                                 authBloc.add(LogOutUser());
+                                socketBloc.add(Disconnect());
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
                                 // Navigator.of(context);
