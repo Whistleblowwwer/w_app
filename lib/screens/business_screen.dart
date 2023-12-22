@@ -319,8 +319,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                       showBusiness: false,
                                       review: reviews[index],
                                       onFollowUser: () async {
-                                        _feedBloc
-                                            .add(FollowUser(reviews[index]));
+                                        _feedBloc.add(FollowUser(
+                                            reviews[index].user.idUser));
                                         _followUser(reviews[index]);
                                       },
                                       onFollowBusinnes: () {

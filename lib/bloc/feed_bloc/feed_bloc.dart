@@ -112,11 +112,11 @@ class FeedBloc extends Bloc<FeedBlocEvent, FeedState> {
 
     try {
       if (currentState is FeedLoaded) {
-        final updatedReview = currentState.followUser(event.review);
+        final updatedReview = currentState.followUser(event.idUser);
         emit(FeedLoaded(updatedReview));
       }
       final responseCode =
-          await apiService.followUser(idFollowed: event.review.user.idUser);
+          await apiService.followUser(idFollowed: event.idUser);
 
       if (responseCode != 200 && responseCode != 201) {
         if (currentState is FeedLoaded) {

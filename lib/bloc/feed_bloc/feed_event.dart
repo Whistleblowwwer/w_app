@@ -47,12 +47,12 @@ class LikeReview extends FeedBlocEvent {
 }
 
 class FollowUser extends FeedBlocEvent {
-  final Review review;
+  final String idUser;
 
-  FollowUser(this.review);
+  FollowUser(this.idUser);
 
   @override
-  List<Object> get props => [review];
+  List<Object> get props => [idUser];
 }
 
 class FollowBusiness extends FeedBlocEvent {

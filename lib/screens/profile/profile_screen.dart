@@ -37,6 +37,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
   late Future<List<Review>> futureListReview;
+  late Future<List<Review>> futureCommentsFromReviewsByUser;
   List<Review> reviews = [];
   bool isLoading = true;
   late AuthBloc authBloc;
@@ -46,7 +47,6 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void dispose() {
     _tabController?.dispose();
-
     super.dispose();
   }
 
@@ -54,113 +54,12 @@ class _ProfileScreenState extends State<ProfileScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
-
     _tabController = TabController(length: 3, vsync: this);
     feedBloc = BlocProvider.of<FeedBloc>(context);
     authBloc = BlocProvider.of<AuthBloc>(context);
     loadReviews();
-  }
-
-  Future<void> loadReviews() async {
-    try {
-      var reviewsList = await ApiService().getUserReviews(widget.user.idUser);
-      if (mounted) {
-        setState(() {
-          reviews = reviewsList;
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      // Handle the error or set state to show an error message
-      showErrorSnackBar(context, e.toString());
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
-
-  void _likeReview(Review review) {
-    // Update the review with the new 'like' status
-    setState(() {
-      reviews = reviews
-          .map((r) => r.idReview == review.idReview
-              ? r.copyWith(
-                  isLiked: !r.isLiked,
-                  likes: r.isLiked ? r.likes - 1 : r.likes + 1)
-              : r)
-          .toList();
-    });
-    // Call the API to update the 'like' status
-    feedBloc.add(LikeReview(review));
-  }
-
-  void _followUser(Review review) {
-    // Update the review with the new 'like' status
-    setState(() {
-      reviews = reviews
-          .map((r) => r.idReview == review.idReview
-              ? r.copyWith(
-                  user: r.user.copyWith(followed: !r.user.followed),
-                )
-              : r)
-          .toList();
-    });
-    // Call the API to update the 'like' status
-    feedBloc.add(FollowUser(review));
-  }
-
-  void _followBusiness(Review review) {
-    // Update the review with the new 'like' status
-    setState(() {
-      reviews = reviews
-          .map((r) => r.idReview == review.idReview
-              ? r.copyWith(
-                  business:
-                      r.business!.copyWith(followed: !r.business!.followed),
-                )
-              : r)
-          .toList();
-    });
-    feedBloc.add(FollowBusiness(review.business!.idBusiness));
-  }
-
-  void addCommentToReview(String reviewId) {
-    setState(() {
-      reviews = reviews.map((review) {
-        if (review.idReview == reviewId) {
-          return review.copyWith(
-            comments: review.comments + 1,
-          );
-        }
-        return review;
-      }).toList();
-    });
-  }
-
-  void _updateReviewsIfChanged(List<Review> updatedReviews) {
-    bool needsUpdate = false;
-
-    // Comprobar si alguna de las reseñas en el perfil ha sido actualizada en el feed
-    for (var updatedReview in updatedReviews) {
-      int index =
-          reviews.indexWhere((r) => r.idReview == updatedReview.idReview);
-      if (index != -1 && reviews[index] != updatedReview) {
-        reviews[index] = updatedReview;
-        needsUpdate = true;
-      }
-    }
-
-    // Si es necesario, actualizar la UI
-    if (needsUpdate) {
-      setState(() {});
-    }
-  }
-
-  void deleteReview(String reviewId) {
-    // Filtramos las reseñas para excluir la que queremos eliminar
-    reviews = reviews.where((review) => review.idReview != reviewId).toList();
+    // futureCommentsFromReviewsByUser =
+    //     ApiService().getCommentsByUser(widget.user.idUser);
   }
 
   @override
@@ -455,184 +354,268 @@ class _ProfileScreenState extends State<ProfileScreen>
                           await loadReviews();
                           Future.delayed(Duration(milliseconds: 1000));
                         },
-                        child: CustomScrollView(
-                          physics: BouncingScrollPhysics(),
-                          slivers: [
-                            isLoading
-                                ? const SliverToBoxAdapter(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(top: 96),
-                                      child: Center(
-                                          child: CircularProgressIndicator
-                                              .adaptive()),
-                                    ),
-                                  )
-                                : reviews.isEmpty
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            CustomScrollView(
+                              physics: BouncingScrollPhysics(),
+                              slivers: [
+                                isLoading
                                     ? const SliverToBoxAdapter(
                                         child: Padding(
-                                            padding: EdgeInsets.only(top: 96),
-                                            child: Center(
-                                              child: Text(
-                                                'Parece que no hay data',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontFamily: "Montserrat",
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            )),
+                                          padding: EdgeInsets.only(top: 96),
+                                          child: Center(
+                                              child: CircularProgressIndicator
+                                                  .adaptive()),
+                                        ),
                                       )
-                                    : SliverPadding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 128),
-                                        sliver: SliverList(
-                                          delegate: SliverChildBuilderDelegate(
-                                            childCount: reviews
-                                                .length, // número de items en la lista
-                                            (BuildContext context, int index) {
-                                              print(index);
-                                              return ReviewCard(
-                                                showBusiness: true,
-                                                review: reviews[index],
-                                                onFollowUser: () {},
-                                                onFollowBusinnes: () {
-                                                  _followBusiness(
-                                                      reviews[index]);
-                                                },
-                                                onLike: () {
-                                                  _likeReview(reviews[index]);
-                                                },
-                                                onDelete: () async {
-                                                  try {
-                                                    final response =
-                                                        await ApiService()
-                                                            .deleteReview(
-                                                                reviews[index]
-                                                                    .idReview);
-
-                                                    if (response == 200) {
-                                                      setState(() {
-                                                        deleteReview(
-                                                            reviews[index]
-                                                                .idReview);
-                                                      });
-                                                      feedBloc.add(DeleteReview(
-                                                          reviews[index]
-                                                              .idReview));
-                                                      if (mounted) {
-                                                        showSuccessSnackBar(
-                                                            context,
-                                                            message:
-                                                                "Se elimino la reseña exitosamente");
-                                                      }
-                                                    } else {
-                                                      if (mounted) {
-                                                        showErrorSnackBar(
-                                                            context,
-                                                            "No se pudo eliminar la reseña");
-                                                      }
-                                                    }
-                                                  } catch (e) {
-                                                    if (mounted) {
-                                                      showErrorSnackBar(context,
-                                                          "No se pudo eliminar la reseña");
-                                                    }
-                                                  }
-                                                },
-                                                onComment: () async {
-                                                  final userBloc =
-                                                      BlocProvider.of<UserBloc>(
-                                                          context);
-                                                  final userState =
-                                                      userBloc.state;
-                                                  if (userState is UserLoaded) {
-                                                    Map<String,
-                                                            dynamic>? response =
-                                                        await showModalBottomSheet(
-                                                            context: context,
-                                                            isScrollControlled:
-                                                                true,
-                                                            useRootNavigator:
-                                                                true,
-                                                            barrierColor:
-                                                                const Color
-                                                                    .fromRGBO(0,
-                                                                    0, 0, 0.1),
-                                                            shape:
-                                                                const RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .only(
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        20.0),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        20.0),
-                                                              ),
-                                                            ),
-                                                            builder: (context) =>
-                                                                BackdropFilter(
-                                                                    filter: ImageFilter.blur(
-                                                                        sigmaX:
-                                                                            6,
-                                                                        sigmaY:
-                                                                            6),
-                                                                    child:
-                                                                        CommentBottomSheet(
-                                                                      user: userState
-                                                                          .user,
-                                                                      name: reviews[
-                                                                              index]
-                                                                          .user
-                                                                          .name,
-                                                                      lastName: reviews[
-                                                                              index]
-                                                                          .user
-                                                                          .lastName,
-                                                                      content: reviews[
-                                                                              index]
-                                                                          .content,
-                                                                    )));
-
-                                                    if (response != null) {
+                                    : reviews.isEmpty
+                                        ? const SliverToBoxAdapter(
+                                            child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 96),
+                                                child: Center(
+                                                  child: Text(
+                                                    'Parece que no hay data',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            "Montserrat",
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                )),
+                                          )
+                                        : SliverPadding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 128),
+                                            sliver: SliverList(
+                                              delegate:
+                                                  SliverChildBuilderDelegate(
+                                                childCount: reviews
+                                                    .length, // número de items en la lista
+                                                (BuildContext context,
+                                                    int index) {
+                                                  print(index);
+                                                  return ReviewCard(
+                                                    showBusiness: true,
+                                                    review: reviews[index],
+                                                    onFollowUser: () {},
+                                                    onFollowBusinnes: () {
+                                                      _followBusiness(
+                                                          reviews[index]);
+                                                    },
+                                                    onLike: () {
+                                                      _likeReview(
+                                                          reviews[index]);
+                                                    },
+                                                    onDelete: () async {
                                                       try {
-                                                        final commentResponse =
-                                                            await ApiService().commentReview(
-                                                                content: response[
-                                                                    'content'],
-                                                                idReview: reviews[
-                                                                        index]
-                                                                    .idReview);
+                                                        final response =
+                                                            await ApiService()
+                                                                .deleteReview(
+                                                                    reviews[index]
+                                                                        .idReview);
 
-                                                        addCommentToReview(
-                                                          reviews[index]
-                                                              .idReview,
-                                                        );
-
-                                                        feedBloc.add(AddComment(
-                                                            comment:
-                                                                commentResponse,
-                                                            reviewId:
+                                                        if (response == 200) {
+                                                          setState(() {
+                                                            deleteReview(
                                                                 reviews[index]
-                                                                    .idReview));
-                                                        return 200;
+                                                                    .idReview);
+                                                          });
+                                                          feedBloc.add(
+                                                              DeleteReview(
+                                                                  reviews[index]
+                                                                      .idReview));
+                                                          if (mounted) {
+                                                            showSuccessSnackBar(
+                                                                context,
+                                                                message:
+                                                                    "Se elimino la reseña exitosamente");
+                                                          }
+                                                        } else {
+                                                          if (mounted) {
+                                                            showErrorSnackBar(
+                                                                context,
+                                                                "No se pudo eliminar la reseña");
+                                                          }
+                                                        }
                                                       } catch (e) {
                                                         if (mounted) {
                                                           showErrorSnackBar(
                                                               context,
-                                                              'No se pudo agregar el comentario');
+                                                              "No se pudo eliminar la reseña");
                                                         }
                                                       }
-                                                    }
-                                                  }
+                                                    },
+                                                    onComment: () async {
+                                                      final userBloc =
+                                                          BlocProvider.of<
+                                                                  UserBloc>(
+                                                              context);
+                                                      final userState =
+                                                          userBloc.state;
+                                                      if (userState
+                                                          is UserLoaded) {
+                                                        Map<String, dynamic>?
+                                                            response =
+                                                            await showModalBottomSheet(
+                                                                context:
+                                                                    context,
+                                                                isScrollControlled:
+                                                                    true,
+                                                                useRootNavigator:
+                                                                    true,
+                                                                barrierColor:
+                                                                    const Color
+                                                                        .fromRGBO(
+                                                                        0,
+                                                                        0,
+                                                                        0,
+                                                                        0.1),
+                                                                shape:
+                                                                    const RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .only(
+                                                                    topLeft: Radius
+                                                                        .circular(
+                                                                            20.0),
+                                                                    topRight: Radius
+                                                                        .circular(
+                                                                            20.0),
+                                                                  ),
+                                                                ),
+                                                                builder: (context) =>
+                                                                    BackdropFilter(
+                                                                        filter: ImageFilter.blur(
+                                                                            sigmaX:
+                                                                                6,
+                                                                            sigmaY:
+                                                                                6),
+                                                                        child:
+                                                                            CommentBottomSheet(
+                                                                          user:
+                                                                              userState.user,
+                                                                          name: reviews[index]
+                                                                              .user
+                                                                              .name,
+                                                                          lastName: reviews[index]
+                                                                              .user
+                                                                              .lastName,
+                                                                          content:
+                                                                              reviews[index].content,
+                                                                        )));
+
+                                                        if (response != null) {
+                                                          try {
+                                                            final commentResponse =
+                                                                await ApiService().commentReview(
+                                                                    content:
+                                                                        response[
+                                                                            'content'],
+                                                                    idReview: reviews[
+                                                                            index]
+                                                                        .idReview);
+
+                                                            addCommentToReview(
+                                                              reviews[index]
+                                                                  .idReview,
+                                                            );
+
+                                                            feedBloc.add(AddComment(
+                                                                comment:
+                                                                    commentResponse,
+                                                                reviewId: reviews[
+                                                                        index]
+                                                                    .idReview));
+                                                            return 200;
+                                                          } catch (e) {
+                                                            if (mounted) {
+                                                              showErrorSnackBar(
+                                                                  context,
+                                                                  'No se pudo agregar el comentario');
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    },
+                                                  );
                                                 },
-                                              );
-                                            },
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
+                              ],
+                            ),
+                            CustomScrollView(
+                              physics: BouncingScrollPhysics(),
+                              slivers: [
+                                // FutureBuilder(
+                                //   // Asegúrate de que la llamada API solo se haga una vez
+                                //   future: futureCommentsFromReviewsByUser,
+                                //   builder: (BuildContext context,
+                                //       AsyncSnapshot<List<Review>> snapshot) {
+                                //     // Verificar si los datos aún están cargando
+                                //     if (snapshot.connectionState ==
+                                //         ConnectionState.waiting) {
+                                //       return SliverToBoxAdapter(
+                                //         child: Center(
+                                //           child:
+                                //               CircularProgressIndicator(), // Muestra un indicador de carga
+                                //         ),
+                                //       );
+                                //     } else if (snapshot.hasError) {
+                                //       // Si ocurre un error al cargar los datos
+                                //       print(snapshot.error);
+                                //       return SliverToBoxAdapter(
+                                //         child: Center(
+                                //           child: Text(
+                                //             'Error: ${snapshot.error}', // Muestra el mensaje de error
+                                //             style: TextStyle(color: Colors.red),
+                                //           ),
+                                //         ),
+                                //       );
+                                //     } else if (snapshot.hasData) {
+                                //       // Si los datos se cargaron exitosamente
+                                //       var comments = snapshot.data;
+                                //       if (comments?.isEmpty ?? true) {
+                                //         // Si la lista de comentarios está vacía
+                                //         return SliverToBoxAdapter(
+                                //           child: Center(
+                                //             child: Text(
+                                //                 'No comments found for this user.'),
+                                //           ),
+                                //         );
+                                //       } else {
+                                //         // Si hay comentarios, construye una lista para mostrarlos
+                                //         return SliverList.builder(
+                                //           itemBuilder: (context, index) {
+                                //             return ReviewCard(
+                                //                 review: snapshot.data![index],
+                                //                 onComment: () async {},
+                                //                 onLike: () {},
+                                //                 onFollowUser: () {},
+                                //                 onFollowBusinnes: () {});
+                                //           },
+                                //         );
+                                //       }
+                                //     } else {
+                                //       // Si el snapshot no está en un estado válido, muestra un mensaje.
+                                //       return SliverToBoxAdapter(
+                                //         child: Center(
+                                //           child: Text('Unexpected state.'),
+                                //         ),
+                                //       );
+                                //     }
+                                //   },
+                                // )
+                              ],
+                            ),
+                            CustomScrollView(
+                              physics: BouncingScrollPhysics(),
+                              slivers: [],
+                            )
                           ],
                         ),
                       ),
@@ -645,6 +628,117 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
       ),
     );
+  }
+
+  Future<void> loadReviews() async {
+    try {
+      var reviewsList = await ApiService().getUserReviews(widget.user.idUser);
+      if (mounted) {
+        setState(() {
+          reviews = reviewsList;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      // Handle the error or set state to show an error message
+      showErrorSnackBar(context, e.toString());
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  // Future<List<Review>> loadCommentsByUser() async {
+
+  //     try {
+  //        var reviewsList = await ApiService().getUserReviews(widget.user.idUser);
+  //     } catch (e) {
+
+  //     }
+  // }
+
+  void _likeReview(Review review) {
+    // Update the review with the new 'like' status
+    setState(() {
+      reviews = reviews
+          .map((r) => r.idReview == review.idReview
+              ? r.copyWith(
+                  isLiked: !r.isLiked,
+                  likes: r.isLiked ? r.likes - 1 : r.likes + 1)
+              : r)
+          .toList();
+    });
+    // Call the API to update the 'like' status
+    feedBloc.add(LikeReview(review));
+  }
+
+  void _followUser(Review review) {
+    // Update the review with the new 'like' status
+    setState(() {
+      reviews = reviews
+          .map((r) => r.idReview == review.idReview
+              ? r.copyWith(
+                  user: r.user.copyWith(followed: !r.user.followed),
+                )
+              : r)
+          .toList();
+    });
+    // Call the API to update the 'like' status
+    feedBloc.add(FollowUser(review.user.idUser));
+  }
+
+  void _followBusiness(Review review) {
+    // Update the review with the new 'like' status
+    setState(() {
+      reviews = reviews
+          .map((r) => r.idReview == review.idReview
+              ? r.copyWith(
+                  business:
+                      r.business!.copyWith(followed: !r.business!.followed),
+                )
+              : r)
+          .toList();
+    });
+    feedBloc.add(FollowBusiness(review.business!.idBusiness));
+  }
+
+  void addCommentToReview(String reviewId) {
+    setState(() {
+      reviews = reviews.map((review) {
+        if (review.idReview == reviewId) {
+          return review.copyWith(
+            comments: review.comments + 1,
+          );
+        }
+        return review;
+      }).toList();
+    });
+  }
+
+  void _updateReviewsIfChanged(List<Review> updatedReviews) {
+    bool needsUpdate = false;
+
+    // Comprobar si alguna de las reseñas en el perfil ha sido actualizada en el feed
+    for (var updatedReview in updatedReviews) {
+      int index =
+          reviews.indexWhere((r) => r.idReview == updatedReview.idReview);
+      if (index != -1 && reviews[index] != updatedReview) {
+        reviews[index] = updatedReview;
+        needsUpdate = true;
+      }
+    }
+
+    // Si es necesario, actualizar la UI
+    if (needsUpdate) {
+      setState(() {});
+    }
+  }
+
+  void deleteReview(String reviewId) {
+    // Filtramos las reseñas para excluir la que queremos eliminar
+    reviews = reviews.where((review) => review.idReview != reviewId).toList();
   }
 
   UnderlineTabIndicator _customUnderlineIndicator() {

@@ -33,16 +33,16 @@ class FeedLoaded extends FeedState {
     }).toList();
   }
 
-  List<Review> followUser(Review updatedReview) {
-    // Verificamos si el usuario en la reseña actualizada está siendo seguido o no
-    bool isFollowing = updatedReview.user.followed;
+  List<Review> followUser(String idUser) {
+    // // Verificamos si el usuario en la reseña actualizada está siendo seguido o no
+    // bool isFollowing = updatedReview.user.followed;
 
     // Actualizamos todas las reseñas que pertenecen al mismo usuario
     return reviews.map((review) {
-      if (review.user.idUser == updatedReview.user.idUser) {
+      if (review.user.idUser == idUser) {
         // Si el usuario coincide, cambiamos el estado de 'followed'
         return review.copyWith(
-            user: review.user.copyWith(followed: !isFollowing));
+            user: review.user.copyWith(followed: !review.user.followed));
       }
       return review;
     }).toList();

@@ -204,7 +204,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             return ReviewCard(
                               review: state.reviews[index],
                               onFollowUser: () async {
-                                _feedBloc.add(FollowUser(state.reviews[index]));
+                                _feedBloc.add(FollowUser(
+                                    state.reviews[index].user.idUser));
                               },
                               onFollowBusinnes: () {
                                 _feedBloc.add(FollowBusiness(

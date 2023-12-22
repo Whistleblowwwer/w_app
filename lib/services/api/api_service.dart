@@ -49,17 +49,21 @@ class ApiService {
   Future<http.Response> createBusiness(
       {required String name,
       required String entity,
+      required String iso2Country,
       required String country,
+      required String iso2State,
       required String state,
       required String city,
       required String category}) async {
     // Construir el cuerpo del POST request con todos los argumentos
     var body = {
       "name": name,
-      "address": "Galerias Monterrey",
+      "address": "tec",
       "entity": entity,
       "country": country,
+      "iso2_country_code": iso2Country,
       "state": state,
+      "iso2_state_code": iso2State,
       "city": city,
       "category": category
     };
@@ -267,6 +271,28 @@ class ApiService {
       return companyData.map((data) => Review.fromJson(data)).toList();
     } catch (e) {
       return Future.error(e);
+    }
+  }
+
+  Future<List<Review>> getCommentsByUser(String idUser) async {
+    try {
+      print(idUser);
+
+      var response = await _utils.get('/users/comments');
+      print(response.statusCode);
+      print(response.body);
+
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['reviews'];
+
+      print("-----z-----zcomments---");
+      print(companyData);
+
+      return companyData.map((data) => Review.fromJson(data)).toList();
+    } catch (e, stacktrace) {
+      print('Stacktrace: $stacktrace');
+      print("errir");
+      return Future.error(e.toString());
     }
   }
 

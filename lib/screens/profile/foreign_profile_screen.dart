@@ -23,7 +23,7 @@ import 'package:w_app/widgets/snackbar.dart';
 class ForeignProfileScreen extends StatefulWidget {
   final User user;
 
-  const ForeignProfileScreen(this.user);
+  const ForeignProfileScreen(this.user, {super.key});
 
   @override
   State<ForeignProfileScreen> createState() => _ForeignProfileScreenState();
@@ -35,6 +35,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
   List<Review> reviews = [];
   bool isLoading = true;
   late FeedBloc feedBloc;
+  late User currentUser;
 
   TabController? _tabController;
 
@@ -42,21 +43,25 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
+    currentUser = widget.user; // Inicializa con el usuario del widget
     _tabController = TabController(length: 3, vsync: this);
     feedBloc = BlocProvider.of<FeedBloc>(context);
+
     _loadReviews();
   }
 
   Future<void> _loadReviews() async {
     try {
-      var reviewsList = await ApiService().getUserReviews(widget.user.idUser);
+      var reviewsList = await ApiService().getUserReviews(currentUser.idUser);
       setState(() {
         reviews = reviewsList;
         isLoading = false;
       });
     } catch (e) {
       // Handle the error or set state to show an error message
-      showErrorSnackBar(context, e.toString());
+      if (mounted) {
+        showErrorSnackBar(context, e.toString());
+      }
       setState(() {
         isLoading = false;
       });
@@ -78,19 +83,19 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
     feedBloc.add(LikeReview(review));
   }
 
-  void _followUser(Review review) {
+  void _followUser() {
     // Update the review with the new 'like' status
     setState(() {
-      reviews = reviews
-          .map((r) => r.idReview == review.idReview
-              ? r.copyWith(
-                  user: r.user.copyWith(followed: !r.user.followed),
-                )
-              : r)
-          .toList();
+      currentUser = currentUser.copyWith(isFollowed: !currentUser.isFollowed!);
+      // Actualizar el estado de 'followed' del usuario en los comentarios
+      reviews = reviews.map((reviewItem) {
+        return reviewItem.copyWith(
+            user:
+                reviewItem.user.copyWith(followed: !reviewItem.user.followed));
+      }).toList();
     });
     // Call the API to update the 'like' status
-    feedBloc.add(FollowUser(review));
+    feedBloc.add(FollowUser(currentUser.idUser));
   }
 
   void _followBusiness(Review review) {
@@ -151,7 +156,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                 ),
                 Expanded(
                   child: Text(
-                    '${widget.user.name} ${widget.user.lastName}',
+                    '${currentUser.name} ${currentUser.lastName}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -162,30 +167,35 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                 ),
 
                 PressTransform(
-                  onPressed: () async{
+                  onPressed: () async {
                     String? tk = await UserRepository().getToken();
-                    if(tk!=null){
+                    if (tk != null) {
                       final _userBloc = BlocProvider.of<UserBloc>(context);
                       final userState = _userBloc.state;
                       User? user;
                       if (userState is UserLoaded) {
                         user = userState.user;
-                        if(user!.idUser != widget.user.idUser) {
+                        if (user!.idUser != currentUser.idUser) {
                           //Sacar el token largo, el; corto ya esta
-                          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-                              settings: RouteSettings(),
-                              builder: (context) =>
-                                  InboxScreen(receiver: widget.user.idUser, receiverName: widget.user.name+" "+widget.user.lastName, initials: user!.name[0]+ user!.lastName[0])));
-                        }else{
+                          Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  settings: RouteSettings(),
+                                  builder: (context) => InboxScreen(
+                                      receiver: currentUser.idUser,
+                                      receiverName: currentUser.name +
+                                          " " +
+                                          currentUser.lastName,
+                                      initials:
+                                          user!.name[0] + user!.lastName[0])));
+                        } else {
                           Navigator.of(context, rootNavigator: true)
-                            .push(MaterialPageRoute(
-                                settings: RouteSettings(),
-                                builder: (context) => ChatPage(
-                                  user: user!,
-                                )
-                              ));
+                              .push(MaterialPageRoute(
+                                  settings: RouteSettings(),
+                                  builder: (context) => ChatPage(
+                                        user: user!,
+                                      )));
                         }
-                      }   
+                      }
                     } else {
                       print("Token no provisto o no valido");
                     }
@@ -300,7 +310,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                                   ),
                                                 ),
                                                 // Text(
-                                                //   widget.user.email,
+                                                //   currentUser.email,
                                                 //   maxLines: 1,
                                                 //   overflow:
                                                 //       TextOverflow.ellipsis,
@@ -315,7 +325,10 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                             ),
                                           ),
                                           PressTransform(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              _followUser();
+                                              setState(() {});
+                                            },
                                             child: Container(
                                               margin: EdgeInsets.only(left: 16),
                                               padding: EdgeInsets.symmetric(
@@ -329,11 +342,19 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    "Seguir",
+                                                    currentUser.isFollowed!
+                                                        ? "Siguiendo"
+                                                        : "Seguir",
                                                     style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.w500,
+                                                            FontWeight.w600,
                                                         fontSize: 14,
+                                                        color: currentUser
+                                                                    .isFollowed ??
+                                                                false
+                                                            ? ColorStyle
+                                                                .solidBlue
+                                                            : Colors.black,
                                                         fontFamily:
                                                             'Montserrat'),
                                                   ),
@@ -354,7 +375,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                             width: 4,
                                           ),
                                           Text(
-                                            widget.user
+                                            currentUser
                                                 .getFormattedCreationDate(),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -376,7 +397,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                 child: CircularAvatarW(
                                   externalRadius: Offset(88, 88),
                                   internalRadius: Offset(82, 82),
-                                  nameAvatar: widget.user.name.substring(0, 1),
+                                  nameAvatar: currentUser.name.substring(0, 1),
                                   isCompany: false,
                                   sizeText: 40,
                                 ),
@@ -446,7 +467,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                       showBusiness: false,
                                       review: reviews[index],
                                       onFollowUser: () async {
-                                        _followUser(reviews[index]);
+                                        _followUser();
                                       },
                                       onFollowBusinnes: () {
                                         _followBusiness(reviews[index]);

@@ -478,7 +478,9 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                           final response = await ApiService().createBusiness(
                               name: controllerCompanyName.text,
                               entity: controllerEntity.text,
+                              iso2Country: selectedCountry!['iso2'],
                               country: selectedCountry!['name'],
+                              iso2State: selectedState!['iso2'],
                               state: selectedState!['name'],
                               city: selectedCity!['name'],
                               category: selecteCategory!);
