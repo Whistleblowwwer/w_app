@@ -8,7 +8,7 @@ import 'package:w_app/repository/user_repository.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
-  late final IO.Socket _socket;
+  late IO.Socket _socket;
 
   SocketBloc() : super(Initial()) {
     on<Connect>(_onConnect);
@@ -29,14 +29,14 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     String? tk = await UserRepository().getToken();
     if (tk != null) {
       _socket = IO.io(
-          'http://3.18.112.92:4000',
+          'http://192.168.1.15:4000',
           IO.OptionBuilder()
               .setTransports(['websocket'])
               .disableAutoConnect()
-              .setAuth({'token': tk})
+              //.setAuth({'token': tk})
               .build());
+      _socket.auth={'token':tk};
     }
-
     /*_socket.on("newMessage", (message) {
       print("Nuevo mensaje: $message");
       if(message['_id_sender']==user['user']['_id_user']){
@@ -98,6 +98,7 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
   }
 
   FutureOr<void> _onDisconnect(Disconnect event, Emitter<SocketState> emit) {
+    print("Desconectando del socket");
     _socket.disconnect();
     emit(Disconnected());
   }

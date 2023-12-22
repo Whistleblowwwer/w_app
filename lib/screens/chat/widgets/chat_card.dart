@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/chat/inbox_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
@@ -17,6 +18,7 @@ class ChatCard extends StatelessWidget {
   final String photoUrl;
   final String receiver;
   final String initials;
+  late DateTime _dateTIme;
 
   ChatCard(
       {required this.name,
@@ -26,6 +28,25 @@ class ChatCard extends StatelessWidget {
       required this.photoUrl,
       required this.receiver,
       required this.initials});
+
+  String getDateTimeString(){
+      _dateTIme=DateTime.parse(lastMessageTime);
+      final now = DateTime.now();
+      final yesterday = DateTime.now().subtract(Duration(days: 1));
+      if(_dateTIme.year == now.year && _dateTIme.month == now.month && _dateTIme.day == now.day){
+        //Retorna la hora de ultimo mensaje si es hoy
+        return DateTime.parse(lastMessageTime)
+                .toLocal()
+                .toIso8601String()
+                .substring(11, 16);
+      }else if(_dateTIme.year == yesterday.year && _dateTIme.month == yesterday.month && _dateTIme.day == yesterday.day){
+        //Retorna la Ayer si fue ayer
+        return "Ayer";
+      }else{
+        //Retorna la fecha en formaro DD/MM/AAAA si fue antes de ayer o mas atras
+        return DateFormat('dd/MM/yyyy').format(_dateTIme);
+      }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,10 +105,7 @@ class ChatCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      DateTime.parse(lastMessageTime)
-                          .toLocal()
-                          .toIso8601String()
-                          .substring(11, 16),
+                      getDateTimeString(),
                       style: TextStyle(
                         fontSize: 12,
                         fontFamily: 'Montserrat',
