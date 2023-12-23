@@ -11,13 +11,11 @@ import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
-import 'package:w_app/data/countries_data.dart';
 import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/add/add_business_screen.dart';
 import 'package:w_app/screens/add/widgets/custom_textfield_widget.dart';
-import 'package:w_app/screens/home/advisors_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
@@ -25,6 +23,7 @@ import 'package:w_app/widgets/dotters.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
 import 'package:w_app/widgets/showLoadingModal.dart';
 import 'package:w_app/widgets/snackbar.dart';
+import 'package:intl/intl.dart';
 
 class CombinedBottomSheet extends StatefulWidget {
   final User user;
@@ -104,6 +103,12 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
     super.dispose();
   }
 
+  String printFormattedDate() {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('MMM d').format(now);
+    return formattedDate;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -169,7 +174,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                   height: 4,
                                 ),
                                 Text(
-                                  "Oct 25",
+                                  printFormattedDate(),
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: ColorStyle.grey,
@@ -257,7 +262,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                 borderRadius: BorderRadius.circular(8),
                                 child: PressTransform(
                                   onPressed: () async {
-                                    if (images.length >= 6) return;
+                                    if (images.length >= 8) return;
                                     try {
                                       final ImagePicker picker = ImagePicker();
                                       final XFile? image =
@@ -602,10 +607,10 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                           child: Container(
                             width: 48,
                             height: 48,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 color: ColorStyle.lightGrey,
                                 shape: BoxShape.circle),
-                            child: Icon(
+                            child: const Icon(
                               FeatherIcons.arrowRight,
                               color: ColorStyle.midToneGrey,
                             ),

@@ -73,16 +73,16 @@ class GradientStyle {
       ]);
 
   // Gradiente para el icono de Nodoo Control
-  LinearGradient medicFlowBlueGradient = const LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
+  LinearGradient whistleBlowwerGradient = const LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment.bottomLeft,
       stops: [
         0.0,
         1.0
       ],
       colors: <Color>[
-        Color.fromRGBO(28, 79, 200, 1),
-        Color.fromRGBO(39, 110, 241, 1),
+        Color.fromRGBO(142, 29, 161, 1),
+        Color.fromRGBO(45, 1, 90, 1),
       ]);
 
   LinearGradient profileGradient = const LinearGradient(

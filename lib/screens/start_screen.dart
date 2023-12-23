@@ -21,6 +21,7 @@ import 'package:w_app/screens/profile/profile_screen.dart';
 import 'package:w_app/screens/search/search_screen.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
+import 'package:w_app/widgets/snackbar.dart';
 
 class StartPage extends StatefulWidget {
   final UserRepository userRepository;
@@ -81,7 +82,9 @@ class StartPageState extends State<StartPage> {
       listener: (context, state) {
         if (state is UserTokenError) {
           _authBloc.add(LogOutUser());
-        } else if (state is UserLoaded) {}
+        } else if (state is UserLoaded) {
+          // showSuccessSnackBar(context);
+        }
       },
       child: Scaffold(
         extendBody: true,
@@ -91,6 +94,8 @@ class StartPageState extends State<StartPage> {
             if (state is UserLoading) {
               return const Center(child: CircularProgressIndicator.adaptive());
             } else if (state is UserLoaded) {
+              print("TAAAAASSSSSS");
+              print("ZAPATEO");
               return IndexedStack(
                 index: currentIndex,
                 children: [
@@ -152,7 +157,7 @@ class StartPageState extends State<StartPage> {
   Widget _buildBottomNavigationBar() {
     double displayWidth = MediaQuery.of(context).size.width / 100;
     return Container(
-      height: Platform.isIOS ? 80 : 72,
+      height: 80,
       padding: const EdgeInsets.only(top: 4, left: 24, right: 24),
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -202,6 +207,9 @@ class StartPageState extends State<StartPage> {
                                   )));
                         }
                       } else {
+                        if (key == 4) {
+                          _userBloc.add(LoadUserProfile());
+                        }
                         setState(() {
                           currentIndex = key;
                         });

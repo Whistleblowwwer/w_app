@@ -107,14 +107,31 @@ class ApiService {
     return _utils.handleResponse(response);
   }
 
-  bool validateToken(String token) {
-    return JwtDecoder.isExpired(token) == false;
-  }
-
   Future<bool> validateAccesToken(String token) async {
     var response = await _utils.get('users/token');
     print(response.statusCode);
     return _utils.handleResponse(response)['success'];
+  }
+
+  Future<bool> requestOTP(String email) async {
+    try {
+      var response = await _utils.get('users/send-otp/?email=$email');
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print("Error validating OTP: $e");
+      return false; // o manejar de otra manera si es necesario
+    }
+  }
+
+  Future<bool> validateOTP(String code, String email) async {
+    try {
+      var response = await _utils
+          .post('users/validate-otp', {"code": code, "email": email});
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print("Error validating SMS: $e");
+      return false; // o manejar de otra manera si es necesario
+    }
   }
 
   Future<Map<String, dynamic>> createUser({
@@ -155,16 +172,6 @@ class ApiService {
 
     // Devolver la respuesta procesada
     return json.decode(response.body);
-  }
-
-  Future<bool> validateNumberSMS(String phoneNumber) async {
-    try {
-      var response = await _utils.get('users/sms');
-      return _utils.handleResponse(response)['success'];
-    } catch (e) {
-      print("Error validating SMS: $e");
-      return false; // o manejar de otra manera si es necesario
-    }
   }
 
   Future<Map<String, dynamic>> getUserProfile() async {
@@ -274,25 +281,21 @@ class ApiService {
     }
   }
 
-  Future<List<Review>> getCommentsByUser(String idUser) async {
+  Future<List<Comment>> getCommentsByUser(String idUser) async {
     try {
       print(idUser);
-
-      var response = await _utils.get('/users/comments');
+      var response = await _utils.get('users/comments');
+      print("sapa monda ---- a- -a-a-");
       print(response.statusCode);
       print(response.body);
-
-      final List<dynamic> companyData =
-          _utils.handleResponse(response)['reviews'];
-
-      print("-----z-----zcomments---");
+      final List<dynamic>? companyData =
+          _utils.handleResponse(response)['comments'];
       print(companyData);
 
-      return companyData.map((data) => Review.fromJson(data)).toList();
-    } catch (e, stacktrace) {
-      print('Stacktrace: $stacktrace');
+      return companyData?.map((data) => Comment.fromJson(data)).toList() ?? [];
+    } catch (e) {
       print("errir");
-      return Future.error(e.toString());
+      return Future.error(e);
     }
   }
 
@@ -450,6 +453,17 @@ class ApiService {
 
     return response;
   }
+
+  // Future<User> getArticles(String idUser) async {
+  //   try {
+  //     var response = await _utils.get('articles/');
+  //     print(response.statusCode);
+  //     print(_utils.handleResponse(response));
+  //     return User.fromJson(_utils.handleResponse(response)["articles"]);
+  //   } catch (e) {
+  //     return Future.error(e);
+  //   }
+  // }
 }
 
 class ApiServerUtils {

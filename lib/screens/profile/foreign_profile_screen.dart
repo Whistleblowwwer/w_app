@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
@@ -10,7 +11,7 @@ import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
-import 'package:w_app/screens/actions/comments_screen.dart';
+import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/chat/chat_screen.dart';
 import 'package:w_app/screens/chat/inbox_screen.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
@@ -35,8 +36,9 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
   List<Review> reviews = [];
   bool isLoading = true;
   late FeedBloc feedBloc;
+  late UserBloc userBloc;
+  late User userMain;
   late User currentUser;
-
   TabController? _tabController;
 
   @override
@@ -46,6 +48,11 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
     currentUser = widget.user; // Inicializa con el usuario del widget
     _tabController = TabController(length: 3, vsync: this);
     feedBloc = BlocProvider.of<FeedBloc>(context);
+    userBloc = BlocProvider.of<UserBloc>(context);
+    final stateUser = userBloc.state;
+    if (stateUser is UserLoaded) {
+      userMain = stateUser.user;
+    }
 
     _loadReviews();
   }
@@ -86,7 +93,11 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
   void _followUser() {
     // Update the review with the new 'like' status
     setState(() {
-      currentUser = currentUser.copyWith(isFollowed: !currentUser.isFollowed!);
+      currentUser = currentUser.copyWith(
+          isFollowed: !currentUser.isFollowed!,
+          followers: currentUser.isFollowed!
+              ? currentUser.followers - 1
+              : currentUser.followers + 1);
       // Actualizar el estado de 'followed' del usuario en los comentarios
       reviews = reviews.map((reviewItem) {
         return reviewItem.copyWith(
@@ -94,6 +105,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                 reviewItem.user.copyWith(followed: !reviewItem.user.followed));
       }).toList();
     });
+
     // Call the API to update the 'like' status
     feedBloc.add(FollowUser(currentUser.idUser));
   }
@@ -166,50 +178,51 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                   ),
                 ),
 
-                PressTransform(
-                  onPressed: () async {
-                    String? tk = await UserRepository().getToken();
-                    if (tk != null) {
-                      final _userBloc = BlocProvider.of<UserBloc>(context);
-                      final userState = _userBloc.state;
-                      User? user;
-                      if (userState is UserLoaded) {
-                        user = userState.user;
-                        if (user!.idUser != currentUser.idUser) {
+                Visibility(
+                  visible: !(userMain.idUser == currentUser.idUser),
+                  child: PressTransform(
+                    onPressed: () async {
+                      String? tk = await UserRepository().getToken();
+                      if (tk != null) {
+                        if (userMain.idUser != currentUser.idUser) {
                           //Sacar el token largo, el; corto ya esta
-                          Navigator.of(context, rootNavigator: true).push(
-                              MaterialPageRoute(
-                                  settings: RouteSettings(),
-                                  builder: (context) => InboxScreen(
-                                      receiver: currentUser.idUser,
-                                      receiverName: currentUser.name +
-                                          " " +
-                                          currentUser.lastName,
-                                      initials:
-                                          user!.name[0] + user!.lastName[0])));
+                          if (mounted) {
+                            Navigator.of(context, rootNavigator: true).push(
+                                MaterialPageRoute(
+                                    settings: RouteSettings(),
+                                    builder: (context) => InboxScreen(
+                                        receiver: currentUser.idUser,
+                                        receiverName: currentUser.name +
+                                            " " +
+                                            currentUser.lastName,
+                                        initials: userMain.name[0] +
+                                            userMain.lastName[0])));
+                          }
                         } else {
-                          Navigator.of(context, rootNavigator: true)
-                              .push(MaterialPageRoute(
-                                  settings: RouteSettings(),
-                                  builder: (context) => ChatPage(
-                                        user: user!,
-                                      )));
+                          if (mounted) {
+                            Navigator.of(context, rootNavigator: true)
+                                .push(MaterialPageRoute(
+                                    settings: RouteSettings(),
+                                    builder: (context) => ChatPage(
+                                          user: userMain,
+                                        )));
+                          }
                         }
+                      } else {
+                        print("Token no provisto o no valido");
                       }
-                    } else {
-                      print("Token no provisto o no valido");
-                    }
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(right: 8),
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: ColorStyle.borderGrey)),
-                    child: Icon(
-                      FeatherIcons.mail,
-                      size: 20,
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 8),
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: ColorStyle.borderGrey)),
+                      child: const Icon(
+                        FeatherIcons.mail,
+                        size: 20,
+                      ),
                     ),
                   ),
                 )
@@ -278,25 +291,25 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                                   TextSpan(
                                                     children: [
                                                       TextSpan(
-                                                          text: widget
-                                                              .user.followings
+                                                          text: currentUser
+                                                              .followings
                                                               .toString(),
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold)),
-                                                      TextSpan(
+                                                      const TextSpan(
                                                         text: ' Seguidos   ',
                                                       ),
                                                       TextSpan(
-                                                          text: widget
-                                                              .user.followers
+                                                          text: currentUser
+                                                              .followers
                                                               .toString(),
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold)),
-                                                      TextSpan(
+                                                      const TextSpan(
                                                         text: ' Seguidores',
                                                       ),
                                                     ],
@@ -304,7 +317,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   textAlign: TextAlign.left,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontSize: 14,
                                                   ),
@@ -324,41 +337,49 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                               ],
                                             ),
                                           ),
-                                          PressTransform(
-                                            onPressed: () {
-                                              _followUser();
-                                              setState(() {});
-                                            },
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: 16),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 16, vertical: 10),
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  border: Border.all(
-                                                      color: ColorStyle
-                                                          .borderGrey)),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    currentUser.isFollowed!
-                                                        ? "Siguiendo"
-                                                        : "Seguir",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 14,
-                                                        color: currentUser
-                                                                    .isFollowed ??
-                                                                false
-                                                            ? ColorStyle
-                                                                .solidBlue
-                                                            : Colors.black,
-                                                        fontFamily:
-                                                            'Montserrat'),
-                                                  ),
-                                                ],
+                                          Visibility(
+                                            visible: !(userMain.idUser ==
+                                                currentUser.idUser),
+                                            child: PressTransform(
+                                              onPressed: () {
+                                                _followUser();
+
+                                                setState(() {});
+                                              },
+                                              child: Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 16),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 10),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    border: Border.all(
+                                                        color: ColorStyle
+                                                            .borderGrey)),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      currentUser.isFollowed!
+                                                          ? "Siguiendo"
+                                                          : "Seguir",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 14,
+                                                          color: currentUser
+                                                                      .isFollowed ??
+                                                                  false
+                                                              ? ColorStyle
+                                                                  .solidBlue
+                                                              : Colors.black,
+                                                          fontFamily:
+                                                              'Montserrat'),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -366,12 +387,12 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                       ),
                                       Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             FeatherIcons.calendar,
                                             size: 18,
                                             color: ColorStyle.textGrey,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 4,
                                           ),
                                           Text(
@@ -421,7 +442,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                             indicator: _customUnderlineIndicator(),
                             indicatorColor: ColorStyle.darkPurple,
                             indicatorWeight: 0,
-                            labelStyle: TextStyle(
+                            labelStyle: const TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.w600),
                             tabs: [
@@ -434,7 +455,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                   ];
                 },
                 body: CustomScrollView(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   slivers: [
                     isLoading
                         ? const SliverToBoxAdapter(
@@ -518,6 +539,9 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                                             content:
                                                                 reviews[index]
                                                                     .content,
+                                                            images:
+                                                                reviews[index]
+                                                                    .images,
                                                           )));
                                           if (response != null) {
                                             try {

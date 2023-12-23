@@ -10,6 +10,7 @@ import 'package:w_app/bloc/search_bloc/search_event.dart';
 import 'package:w_app/bloc/search_bloc/search_state.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_event.dart';
+import 'package:w_app/models/article_model.dart';
 import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
@@ -1001,6 +1002,22 @@ class NoticeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Article> articles = [
+      Article(
+          id: '',
+          title: 'Titulo increible',
+          content: """Hola! Somos Whistleblowwer. 
+Nosotros al igual que tu, fuimos víctimas de un incumplimiento de una desarrolladora inmobiliaria. 
+Durante años estuvimos puntualmente pagando. Con esfuerzo logramos reunir un enganche y privándonos de vacaciones, salidas al cine, etc. estuvímos pagando nuestras mensualidades para que al final no nos cumplieran. 
+Esta inversión era nuestro patrimonio, la universidad de nuestros hijos, nuestra primera casa, nuestro retiro, en fin… nuestros sueños y nuestro futuro. 
+Hoy comprar una casa es imposible, te tienes que privar de casi todos los lujos para lograrlo. Para que al final llegue un charlatán y te quite tus ahorros, tu casa, tus sueños, tu futuro!  No se vale!!
+Intentamos una y mil veces a hablar con alguien y siempre eran excusas y pretextos. Buscamos a otros inversionistas para unir fuerzas pero era como buscar una aguja en un pajar! Pero ahora con Whistleblowwer, podemos encontrarnos y juntos, los desarrolladores inmobiliarios VAN A TEMBLAR porque van a tener afuera de sus proyectos y sus oficinas a 50 o mas clientes inconformes exigiendo justicia. Y si no nos cumplen, que al menos TODOS se enteren y no vuelvan a vender un solo metro cuadrado mas!
+SOMOS UNA PEQUEÑA STARTUP. PORFAVOR COMPARTE EN TUS REDES SOCIALES PARA LLEGAR A MAS GENTE Y TENER MAS PODER EN CONTRA DE LAS GRANDES DESARROLLADORAS INMOBILIARIAS!""",
+          publishedAt: DateTime(2023, 12, 24),
+          isPublished: true,
+          idCategory: '',
+          imageUrl: 'assets/images/logos/Whistle.png'),
+    ];
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.only(top: 170, bottom: 160),
@@ -1045,88 +1062,92 @@ class NoticeScreen extends StatelessWidget {
           SizedBox(
             height: 16,
           ),
-          Column(
-            children: List.generate(
-                3,
-                (index) => PressTransform(
-                      onPressed: () {
-                        Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                                builder: (context) => NoticeDetailScreen(
-                                    index: index,
-                                    image: index == 0
-                                        ? 'assets/images/logos/Whistle.png'
-                                        : 'assets/images/ilustrations/169.jpg')));
-                      },
-                      child: Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: double.maxFinite,
-                              margin: EdgeInsets.only(bottom: 10),
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
+          FutureBuilder(
+              future: Future.delayed(Duration(milliseconds: 500)),
+              builder: (context, snapshot) {
+                return Column(
+                  children: List.generate(
+                      articles.length,
+                      (index) => PressTransform(
+                            onPressed: () {
+                              Navigator.of(context, rootNavigator: true)
+                                  .push(MaterialPageRoute(
+                                      builder: (context) => NoticeDetailScreen(
+                                            article: articles[index],
+                                            index: index,
+                                          )));
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 8),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
                               decoration: BoxDecoration(
-                                  color: ColorStyle.borderGrey,
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Hero(
-                                tag: index,
-                                child: index == 0
-                                    ? Image.asset(
-                                        'assets/images/logos/Whistle.png',
-                                        width: double.maxFinite,
-                                      )
-                                    : Image.asset(
-                                        'assets/images/ilustrations/169.jpg',
-                                        width: double.maxFinite,
-                                      ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: double.maxFinite,
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Hero(
+                                      tag: index,
+                                      child: index == 0
+                                          ? Image.asset(
+                                              'assets/images/logos/Whistle.png',
+                                              width: double.maxFinite,
+                                            )
+                                          : Image.asset(
+                                              'assets/images/ilustrations/169.jpg',
+                                              width: double.maxFinite,
+                                            ),
+                                    ),
+                                  ),
+                                  Text(
+                                    articles[index].title,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    articles[index].content,
+                                    maxLines: 4,
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      articles[index].formatDate(),
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          color: ColorStyle.textGrey,
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Text(
-                              "Titulo increible",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Text(
-                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                              style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                "Nov 17. 2023",
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    color: ColorStyle.textGrey,
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )),
-          ),
+                          )),
+                );
+              }),
         ],
       ),
     );
@@ -1148,7 +1169,7 @@ class ForYouScreen extends StatelessWidget {
           Container(
             height: 256,
             width: double.maxFinite,
-            padding: EdgeInsets.only(left: 24, bottom: 8),
+            padding: EdgeInsets.only(left: 24, bottom: 16),
             decoration: BoxDecoration(
                 // gradient: GradientStyle().grayGradient,
                 image: DecorationImage(
@@ -1184,7 +1205,7 @@ class ForYouScreen extends StatelessWidget {
           ),
           Column(
             children: List.generate(
-                3,
+                1,
                 (index) => Container(
                       margin: EdgeInsets.symmetric(horizontal: 24),
                       padding: EdgeInsets.symmetric(vertical: 8),
@@ -1213,7 +1234,7 @@ class ForYouScreen extends StatelessWidget {
                             height: 4,
                           ),
                           Text(
-                            "2342 Me gusta • 200 comentarios",
+                            "24 Me gusta • 6 comentarios",
                             style: TextStyle(
                                 color: ColorStyle.textGrey,
                                 fontFamily: 'Montserrat',

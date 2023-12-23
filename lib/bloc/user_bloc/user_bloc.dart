@@ -11,6 +11,7 @@ class UserBloc extends Bloc<UserBlocEvent, UserState> {
 
   UserBloc(UserState initialState, this.apiService) : super(initialState) {
     on<FetchUserProfile>(_onFetchUserProfile);
+    on<LoadUserProfile>(_onLoadUserProfile);
   }
 
   FutureOr<void> _onFetchUserProfile(
@@ -19,7 +20,26 @@ class UserBloc extends Bloc<UserBlocEvent, UserState> {
     try {
       print("aa");
       final response = await apiService.getUserProfile();
-      final user = User.fromJson(response['user']);
+      User user = User.fromJson(response['user']);
+
+      emit(UserLoaded(user));
+    } catch (e) {
+      if (e.toString().contains('Token is invalid or expired')) {
+        print("eeee");
+        emit(UserTokenError(e.toString()));
+      } else {
+        emit(UserError(e.toString()));
+      }
+    }
+  }
+
+  FutureOr<void> _onLoadUserProfile(
+      LoadUserProfile event, Emitter<UserState> emit) async {
+    // emit(UserLoading());
+    try {
+      print("aa");
+      final response = await apiService.getUserProfile();
+      User user = User.fromJson(response['user']);
 
       emit(UserLoaded(user));
     } catch (e) {

@@ -11,7 +11,7 @@ import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/repository/user_repository.dart';
-import 'package:w_app/screens/actions/comments_screen.dart';
+import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/home/advisors_screen.dart';
 import 'package:w_app/screens/home/lawyers_screen.dart';
 import 'package:w_app/screens/chat/chat_screen.dart';
@@ -67,8 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              floating: true,
-              snap: true,
               expandedHeight: 56,
               backgroundColor: Colors.white,
               flexibleSpace: FlexibleSpaceBar(
@@ -265,6 +263,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .user.lastName,
                                                 content: state
                                                     .reviews[index].content,
+                                                images:
+                                                    state.reviews[index].images,
                                               ));
 
                                   if (response != null) {

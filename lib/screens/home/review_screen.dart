@@ -10,7 +10,7 @@ import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
-import 'package:w_app/screens/actions/comments_screen.dart';
+import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/add/add_review.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/screens/home/widgets/comment_card.dart';
@@ -166,7 +166,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                           (BuildContext context, int index) {
                                             return CommentWidget(
                                               comment: comments[index],
-                                              user: stateUser.user,
+                                              userMain: stateUser.user,
                                               onFollowUser: () {
                                                 _followUser(
                                                     comments[index].user);
@@ -219,6 +219,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                                                 content: comments[
                                                                         index]
                                                                     .content,
+                                                                images: comments[
+                                                                        index]
+                                                                    .images,
                                                               ));
 
                                                   if (response != null) {

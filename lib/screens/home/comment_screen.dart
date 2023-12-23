@@ -6,7 +6,7 @@ import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
-import 'package:w_app/screens/actions/comments_screen.dart';
+import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/home/widgets/comment_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/widgets/snackbar.dart';
@@ -42,16 +42,17 @@ class _CommentPageState extends State<CommentPage> {
     super.initState();
     _userBloc = BlocProvider.of<UserBloc>(context);
     comment = widget.comment;
-    _loadReviews();
+    _loadComments();
   }
 
-  Future<void> _loadReviews() async {
+  Future<void> _loadComments() async {
     try {
       var commentsList =
           await ApiService().getCommentChildren(widget.comment.idComment);
       setState(() {
         comments = commentsList;
         isLoading = false;
+        addCommentToComment(commentsList.length);
       });
     } catch (e) {
       // Handle the error or set state to show an error message
@@ -93,9 +94,9 @@ class _CommentPageState extends State<CommentPage> {
     }
   }
 
-  void addCommentToComment() {
+  void addCommentToComment(int comments) {
     setState(() {
-      comment = comment.copyWith(comments: comment.comments + 1);
+      comment = comment.copyWith(comments: comments);
     });
   }
 
@@ -145,11 +146,10 @@ class _CommentPageState extends State<CommentPage> {
                                   isThread: true,
                                   isActive: false,
                                   comment: comment,
-                                  user: widget.user,
+                                  userMain: widget.user,
                                   onComment: () async {
                                     await widget.onComment();
-                                    await _loadReviews();
-                                    addCommentToComment();
+                                    await _loadComments();
                                   },
                                   onFollowUser: () {
                                     _followUser(comment.user);
@@ -196,16 +196,14 @@ class _CommentPageState extends State<CommentPage> {
                                         (BuildContext context, int index) {
                                           return CommentWidget(
                                             comment: comments[index],
-                                            user: stateUser.user,
+                                            userMain: stateUser.user,
                                             onFollowUser: () {},
                                             onLike: () {
                                               _likeComment(comments[index]);
                                             },
                                             onComment: () async {
                                               final userState = _userBloc.state;
-                                              print("saoa");
                                               if (userState is UserLoaded) {
-                                                print("hey");
                                                 Map<String, dynamic>? response =
                                                     await showModalBottomSheet(
                                                         context: context,
@@ -244,22 +242,31 @@ class _CommentPageState extends State<CommentPage> {
                                                               content: comments[
                                                                       index]
                                                                   .content,
+                                                              images: comments[
+                                                                      index]
+                                                                  .images,
                                                             ));
 
                                                 if (response != null) {
-                                                  // _feedBloc.add(AddComment(
-                                                  //     content: response['content'],
-                                                  //    ));
+                                                  try {
+                                                    final reponse = await ApiService()
+                                                        .commentReview(
+                                                            content: response[
+                                                                'content'],
+                                                            idReview:
+                                                                comments[index]
+                                                                    .idReview,
+                                                            idParent:
+                                                                comments[index]
+                                                                    .idComment);
 
-                                                  ApiService().commentReview(
-                                                      content:
-                                                          response['content'],
-                                                      idReview: comments[index]
-                                                          .idReview,
-                                                      idParent: comments[index]
-                                                          .idComment);
+                                                    comments[index].copyWith(
+                                                        comments:
+                                                            comments[index]
+                                                                    .comments +
+                                                                1);
+                                                  } catch (e) {}
                                                 }
-                                                print(response);
                                               }
                                             },
                                           );
@@ -267,14 +274,14 @@ class _CommentPageState extends State<CommentPage> {
                                       ),
                                     ),
 
-                          SliverPadding(
+                          const SliverPadding(
                             padding: EdgeInsets.only(top: 112),
                           ),
                           // for (Comment comment in []) CommentWidget(comment: comment),
                         ],
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               Container(
                 width: double.maxFinite,
                 height: 96,

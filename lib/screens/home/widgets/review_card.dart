@@ -428,16 +428,25 @@ class ReviewCard extends StatelessWidget {
                                   ),
                                   if (review.images?.isNotEmpty ?? false)
                                     Container(
+                                      constraints: BoxConstraints(
+                                        maxHeight: review.images!.length == 1
+                                            ? sizeH * 100 * 1 / 2
+                                            : 256,
+                                      ),
                                       margin: EdgeInsets.only(
                                           left: 16, right: 16, bottom: 16),
-                                      height: 200,
+                                      height: review.images!.length == 1
+                                          ? null
+                                          : 256,
                                       width: double.maxFinite,
-                                      clipBehavior: Clip.antiAliasWithSaveLayer,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      child: buildDynamicLayout(
-                                          review.images ?? [], context),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: buildDynamicLayout(
+                                            review.images ?? [], context),
+                                      ),
                                     ),
                                   Padding(
                                       padding:

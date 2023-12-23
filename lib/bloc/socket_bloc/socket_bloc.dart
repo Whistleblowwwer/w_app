@@ -29,13 +29,13 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     String? tk = await UserRepository().getToken();
     if (tk != null) {
       _socket = IO.io(
-          'http://192.168.1.15:4000',
+          'https://api.whistleblowwer.net',
           IO.OptionBuilder()
               .setTransports(['websocket'])
               .disableAutoConnect()
               //.setAuth({'token': tk})
               .build());
-      _socket.auth={'token':tk};
+      _socket.auth = {'token': tk};
     }
     /*_socket.on("newMessage", (message) {
       print("Nuevo mensaje: $message");

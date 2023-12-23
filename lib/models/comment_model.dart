@@ -43,7 +43,7 @@ class Comment extends Equatable {
       updatedAt: DateTime.parse(json['updatedAt']),
       idReview: json['_id_review'] ?? json['Review']['_id_review'] ?? '',
       idParent: json['_id_parent'] ?? '',
-      comments: int.tryParse(json['comments']?.toString() ?? '0') ?? 0,
+      comments: int.tryParse(json['commentsCount']?.toString() ?? '0') ?? 0,
       likes: int.tryParse(json['likes']?.toString() ?? '0') ?? 0,
       isLiked: json['is_liked'] ?? false,
       user: json['User'] != null

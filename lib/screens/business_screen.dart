@@ -13,7 +13,7 @@ import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/review_model.dart';
-import 'package:w_app/screens/actions/comments_screen.dart';
+import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/add/add_review.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/services/api/api_service.dart';
@@ -377,6 +377,9 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                                             content:
                                                                 reviews[index]
                                                                     .content,
+                                                            images:
+                                                                reviews[index]
+                                                                    .images,
                                                           )));
 
                                           if (response != null) {

@@ -21,49 +21,16 @@ class MessageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // if (showSender)
-        //   Padding(
-        //     padding: EdgeInsets.only(
-        //       bottom: 4,
-        //       top: 0,
-        //       left: isMine ? 0 : 0,
-        //       right: isMine ? 0 : 0,
-        //     ),
-        //     child: Row(
-        //       mainAxisAlignment:
-        //           isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
-        //       children: [
-        //         if (!isMine)
-        //           Text(
-        //             name,
-        //             style: TextStyle(
-        //               fontSize: 14,
-        //               fontWeight: FontWeight.bold,
-        //               color: Colors.grey[900],
-        //               fontFamily: 'Montserrat',
-        //             ),
-        //           ),
-        //         if (isMine)
-        //           Text(
-        //             ' Me',
-        //             style: TextStyle(
-        //               fontSize: 14,
-        //               fontWeight: FontWeight.bold,
-        //               color: Colors.grey[900],
-        //             ),
-        //           ),
-        //       ],
-        //     ),
-        //   ),
         if (showDate)
           Container(
+            margin: EdgeInsets.only(bottom: 16, top: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    // color: ColorStyle.grey.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -71,7 +38,7 @@ class MessageContainer extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontFamily: 'Montserrat',
-                      color: Colors.grey[800],
+                      color: ColorStyle.midToneGrey,
                     ),
                   ),
                 ),
@@ -152,18 +119,6 @@ class MessageContainer extends StatelessWidget {
             ),
           ),
         ),
-        // Align(
-        //   alignment: Alignment.centerLeft,
-        //   child: Text(
-        //     message.getFormattedTime(),
-        //     style: TextStyle(
-        //       fontSize: 12.0,
-        //       fontFamily: 'Montserrat',
-        //       color: isMine ? Colors.white : Colors.black,
-        //     ),
-        //     textAlign: TextAlign.end,
-        //   ),
-        // ),
       ],
     );
   }

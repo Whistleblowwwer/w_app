@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:w_app/models/article_model.dart';
 import 'package:w_app/styles/color_style.dart';
 
 class NoticeDetailScreen extends StatefulWidget {
-  final String image;
   final int index;
+  final Article article;
   const NoticeDetailScreen(
-      {super.key, required this.image, required this.index});
+      {super.key, required this.index, required this.article});
 
   @override
   State<NoticeDetailScreen> createState() => _NoticeDetailScreenState();
@@ -39,7 +40,7 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
                       child: Hero(
                           tag: widget.index,
                           child: Image.asset(
-                            widget.image,
+                            widget.article.imageUrl,
                             fit: BoxFit.cover,
                             width: sizeW * 100,
                           )),
@@ -48,7 +49,7 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 16),
                       child: Text(
-                        "Titulo increible",
+                        widget.article.title,
                         style: TextStyle(
                             color: Colors.black,
                             fontFamily: 'Montserrat',
@@ -63,7 +64,7 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 0),
                       child: Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                        widget.article.content,
                         style: TextStyle(
                             fontFamily: 'Montserrat',
                             fontSize: 14,
@@ -78,7 +79,7 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
                       child: Padding(
                         padding: EdgeInsets.only(right: 24, top: 16),
                         child: Text(
-                          "Nov 17. 2023",
+                          widget.article.formatDate(),
                           textAlign: TextAlign.right,
                           style: TextStyle(
                               color: ColorStyle.textGrey,

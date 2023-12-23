@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:w_app/widgets/press_transform_widget.dart';
 
 class ImageCarousel extends StatefulWidget {
-  final List<File> images;
+  final List<String> images;
   final int initialPage;
 
   const ImageCarousel(
@@ -22,7 +19,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
   void initState() {
     super.initState();
     print("-=----");
-    print(widget.images[widget.initialPage].path);
+    print(widget.images[widget.initialPage]);
     _pageController = PageController(initialPage: widget.initialPage);
   }
 
@@ -41,28 +38,44 @@ class _ImageCarouselState extends State<ImageCarousel> {
               itemCount: widget.images.length,
               onPageChanged: (int page) {},
               itemBuilder: (context, index) {
-                return Hero(
-                  tag: 1,
-                  child: Image.file(
-                    widget.images[index],
-                    fit: BoxFit.contain,
-                  ),
+                return Image.network(
+                  widget.images[index],
+                  fit: BoxFit.contain,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child; // Imagen cargada
+                    return Center(
+                      child: CircularProgressIndicator.adaptive(
+                        backgroundColor: Colors.white,
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
                 );
               },
             ),
           ),
           Positioned(
-            top: 64,
+            top: 56,
             left: 16,
-            child: IconButton(
-              icon: const Icon(
-                FeatherIcons.arrowLeft,
-                color: Colors.white,
-                size: 28,
-              ),
-              onPressed: () {
+            child: GestureDetector(
+              onTap: () {
                 Navigator.of(context).pop();
               },
+              child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.black.withOpacity(0.5)),
+                child: Icon(
+                  FeatherIcons.x,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
             ),
           ),
         ],

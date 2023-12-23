@@ -11,7 +11,7 @@ import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
 
 class CommentWidget extends StatelessWidget {
-  final User user;
+  final User userMain;
   final bool isThread;
   final bool isActive;
   final Comment comment;
@@ -23,7 +23,7 @@ class CommentWidget extends StatelessWidget {
   const CommentWidget({
     super.key,
     required this.comment,
-    required this.user,
+    required this.userMain,
     this.isActive = true,
     this.isThread = false,
     required this.onComment,
@@ -42,7 +42,7 @@ class CommentWidget extends StatelessWidget {
           MaterialPageRoute(
               builder: (context) => CommentPage(
                     comment: comment,
-                    user: user,
+                    user: userMain,
                     onLike: onLike,
                     onComment: onComment,
                     onFollowUser: onFollowUser,
@@ -77,7 +77,7 @@ class CommentWidget extends StatelessWidget {
                           bottom: 0,
                           right: 0,
                           child: Visibility(
-                            visible: user.idUser == comment.user.idUser
+                            visible: userMain.idUser == comment.user.idUser
                                 ? false
                                 : !comment.user.followed,
                             child: PressTransform(
@@ -143,9 +143,9 @@ class CommentWidget extends StatelessWidget {
                         ),
                         builder: (BuildContext context) {
                           return ReviewBottomSheet(
-                            user: user,
+                            user: userMain,
                             actions: [
-                              if (user.idUser != comment.user.idUser)
+                              if (userMain.idUser != comment.user.idUser)
                                 ReviewAction(
                                   text: comment.user.followed
                                       ? "Dejar de seguir a ${comment.user.name}"
@@ -154,7 +154,7 @@ class CommentWidget extends StatelessWidget {
                                     onFollowUser();
                                   },
                                 ),
-                              if (user.idUser == comment.user.idUser)
+                              if (userMain.idUser == comment.user.idUser)
                                 ReviewAction(
                                     color: ColorStyle.accentRed,
                                     text: "Eliminar",

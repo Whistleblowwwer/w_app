@@ -9,3 +9,10 @@ class FetchUserProfile extends UserBlocEvent {
   @override
   List<Object> get props => [];
 }
+
+class LoadUserProfile extends UserBlocEvent {
+  LoadUserProfile();
+
+  @override
+  List<Object> get props => [];
+}

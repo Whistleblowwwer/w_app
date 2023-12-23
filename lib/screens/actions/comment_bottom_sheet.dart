@@ -2,19 +2,17 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/add/widgets/custom_textfield_widget.dart';
-import 'package:w_app/services/api/api_service.dart';
+import 'package:w_app/screens/home/widgets/images_dimension_widget.dart';
+
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/dotters.dart';
-import 'package:w_app/widgets/image_expanded.dart';
+
 import 'package:w_app/widgets/press_transform_widget.dart';
-import 'package:w_app/widgets/snackbar.dart';
 
 Route navegarFadeIn(BuildContext context, Widget page) {
   return PageRouteBuilder(
@@ -33,13 +31,15 @@ class CommentBottomSheet extends StatefulWidget {
   final String name;
   final String lastName;
   final String content;
+  final List<String>? images;
 
   const CommentBottomSheet(
       {super.key,
       required this.user,
       required this.name,
       required this.lastName,
-      required this.content});
+      required this.content,
+      this.images});
   @override
   _CommentBottomSheetState createState() => _CommentBottomSheetState();
 }
@@ -154,6 +154,19 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                                 ),
                               ),
                             ),
+                            if (widget.images?.isNotEmpty ?? false)
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: 16, right: 16, bottom: 16),
+                                height: 200,
+                                width: double.maxFinite,
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: buildDynamicLayout(
+                                    widget.images ?? [], context),
+                              ),
                           ],
                         ),
                       )
@@ -195,7 +208,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                       Container(
                         width: 1.5,
                         margin: EdgeInsets.only(left: 36, bottom: 4, top: 4),
-                        color: ColorStyle.borderGrey,
+                        color: Colors.transparent,
                       ),
                       Expanded(
                         child: Column(
@@ -209,7 +222,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                                   controller: controllerReview,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Por favor escribe una reseña y elige una entidad';
+                                      return 'Por favor escribe un comentario';
                                     }
                                     // Add more validation if necessary
                                     return null;

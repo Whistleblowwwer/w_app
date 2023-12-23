@@ -1,13 +1,22 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_state.dart';
 import 'package:w_app/data/countries_data.dart';
+import 'package:w_app/screens/signInUp/verificationSMS_screen.dart';
 import 'package:w_app/screens/signInUp/widgets/custom_textfield_widget.dart';
+import 'package:w_app/screens/signInUp/widgets/roundedBottomSheet.dart';
+import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/custom_dropdown_menu.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
@@ -241,11 +250,34 @@ class _SignUpPageState extends State<SignUpPage> {
                               onPressed: () async {
                                 if (_formKey1.currentState!.validate()) {
                                   _formKey1.currentState!.save();
-                                  controllerPage.jumpToPage(
-                                    1,
-                                    // duration: Duration(milliseconds: 400),
-                                    // curve: Curves.bounceInOut);
-                                  );
+                                  final bool requestOTP = await ApiService()
+                                      .requestOTP(controllerEmail.text);
+
+                                  if (requestOTP) {
+                                    if (mounted) {
+                                      final bool? responseSMS =
+                                          await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SMSVerificationPage(
+                                                        email: controllerEmail
+                                                            .text,
+                                                      )));
+
+                                      if (responseSMS != null &&
+                                          responseSMS == true) {
+                                        controllerPage.jumpToPage(
+                                          1,
+                                        );
+                                      }
+                                    }
+                                  } else {
+                                    if (mounted) {
+                                      showErrorSnackBar(context,
+                                          "Al enviar código al correo ${controllerEmail.text}");
+                                    }
+                                  }
                                 }
                               },
                               child: Container(
@@ -415,11 +447,18 @@ class _SignUpPageState extends State<SignUpPage> {
                                         text: "Términos de servicio",
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {
-                                            final Uri url = Uri.parse(
-                                                'https://www.whistleblowwer.com/admin');
-                                            if (!await launchUrl(url)) {
-                                              print('Could not launch $url');
-                                            }
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PDFScreen()),
+                                            );
+
+                                            // final Uri url = Uri.parse(
+                                            //     'https://www.whistleblowwer.com/admin');
+                                            // if (!await launchUrl(url)) {
+                                            //   print('Could not launch $url');
+                                            // }
                                           },
                                         style: TextStyle(
                                             decoration:
@@ -429,11 +468,19 @@ class _SignUpPageState extends State<SignUpPage> {
                                         text: "Política de privacidad",
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {
-                                            final Uri url = Uri.parse(
-                                                'https://www.whistleblowwer.com/admin');
-                                            if (!await launchUrl(url)) {
-                                              print('Could not launch $url');
-                                            }
+                                            showModalBottomSheet(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  RoundedBottomSheet(),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              isScrollControlled: true,
+                                            );
+                                            // final Uri url = Uri.parse(
+                                            //     'https://www.whistleblowwer.com/admin');
+                                            // if (!await launchUrl(url)) {
+                                            //   print('Could not launch $url');
+                                            // }
                                           },
                                         style: TextStyle(
                                             decoration:
@@ -445,7 +492,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {
                                             final Uri url = Uri.parse(
-                                                'https://www.whistleblowwer.com/admin');
+                                                'https://www.whistleblowwer.com');
                                             if (!await launchUrl(url)) {
                                               print('Could not launch $url');
                                             }
@@ -659,6 +706,64 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class PDFScreen extends StatefulWidget {
+  @override
+  _PDFScreenState createState() => _PDFScreenState();
+}
+
+class _PDFScreenState extends State<PDFScreen> {
+  String pathPDF = "";
+
+  @override
+  void initState() {
+    super.initState();
+    fromAsset('assets/terminos.pdf', 'terminos.pdf').then((f) {
+      setState(() {
+        pathPDF = f.path;
+      });
+    });
+  }
+
+  Future<File> fromAsset(String asset, String filename) async {
+    // Prepara el temporal directory
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+
+    // Carga el archivo
+    ByteData bd = await rootBundle.load(asset);
+    var bytes = bd.buffer.asUint8List();
+
+    // Guarda como archivo
+    File file = File('$tempPath/$filename');
+    await file.writeAsBytes(bytes, flush: true);
+    return file;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Términos de servicio'),
+      ),
+      body: pathPDF == ""
+          ? Center(child: CircularProgressIndicator())
+          : PDFView(
+              filePath: pathPDF,
+              enableSwipe: true,
+              autoSpacing: false,
+              pageFling: true,
+              pageSnap: true,
+              fitPolicy: FitPolicy.BOTH,
+              preventLinkNavigation: false,
+              onPageChanged: (int? page, int? total) {
+                print('page change: $page/$total');
+                setState(() {});
+              },
+            ),
     );
   }
 }

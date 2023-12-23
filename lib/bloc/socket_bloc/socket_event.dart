@@ -64,27 +64,69 @@ class Message {
   }
 
   bool isToday() {
-    final now = DateTime.now();
-    return createdAt.year == now.year && createdAt.month == now.month && createdAt.day == now.day;
+    final now = DateTime.now().toLocal();
+    print("--");
+    print(now);
+    print(createdAt);
+    return createdAt.year == now.year &&
+        createdAt.month == now.month &&
+        createdAt.day == now.day;
   }
 
   bool isYesterday() {
-    final yesterday = DateTime.now().subtract(Duration(days: 1));
-    return createdAt.year == yesterday.year && createdAt.month == yesterday.month && createdAt.day == yesterday.day;
+    final yesterday = DateTime.now().toLocal().subtract(Duration(days: 1));
+    return createdAt.year == yesterday.year &&
+        createdAt.month == yesterday.month &&
+        createdAt.day == yesterday.day;
   }
-  
+
   String getFormattedTime() {
     return '${createdAt.hour.toString().padLeft(2, '0')}:${createdAt.minute.toString().padLeft(2, '0')}';
   }
 
   String getFormattedDate() {
-    if(isToday()){
+    final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    final DateTime createdAtDate =
+        DateTime(createdAt.year, createdAt.month, createdAt.day);
+    final int differenceInDays = today.difference(createdAtDate).inDays;
+
+    if (isToday()) {
       return "Hoy";
-    }else if(isYesterday()){
+    } else if (isYesterday()) {
       return "Ayer";
-    }else{
-      return '${createdAt.day.toString().padLeft(2, '0')} de ${_getMonthName(createdAt.month)} de ${createdAt.year}';
+    } else if (differenceInDays < 7) {
+      // For dates within the last seven days
+      return '${_formatDayOfWeek(createdAt)}, ${_formatMonth(createdAt.month)} ${createdAt.day}';
+    } else {
+      // For dates more than seven days ago
+      return '${_formatMonth(createdAt.month)}. ${createdAt.day}, ${createdAt.year}';
     }
+  }
+
+  String _formatDayOfWeek(DateTime date) {
+    // Depending on your locale, you might want to change these
+    const daysOfWeek = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+    return daysOfWeek[date.weekday - 1];
+  }
+
+  String _formatMonth(int month) {
+    // Depending on your locale, you might want to change these
+    const months = [
+      "ene",
+      "feb",
+      "mar",
+      "abr",
+      "may",
+      "jun",
+      "jul",
+      "ago",
+      "sep",
+      "oct",
+      "nov",
+      "dic"
+    ];
+    return months[month - 1];
   }
 
   String _getMonthName(int month) {
