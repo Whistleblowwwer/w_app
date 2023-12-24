@@ -124,6 +124,8 @@ class ApiService {
   }
 
   Future<bool> validateOTP(String code, String email) async {
+    print(code);
+    print(email);
     try {
       var response = await _utils
           .post('users/validate-otp', {"code": code, "email": email});

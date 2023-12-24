@@ -55,6 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String? gender;
   DateTime? birthdate;
   String preffix = '52';
+  bool loadingOTP = false;
 
   final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
@@ -248,8 +249,12 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                             PressTransform(
                               onPressed: () async {
+                                if (loadingOTP) return;
                                 if (_formKey1.currentState!.validate()) {
                                   _formKey1.currentState!.save();
+                                  setState(() {
+                                    loadingOTP = true;
+                                  });
                                   final bool requestOTP = await ApiService()
                                       .requestOTP(controllerEmail.text);
 
@@ -278,6 +283,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                           "Al enviar código al correo ${controllerEmail.text}");
                                     }
                                   }
+                                  setState(() {
+                                    loadingOTP = false;
+                                  });
                                 }
                               },
                               child: Container(
