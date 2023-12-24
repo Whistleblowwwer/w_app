@@ -18,7 +18,7 @@ class CommentWidget extends StatelessWidget {
   final VoidCallback onLike;
   final Future Function() onComment;
   final VoidCallback onFollowUser;
-  final VoidCallback? onDelete;
+  final Future Function()? onDelete;
 
   const CommentWidget({
     super.key,
@@ -46,6 +46,7 @@ class CommentWidget extends StatelessWidget {
                     onLike: onLike,
                     onComment: onComment,
                     onFollowUser: onFollowUser,
+                    onDelete: onDelete,
                   )),
         );
       },
@@ -158,7 +159,7 @@ class CommentWidget extends StatelessWidget {
                                 ReviewAction(
                                     color: ColorStyle.accentRed,
                                     text: "Eliminar",
-                                    onPressed: () {
+                                    onPressed: () async {
                                       onDelete?.call();
                                     }),
                             ],

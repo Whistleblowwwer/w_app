@@ -617,6 +617,47 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 itemBuilder: (context, index) {
                                                   return CommentWidget(
                                                     comment: comments[index],
+                                                    userMain: _user,
+                                                    onLike: () {
+                                                      _likeComment(
+                                                          comments[index]);
+                                                    },
+                                                    onFollowUser: () {},
+                                                    onDelete: () async {
+                                                      try {
+                                                        final response =
+                                                            await ApiService()
+                                                                .deleteComment(
+                                                                    comments[
+                                                                            index]
+                                                                        .idComment);
+                                                        if (response == 200) {
+                                                          setState(() {
+                                                            comments.removeAt(
+                                                                index);
+                                                          });
+                                                          if (mounted) {
+                                                            showSuccessSnackBar(
+                                                                context,
+                                                                message:
+                                                                    "Se elimino el comentario exitosamente");
+                                                          }
+                                                          return true;
+                                                        } else {
+                                                          if (mounted) {
+                                                            showErrorSnackBar(
+                                                                context,
+                                                                "No se pudo eliminar el comentario");
+                                                          }
+                                                        }
+                                                      } catch (e) {
+                                                        if (mounted) {
+                                                          showErrorSnackBar(
+                                                              context,
+                                                              "No se pudo eliminar el comentario");
+                                                        }
+                                                      }
+                                                    },
                                                     onComment: () async {
                                                       final userState =
                                                           userBloc.state;
@@ -702,12 +743,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         setState(() {});
                                                       }
                                                     },
-                                                    onLike: () {
-                                                      _likeComment(
-                                                          comments[index]);
-                                                    },
-                                                    onFollowUser: () {},
-                                                    userMain: _user,
                                                   );
                                                 },
                                               ),

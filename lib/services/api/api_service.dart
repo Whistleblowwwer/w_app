@@ -127,8 +127,9 @@ class ApiService {
     print(code);
     print(email);
     try {
-      var response = await _utils
-          .post('users/validate-otp', {"code": code, "email": email});
+      var response = await _utils.post('users/validate-otp',
+          {"code": double.tryParse(code), "email": email});
+      print('a');
       return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
       print("Error validating SMS: $e");
@@ -171,6 +172,8 @@ class ApiService {
 
     // Realizar la petición POST al endpoint para registrar usuarios
     var response = await _utils.post('users/', body);
+    print(response.body);
+    print(response.statusCode);
 
     // Devolver la respuesta procesada
     return json.decode(response.body);
@@ -262,6 +265,17 @@ class ApiService {
       var response = await _utils.patch('reviews/?_id_review=$idReview', {});
       return response.statusCode;
     } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<int> deleteComment(String idComment) async {
+    try {
+      var response = await _utils.patch('comments/?_id_comment=$idComment', {});
+      print(response.body);
+      return response.statusCode;
+    } catch (e) {
+      print("ssss");
       return Future.error(e);
     }
   }

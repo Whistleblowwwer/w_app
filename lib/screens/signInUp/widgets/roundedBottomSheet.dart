@@ -310,7 +310,9 @@ Monterrey, Nuevo León. México. Diciembre 21, 2023.""", // Tus términos y cond
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             PressTransform(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                               child: Container(
                                 margin: EdgeInsets.only(
                                     right: sizeH * 5, left: sizeH * 5),
@@ -332,7 +334,9 @@ Monterrey, Nuevo León. México. Diciembre 21, 2023.""", // Tus términos y cond
                               ),
                             ),
                             PressTransform(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                               child: Container(
                                 width: sizeH * 60,
                                 height: sizeV * 7,

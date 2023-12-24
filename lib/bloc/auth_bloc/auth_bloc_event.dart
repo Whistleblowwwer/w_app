@@ -49,7 +49,6 @@ class CreateUser extends AuthBlocEvent {
   });
 
   @override
-  // TODO: implement props
   List<Object> get props => [
         userName,
         name,

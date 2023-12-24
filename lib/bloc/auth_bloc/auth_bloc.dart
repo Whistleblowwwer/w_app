@@ -92,7 +92,11 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
         await userRepository.saveToken(response['token']);
         emit(AuthAuthenticated());
       } else {
-        emit(AuthError('Sign in failed'));
+        if (response.containsKey("errors")) {
+          emit(AuthError(response["errors"][0]["message"]));
+        } else {
+          emit(AuthError('Sign in failed'));
+        }
       }
     } catch (e) {
       print(e);

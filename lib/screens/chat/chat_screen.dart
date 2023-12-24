@@ -12,6 +12,7 @@ import 'package:w_app/services/api/api_service.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
+import 'package:w_app/widgets/snackbar.dart';
 
 class ChatPage extends StatefulWidget {
   final User user;
@@ -78,13 +79,17 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> loadChats() async {
-    final conv = await ApiService().getChats();
-    if (!mounted) return;
-    setState(() {
-      conversations = conv;
-      listFilter = [...conv];
-    });
-    print(conv);
+    try {
+      final conv = await ApiService().getChats();
+      if (!mounted) return;
+      setState(() {
+        conversations = conv;
+        listFilter = [...conv];
+      });
+      print(conv);
+    } catch (e) {
+      showErrorSnackBar(context, "No se cargaron los chats");
+    }
   }
 
   @override

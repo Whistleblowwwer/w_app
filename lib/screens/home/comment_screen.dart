@@ -15,6 +15,7 @@ class CommentPage extends StatefulWidget {
   final Comment comment;
   final VoidCallback onLike;
   final Future Function() onComment;
+  final Future Function()? onDelete;
   final VoidCallback onFollowUser;
   final User user;
   const CommentPage(
@@ -23,7 +24,8 @@ class CommentPage extends StatefulWidget {
       required this.user,
       required this.onLike,
       required this.onComment,
-      required this.onFollowUser});
+      required this.onFollowUser,
+      this.onDelete});
 
   @override
   State<CommentPage> createState() => _CommentPageState();
@@ -147,6 +149,15 @@ class _CommentPageState extends State<CommentPage> {
                                   isActive: false,
                                   comment: comment,
                                   userMain: widget.user,
+                                  onDelete: () async {
+                                    bool? responseOnDelete =
+                                        await widget.onDelete!();
+                                    if (responseOnDelete ?? false) {
+                                      if (mounted) {
+                                        Navigator.of(context).pop();
+                                      }
+                                    }
+                                  },
                                   onComment: () async {
                                     await widget.onComment();
                                     await _loadComments();
@@ -200,6 +211,40 @@ class _CommentPageState extends State<CommentPage> {
                                             onFollowUser: () {},
                                             onLike: () {
                                               _likeComment(comments[index]);
+                                            },
+                                            onDelete: () async {
+                                              try {
+                                                final response =
+                                                    await ApiService()
+                                                        .deleteComment(
+                                                            comments[index]
+                                                                .idComment);
+                                                if (response == 200) {
+                                                  setState(() {
+                                                    comments.removeAt(index);
+                                                    comment = comment.copyWith(
+                                                        comments:
+                                                            comment.comments -
+                                                                1);
+                                                  });
+                                                  if (mounted) {
+                                                    showSuccessSnackBar(context,
+                                                        message:
+                                                            "Se elimino el comentario exitosamente");
+                                                  }
+                                                  return true;
+                                                } else {
+                                                  if (mounted) {
+                                                    showErrorSnackBar(context,
+                                                        "No se pudo eliminar el comentario");
+                                                  }
+                                                }
+                                              } catch (e) {
+                                                if (mounted) {
+                                                  showErrorSnackBar(context,
+                                                      "No se pudo eliminar el comentario");
+                                                }
+                                              }
                                             },
                                             onComment: () async {
                                               final userState = _userBloc.state;
