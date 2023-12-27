@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,7 +74,7 @@ class ReviewCard extends StatelessWidget {
                 },
                 child: Container(
                   width: double.maxFinite,
-                  decoration: BoxDecoration(color: Colors.white),
+                  decoration: const BoxDecoration(color: Colors.white),
                   child: Column(
                     children: [
                       false //  showBusiness ?? true
@@ -100,8 +98,9 @@ class ReviewCard extends StatelessWidget {
                               child: Container(
                                 height: 56,
                                 width: double.maxFinite,
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                decoration: BoxDecoration(),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                decoration: const BoxDecoration(),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -117,14 +116,14 @@ class ReviewCard extends StatelessWidget {
                                           children: [
                                             Text(
                                               review.business?.name ?? '',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 14,
                                                   fontFamily: 'Montserrat'),
                                             ),
                                             Text(
                                               review.business?.entity ?? '',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   color: ColorStyle.grey,
                                                   fontSize: 12,
@@ -134,7 +133,7 @@ class ReviewCard extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    Icon(
+                                    const Icon(
                                       FeatherIcons.arrowRightCircle,
                                       color: ColorStyle.solidBlue,
                                       size: 18,
@@ -171,12 +170,13 @@ class ReviewCard extends StatelessWidget {
                                       });
                                     },
                                     child: CircularAvatarW(
-                                      externalRadius: Offset(38, 38),
-                                      internalRadius: Offset(34, 34),
+                                      externalRadius: const Offset(38, 38),
+                                      internalRadius: const Offset(34, 34),
                                       nameAvatar:
                                           '${review.user.name[0].toUpperCase()}${review.user.lastName[0].toUpperCase()}',
                                       isCompany: false,
                                       sizeText: 18,
+                                      urlImage: review.user.profilePictureUrl,
                                     ),
                                   ),
                                   Positioned(
@@ -192,10 +192,10 @@ class ReviewCard extends StatelessWidget {
                                         child: Container(
                                             width: 18,
                                             height: 18,
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 color: Colors.white),
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons.add_circle_rounded,
                                               size: 18,
                                             )),
@@ -240,7 +240,7 @@ class ReviewCard extends StatelessWidget {
                                           },
                                           child: Text(
                                             review.business?.name ?? '',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 16,
                                                 fontFamily: 'Montserrat'),
@@ -309,7 +309,7 @@ class ReviewCard extends StatelessWidget {
                                             ),
                                             TextSpan(
                                               text: review.timeAgo,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontWeight: FontWeight.w300,
                                               ),
                                             )
@@ -317,7 +317,7 @@ class ReviewCard extends StatelessWidget {
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontFamily: 'Montserrat',
                                             color: ColorStyle.textGrey,
@@ -344,6 +344,18 @@ class ReviewCard extends StatelessWidget {
                                   builder: (BuildContext context) {
                                     return ReviewBottomSheet(
                                       user: stateUser.user,
+                                      onReport: () async {
+                                        // ApiService()
+                                        //     .reportReview(
+                                        //         idReview: review.idReview)
+                                        //     .then((value) {
+                                        //   if (value == 200 || value == 201) {
+                                        //     showSuccessSnackBar(context,
+                                        //         message:
+                                        //             "Se envió el reporte exitosamente");
+                                        //   }
+                                        // });
+                                      },
                                       actions: [
                                         ReviewAction(
                                           text: review.business?.followed ??
@@ -377,7 +389,7 @@ class ReviewCard extends StatelessWidget {
                                   },
                                 );
                               },
-                              child: Icon(
+                              child: const Icon(
                                 FeatherIcons.moreHorizontal,
                                 size: 18,
                               ),
@@ -405,7 +417,8 @@ class ReviewCard extends StatelessWidget {
                                 visible: isThread,
                                 child: Container(
                                   width: 1.5,
-                                  margin: EdgeInsets.only(left: 34, bottom: 16),
+                                  margin: const EdgeInsets.only(
+                                      left: 34, bottom: 16),
                                   color: ColorStyle.borderGrey,
                                 )),
                             Expanded(
@@ -413,12 +426,12 @@ class ReviewCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(
+                                    padding: const EdgeInsets.only(
                                         left: 16, right: 18, bottom: 16),
                                     child: Text(
                                       review.content,
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontFamily: 'Montserrat',
                                         height: 1.42,
@@ -433,7 +446,7 @@ class ReviewCard extends StatelessWidget {
                                             ? sizeH * 100 * 1 / 2
                                             : 256,
                                       ),
-                                      margin: EdgeInsets.only(
+                                      margin: const EdgeInsets.only(
                                           left: 16, right: 16, bottom: 16),
                                       height: review.images!.length == 1
                                           ? null
@@ -449,8 +462,8 @@ class ReviewCard extends StatelessWidget {
                                       ),
                                     ),
                                   Padding(
-                                      padding:
-                                          EdgeInsets.only(left: 16, right: 16),
+                                      padding: const EdgeInsets.only(
+                                          left: 16, right: 16),
                                       child: SizedBox(
                                         width: double.maxFinite,
                                         child: Row(
@@ -475,7 +488,7 @@ class ReviewCard extends StatelessWidget {
                                                     height: 20,
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 16,
                                                 ),
 
@@ -493,7 +506,7 @@ class ReviewCard extends StatelessWidget {
                                                 ),
                                                 //                                             Flexible(
 
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 16,
                                                 ),
                                                 PressTransform(
@@ -523,7 +536,8 @@ class ReviewCard extends StatelessWidget {
                                               itemPadding:
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 0.5),
-                                              itemBuilder: (context, _) => Icon(
+                                              itemBuilder: (context, _) =>
+                                                  const Icon(
                                                 Icons.star,
                                                 color: ColorStyle.solidBlue,
                                               ),
@@ -537,7 +551,7 @@ class ReviewCard extends StatelessWidget {
                                         ),
                                       )),
                                   Padding(
-                                    padding: EdgeInsets.only(
+                                    padding: const EdgeInsets.only(
                                         left: 16,
                                         right: 16,
                                         top: 8,
@@ -550,7 +564,7 @@ class ReviewCard extends StatelessWidget {
                                             onPressed: () {},
                                             child: Text(
                                               review.getLikes,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.w300,
                                                   fontFamily: 'Montserrat'),
                                             ),
@@ -565,7 +579,7 @@ class ReviewCard extends StatelessWidget {
                                             onPressed: () {},
                                             child: Text(
                                               "${review.comments} respuestas",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.w300,
                                                   fontFamily: 'Montserrat'),
                                             ),
@@ -586,14 +600,14 @@ class ReviewCard extends StatelessWidget {
               ),
               Visibility(
                 visible: !isThread,
-                child: Divider(
+                child: const Divider(
                   height: 1,
                   color: ColorStyle.grey,
                 ),
               )
             ],
           )
-        : SizedBox();
+        : const SizedBox();
   }
 }
 
@@ -625,7 +639,7 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
           },
           child: Container(
             width: double.maxFinite,
-            decoration: BoxDecoration(color: Colors.white),
+            decoration: const BoxDecoration(color: Colors.white),
             child: Column(
               children: [
                 widget.showBusiness ?? true
@@ -634,21 +648,21 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                         child: Container(
                           height: 56,
                           width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           decoration:
-                              BoxDecoration(color: ColorStyle.lightGrey),
+                              const BoxDecoration(color: ColorStyle.lightGrey),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               CircularAvatarW(
-                                externalRadius: Offset(42, 42),
-                                internalRadius: Offset(36, 36),
+                                externalRadius: const Offset(42, 42),
+                                internalRadius: const Offset(36, 36),
                                 nameAvatar: widget.review.business?.name
                                         .substring(0, 1) ??
                                     '',
                                 isCompany: true,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 16,
                               ),
                               Flexible(
@@ -662,14 +676,14 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                     children: [
                                       Text(
                                         widget.review.business?.name ?? '',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 14,
                                             fontFamily: 'Montserrat'),
                                       ),
                                       Text(
                                         widget.review.business?.entity ?? '',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w400,
                                             color: ColorStyle.grey,
                                             fontSize: 12,
@@ -679,7 +693,7 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                   ),
                                 ),
                               ),
-                              Icon(
+                              const Icon(
                                 FeatherIcons.arrowRightCircle,
                                 color: ColorStyle.solidBlue,
                                 size: 18,
@@ -695,8 +709,8 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                   child: Row(
                     children: [
                       CircularAvatarW(
-                        externalRadius: Offset(42, 42),
-                        internalRadius: Offset(36, 36),
+                        externalRadius: const Offset(42, 42),
+                        internalRadius: const Offset(36, 36),
                         nameAvatar: widget.review.user.name.substring(0, 1),
                         isCompany: false,
                       ),
@@ -711,12 +725,12 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                             children: [
                               Text(
                                 "${widget.review.user.name} ${widget.review.user.lastName}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontFamily: 'Montserrat',
                                     fontSize: 14),
                               ),
-                              Text(
+                              const Text(
                                 "4h",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
@@ -730,13 +744,13 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                       PressTransform(
                         onPressed: () {},
                         child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: ColorStyle.lightGrey,
                           ),
-                          child: Icon(FeatherIcons.userCheck),
+                          child: const Icon(FeatherIcons.userCheck),
                         ),
                       )
                     ],
@@ -749,21 +763,22 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                       widget.isThread
                           ? Container(
                               width: 1,
-                              margin: EdgeInsets.only(left: 36, bottom: 16),
+                              margin:
+                                  const EdgeInsets.only(left: 36, bottom: 16),
                               color: ColorStyle.borderGrey,
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   left: 16, right: 18, bottom: 16),
                               child: Text(
                                 widget.review.content,
                                 textAlign: TextAlign.start,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Montserrat',
                                   height: 1.42,
@@ -772,7 +787,8 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                               ),
                             ),
                             Padding(
-                                padding: EdgeInsets.only(left: 16, right: 16),
+                                padding:
+                                    const EdgeInsets.only(left: 16, right: 16),
                                 child: SizedBox(
                                   width: double.maxFinite,
                                   child: Row(
@@ -828,7 +844,7 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                         itemCount: 5,
                                         itemPadding: const EdgeInsets.symmetric(
                                             horizontal: 0.5),
-                                        itemBuilder: (context, _) => Icon(
+                                        itemBuilder: (context, _) => const Icon(
                                           Icons.star,
                                           color: ColorStyle.solidBlue,
                                         ),
@@ -842,7 +858,7 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                   ),
                                 )),
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   left: 16, right: 16, top: 16, bottom: 16),
                               child: Align(
                                 alignment: Alignment.centerLeft,
@@ -850,8 +866,8 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                   children: [
                                     PressTransform(
                                       onPressed: () {},
-                                      child: Text(
-                                        "123 me gustas",
+                                      child: const Text(
+                                        "123 me gusta",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w300,
                                             fontFamily: 'Montserrat'),
@@ -865,7 +881,7 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
                                     ),
                                     PressTransform(
                                       onPressed: () {},
-                                      child: Text(
+                                      child: const Text(
                                         "70 comentarios",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w300,
@@ -886,7 +902,7 @@ class _ReviewCardDefaultState extends State<ReviewCardDefault> {
             ),
           ),
         ),
-        Divider(
+        const Divider(
           height: 1,
           color: ColorStyle.grey,
         )

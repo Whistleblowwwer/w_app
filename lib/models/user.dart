@@ -64,8 +64,11 @@ class User extends Equatable {
     return monthNames[month - 1];
   }
 
+  String get nameFirstLetter {
+    return (name[0] + lastName[0]).toUpperCase();
+  }
+
   factory User.fromJson(Map<String, dynamic> json) {
-    print(json);
     return User(
         idUser: json['_id_user'],
         name: json['name'],

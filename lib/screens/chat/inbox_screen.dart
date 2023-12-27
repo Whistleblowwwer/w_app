@@ -1,10 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/material.dart';
-import 'package:socket_io_common/src/util/event_emitter.dart';
 import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
 import 'package:w_app/bloc/socket_bloc/socket_event.dart';
 import 'package:w_app/bloc/socket_bloc/socket_state.dart';
@@ -14,7 +10,6 @@ import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/chat/widgets/message_cont.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
-import 'package:w_app/styles/gradient_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/glassmorphism.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
@@ -24,8 +19,9 @@ class InboxScreen extends StatefulWidget {
   final String receiverName;
   final String initials;
 
-  InboxScreen(
-      {required this.receiver,
+  const InboxScreen(
+      {super.key,
+      required this.receiver,
       required this.receiverName,
       required this.initials});
 
@@ -35,7 +31,7 @@ class InboxScreen extends StatefulWidget {
 
 class _InboxScreenState extends State<InboxScreen> {
   // final _keyboardVisibilityController = KeyboardVisibilityController();
-  TextEditingController _textFieldController = TextEditingController();
+  final TextEditingController _textFieldController = TextEditingController();
   FocusNode focusNodeTextField = FocusNode();
 
   List<MessageContainer> messages = [];
@@ -84,9 +80,12 @@ class _InboxScreenState extends State<InboxScreen> {
           msg[i]['_id_sender'] != msg[i + 1]['_id_sender'];
 
       bool showDate = i == msg.length - 1 ||
-          !(DateTime.parse(msg[i]['createdAt']).year == DateTime.parse(msg[i+1]['createdAt']).year && 
-            DateTime.parse(msg[i]['createdAt']).month == DateTime.parse(msg[i+1]['createdAt']).month &&
-            DateTime.parse(msg[i]['createdAt']).day == DateTime.parse(msg[i+1]['createdAt']).day);
+          !(DateTime.parse(msg[i]['createdAt']).year ==
+                  DateTime.parse(msg[i + 1]['createdAt']).year &&
+              DateTime.parse(msg[i]['createdAt']).month ==
+                  DateTime.parse(msg[i + 1]['createdAt']).month &&
+              DateTime.parse(msg[i]['createdAt']).day ==
+                  DateTime.parse(msg[i + 1]['createdAt']).day);
 
       messageContainers.add(MessageContainer(
         message: message,
@@ -105,9 +104,11 @@ class _InboxScreenState extends State<InboxScreen> {
   }
 
   void _addMessage(Message message) {
-    bool showDate = messages.isEmpty? true :  !(message.createdAt.year == messages.last.message.createdAt.year && 
-                                                message.createdAt.month == messages.last.message.createdAt.month &&
-                                                message.createdAt.day == messages.last.message.createdAt.day);
+    bool showDate = messages.isEmpty
+        ? true
+        : !(message.createdAt.year == messages.last.message.createdAt.year &&
+            message.createdAt.month == messages.last.message.createdAt.month &&
+            message.createdAt.day == messages.last.message.createdAt.day);
     messages.add(MessageContainer(
       message: message,
       isMine: message.idSender == user.idUser,
@@ -141,7 +142,7 @@ class _InboxScreenState extends State<InboxScreen> {
         backgroundColor: Colors.grey[100],
         body: Stack(
           children: [
-            Container(
+            SizedBox(
               width: double.maxFinite,
               height: double.maxFinite,
               child: Column(children: [
@@ -149,15 +150,13 @@ class _InboxScreenState extends State<InboxScreen> {
                   child: ListView.builder(
                     reverse: true,
                     scrollDirection: Axis.vertical,
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                         left: 16, right: 16, top: 128, bottom: 16),
                     itemBuilder: (context, index) {
-                      return Container(
-                        child: Column(children: [
-                          messages[messages.length - 1 - index],
-                          SizedBox(height: 5.0)
-                        ]),
-                      );
+                      return Column(children: [
+                        messages[messages.length - 1 - index],
+                        const SizedBox(height: 5.0)
+                      ]);
                     },
                     itemCount: messages.length,
                   ),
@@ -166,7 +165,7 @@ class _InboxScreenState extends State<InboxScreen> {
                   width: double.maxFinite,
                   height: focusNodeTextField.hasFocus ? 64 : 88,
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     // border: Border(
                     //   top: BorderSide(
@@ -181,7 +180,7 @@ class _InboxScreenState extends State<InboxScreen> {
                         right: 8,
                         top: 8,
                         bottom: focusNodeTextField.hasFocus ? 8 : 32),
-                    padding: EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.only(right: 8),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         color: Colors.grey[100],
@@ -190,21 +189,21 @@ class _InboxScreenState extends State<InboxScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(left: 8),
+                          padding: const EdgeInsets.only(left: 8),
                           child: CircleAvatar(
                             radius: 18,
+                            backgroundColor: ColorStyle.solidBlue,
                             child: Text(widget.initials.toUpperCase(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 16,
                                     fontFamily: 'Montserrat')),
-                            backgroundColor: ColorStyle.solidBlue,
                           ),
                         ),
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 8,
                             ),
                             child: TextField(
@@ -225,7 +224,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                 SendMessage(msg, user.idUser, widget.receiver));
                             _textFieldController.clear();
                           },
-                          child: Icon(
+                          child: const Icon(
                             Icons.send,
                             color: ColorStyle.solidBlue,
                           ),
@@ -246,7 +245,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: 104,
-                  padding: EdgeInsets.only(top: 32),
+                  padding: const EdgeInsets.only(top: 32),
                   child: Stack(
                     alignment: AlignmentDirectional.center,
                     children: [
@@ -259,12 +258,12 @@ class _InboxScreenState extends State<InboxScreen> {
                           child: Row(
                             children: [
                               CircularAvatarW(
-                                  externalRadius: Offset(42, 42),
-                                  internalRadius: Offset(38, 38),
+                                  externalRadius: const Offset(42, 42),
+                                  internalRadius: const Offset(38, 38),
                                   nameAvatar:
                                       widget.receiverName.substring(0, 1),
                                   isCompany: false),
-                              SizedBox(
+                              const SizedBox(
                                 width: 8,
                               ),
                               Column(
@@ -283,7 +282,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                           fontWeight: FontWeight.w600),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 2,
                                   ),
                                   Text(

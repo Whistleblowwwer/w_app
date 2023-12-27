@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:w_app/bloc/feed_bloc/feed_event.dart';
-import 'package:w_app/models/company_model.dart';
-import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
+import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
 
@@ -16,18 +14,18 @@ class ReviewAction {
 
 class ReviewBottomSheet extends StatelessWidget {
   final User user;
-
   final List<ReviewAction> actions; // Lista de acciones
+  final VoidCallback onReport;
 
-  const ReviewBottomSheet({
-    super.key,
-    required this.user,
-    required this.actions, // Acepta la lista de acciones
-  });
+  const ReviewBottomSheet(
+      {super.key,
+      required this.user,
+      required this.actions, // Acepta la lista de acciones
+      required this.onReport});
 
   @override
   Widget build(BuildContext context) {
-    final sizeW = MediaQuery.of(context).size.width / 100;
+    // final sizeW = MediaQuery.of(context).size.width / 100;
     // final sizeH = MediaQuery.of(context).size.height / 100;
     return Container(
       width: double.maxFinite,
@@ -49,14 +47,15 @@ class ReviewBottomSheet extends StatelessWidget {
                 Container(
                   width: 48,
                   height: 4,
-                  margin: EdgeInsets.only(top: 16, bottom: 24),
+                  margin: const EdgeInsets.only(top: 16, bottom: 24),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: ColorStyle.borderGrey),
                 ),
                 OptionsWidget(actions: actions),
                 Container(
-                  margin: EdgeInsets.only(left: 16, right: 16, bottom: 56),
+                  margin:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 56),
                   width: double.maxFinite,
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
@@ -67,17 +66,16 @@ class ReviewBottomSheet extends StatelessWidget {
                     children: [
                       PressTransform(
                         animation: false,
-                        onPressed: () {
-                          print("a");
-                        },
+                        onPressed: onReport,
                         child: Container(
                           color: ColorStyle.lightGrey,
                           width: double.maxFinite,
-                          padding: EdgeInsets.all(16),
-                          child: Text(
-                            "Reportar",
+                          padding: const EdgeInsets.all(16),
+                          child: const Text(
+                            "Envía tu reporte a reportes@whistleblowwer.com",
                             style: TextStyle(
                                 fontFamily: 'Montserrat',
+                                fontSize: 12,
                                 color: ColorStyle.accentRed,
                                 fontWeight: FontWeight.w600),
                           ),
@@ -127,7 +125,7 @@ class OptionsWidget extends StatelessWidget {
                 child: Container(
                   color: ColorStyle.lightGrey,
                   width: double.maxFinite,
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Text(
                     action.text,
                     style: TextStyle(
@@ -139,7 +137,7 @@ class OptionsWidget extends StatelessWidget {
               ),
               // Agregar Divider si no es el último elemento
               if (idx != actions.length - 1)
-                Divider(
+                const Divider(
                   height: 1,
                   color: ColorStyle.borderGrey,
                 ),

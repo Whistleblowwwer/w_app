@@ -9,6 +9,7 @@ import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/home/widgets/comment_card.dart';
 import 'package:w_app/services/api/api_service.dart';
+import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/snackbar.dart';
 
 class CommentPage extends StatefulWidget {
@@ -82,7 +83,6 @@ class _CommentPageState extends State<CommentPage> {
     // Realiza la llamada al servicio.
     final response =
         await ApiService().likeComment(idComment: comment.idComment);
-    print(response);
 
     // Si la respuesta no es exitosa, revierte el cambio en la UI.
     if (response != 200 && response != 201) {
@@ -96,9 +96,13 @@ class _CommentPageState extends State<CommentPage> {
     }
   }
 
-  void addCommentToComment(int comments) {
+  void addCommentToComment(int index) {
     setState(() {
-      comment = comment.copyWith(comments: comments);
+      comments = comments.map((itemComment) {
+        return itemComment.idComment == comments[index].idComment
+            ? comments[index].copyWith(comments: comments[index].comments + 1)
+            : itemComment;
+      }).toList();
     });
   }
 
@@ -128,17 +132,17 @@ class _CommentPageState extends State<CommentPage> {
     final stateUser = BlocProvider.of<UserBloc>(context).state;
 
     return Scaffold(
-      body: Container(
+      body: SizedBox(
           width: double.maxFinite,
           height: double.maxFinite,
           child: Stack(
             children: [
               stateUser is UserLoaded
-                  ? Container(
+                  ? SizedBox(
                       width: sizeW * 100,
                       height: sizeH * 100,
                       child: CustomScrollView(
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         slivers: [
                           const SliverPadding(
                             padding: EdgeInsets.only(top: 96),
@@ -182,8 +186,13 @@ class _CommentPageState extends State<CommentPage> {
                                   child: Padding(
                                     padding: EdgeInsets.only(top: 96),
                                     child: Center(
-                                        child: CircularProgressIndicator
-                                            .adaptive()),
+                                        child:
+                                            CircularProgressIndicator.adaptive(
+                                      backgroundColor: ColorStyle
+                                          .grey, // Fondo del indicador
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          ColorStyle.darkPurple),
+                                    )),
                                   ),
                                 )
                               : comments.isEmpty
@@ -294,7 +303,7 @@ class _CommentPageState extends State<CommentPage> {
 
                                                 if (response != null) {
                                                   try {
-                                                    final reponse = await ApiService()
+                                                    await ApiService()
                                                         .commentReview(
                                                             content: response[
                                                                 'content'],
@@ -304,13 +313,19 @@ class _CommentPageState extends State<CommentPage> {
                                                             idParent:
                                                                 comments[index]
                                                                     .idComment);
+                                                    if (mounted) {
+                                                      showSuccessSnackBar(
+                                                          context);
+                                                    }
 
-                                                    comments[index].copyWith(
-                                                        comments:
-                                                            comments[index]
-                                                                    .comments +
-                                                                1);
-                                                  } catch (e) {}
+                                                    addCommentToComment(index);
+                                                    await _loadComments();
+                                                  } catch (e) {
+                                                    if (mounted) {
+                                                      showErrorSnackBar(context,
+                                                          e.toString());
+                                                    }
+                                                  }
                                                 }
                                               }
                                             },
@@ -330,13 +345,13 @@ class _CommentPageState extends State<CommentPage> {
               Container(
                 width: double.maxFinite,
                 height: 96,
-                padding: EdgeInsets.only(top: 32),
-                decoration: BoxDecoration(color: Colors.white),
+                padding: const EdgeInsets.only(top: 32),
+                decoration: const BoxDecoration(color: Colors.white),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();
                   },
-                  child: Row(
+                  child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(

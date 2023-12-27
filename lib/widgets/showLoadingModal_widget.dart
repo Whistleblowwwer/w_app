@@ -9,7 +9,7 @@ Future<void> showLoadingDialog(BuildContext context) async {
     builder: (BuildContext context) {
       return WillPopScope(
         onWillPop: () async => false,
-        child: Center(
+        child: const Center(
           child: CircularProgressIndicator.adaptive(
             backgroundColor: ColorStyle.darkPurple,
           ), // Widget de carga, puedes personalizarlo

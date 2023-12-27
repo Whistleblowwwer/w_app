@@ -34,6 +34,7 @@ class CommentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sizeH = MediaQuery.of(context).size.height / 100;
     return GestureDetector(
       onTap: () {
         if (!isActive) return;
@@ -54,7 +55,7 @@ class CommentWidget extends StatelessWidget {
         color: Colors.white,
         child: Column(
           children: [
-            Divider(
+            const Divider(
               height: 1,
               color: ColorStyle.grey,
             ),
@@ -68,8 +69,8 @@ class CommentWidget extends StatelessWidget {
                     child: Stack(
                       children: [
                         CircularAvatarW(
-                          externalRadius: Offset(38, 38),
-                          internalRadius: Offset(34, 34),
+                          externalRadius: const Offset(38, 38),
+                          internalRadius: const Offset(34, 34),
                           nameAvatar: comment.user.name.substring(0, 1),
                           isCompany: false,
                           sizeText: 22,
@@ -86,10 +87,10 @@ class CommentWidget extends StatelessWidget {
                               child: Container(
                                   width: 18,
                                   height: 18,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.white),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.add_circle_rounded,
                                     size: 18,
                                   )),
@@ -110,17 +111,17 @@ class CommentWidget extends StatelessWidget {
                         children: [
                           Text(
                             "${comment.user.name} ${comment.user.lastName}",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'Montserrat',
                                 fontSize: 14),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 1,
                           ),
                           Text(
                             comment.timeAgo,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: ColorStyle.grey,
                                 fontSize: 12),
@@ -145,6 +146,7 @@ class CommentWidget extends StatelessWidget {
                         builder: (BuildContext context) {
                           return ReviewBottomSheet(
                             user: userMain,
+                            onReport: () {},
                             actions: [
                               if (userMain.idUser != comment.user.idUser)
                                 ReviewAction(
@@ -167,7 +169,7 @@ class CommentWidget extends StatelessWidget {
                         },
                       );
                     },
-                    child: Icon(
+                    child: const Icon(
                       FeatherIcons.moreHorizontal,
                       size: 18,
                     ),
@@ -192,23 +194,25 @@ class CommentWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Visibility(
-                      visible: isThread,
+                      visible: true, // isThread,
                       child: Container(
                         width: 1.5,
-                        margin: EdgeInsets.only(left: 34, bottom: 16),
-                        color: ColorStyle.borderGrey,
+                        margin: const EdgeInsets.only(left: 34, bottom: 16),
+                        color: isThread
+                            ? ColorStyle.borderGrey
+                            : Colors.transparent,
                       )),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding:
-                              EdgeInsets.only(left: 24, right: 18, bottom: 12),
+                          padding: const EdgeInsets.only(
+                              left: 24, right: 18, bottom: 12),
                           child: Text(
                             comment.content,
                             textAlign: TextAlign.start,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Montserrat',
                               height: 1.42,
@@ -218,19 +222,26 @@ class CommentWidget extends StatelessWidget {
                         ),
                         if (comment.images?.isNotEmpty ?? false)
                           Container(
-                            margin: EdgeInsets.only(
+                            constraints: BoxConstraints(
+                              maxHeight: comment.images!.length == 1
+                                  ? sizeH * 100 * 3 / 5
+                                  : 256,
+                            ),
+                            margin: const EdgeInsets.only(
                                 left: 16, right: 16, bottom: 16),
-                            height: 200,
+                            height: comment.images!.length == 1 ? null : 256,
                             width: double.maxFinite,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: buildDynamicLayout(
-                                comment.images ?? [], context),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: buildDynamicLayout(
+                                  comment.images ?? [], context),
+                            ),
                           ),
                         Padding(
-                            padding: EdgeInsets.only(left: 24, right: 16),
+                            padding: const EdgeInsets.only(left: 24, right: 16),
                             child: SizedBox(
                               width: double.maxFinite,
                               child: Row(
@@ -251,7 +262,7 @@ class CommentWidget extends StatelessWidget {
                                           height: 18,
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 16,
                                       ),
                                       PressTransform(
@@ -262,7 +273,7 @@ class CommentWidget extends StatelessWidget {
                                           height: 18,
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 16,
                                       ),
                                       PressTransform(
@@ -279,7 +290,7 @@ class CommentWidget extends StatelessWidget {
                               ),
                             )),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 24, right: 16, top: 8, bottom: 16),
                           child: Align(
                             alignment: Alignment.centerLeft,
@@ -289,7 +300,7 @@ class CommentWidget extends StatelessWidget {
                                   onPressed: () {},
                                   child: Text(
                                     "${comment.likes} Me gustas",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w300,
                                         fontFamily: 'Montserrat'),
                                   ),
@@ -304,7 +315,7 @@ class CommentWidget extends StatelessWidget {
                                   onPressed: () {},
                                   child: Text(
                                     "${comment.comments} respuestas",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w300,
                                         fontFamily: 'Montserrat'),
                                   ),

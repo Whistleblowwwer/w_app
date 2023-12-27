@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:w_app/screens/signInUp/widgets/codeField_widget.dart';
@@ -31,6 +30,10 @@ class _SMSVerificationPageState extends State<SMSVerificationPage> {
   int _start = 180;
   Timer? _timer;
 
+  int _resendTokenStart = 60; // Segundos para esperar antes de reenviar
+  Timer? _resendTimer;
+  bool _canResendCode = true; // Controla si el usuario puede reenviar el código
+
   //Input
   String _code = '';
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
@@ -51,10 +54,29 @@ class _SMSVerificationPageState extends State<SMSVerificationPage> {
           });
 
           Navigator.of(context).pop();
-          showErrorSnackBar(context, "Expiró el SMS");
+          showErrorSnackBar(context, "Expiró el OTP");
         } else {
           setState(() {
             _start--;
+          });
+        }
+      },
+    );
+  }
+
+  void startResendTokenTimer() {
+    _resendTokenStart = 60;
+    _resendTimer = Timer.periodic(
+      Duration(seconds: 1),
+      (Timer timer) {
+        if (_resendTokenStart == 0) {
+          setState(() {
+            timer.cancel();
+            _canResendCode = true; // Habilita el reenvío nuevamente
+          });
+        } else {
+          setState(() {
+            _resendTokenStart--;
           });
         }
       },
@@ -70,6 +92,7 @@ class _SMSVerificationPageState extends State<SMSVerificationPage> {
   @override
   void dispose() {
     _timer?.cancel();
+    _resendTimer?.cancel();
     super.dispose();
   }
 
@@ -114,33 +137,34 @@ class _SMSVerificationPageState extends State<SMSVerificationPage> {
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                      color: ColorStyle.mainBlue, width: 1.5)),
-                              child: Icon(
+                                      color: ColorStyle.darkPurple,
+                                      width: 1.5)),
+                              child: const Icon(
                                 Icons.arrow_back,
                                 size: 14,
-                                color: ColorStyle.mainBlue,
+                                color: ColorStyle.darkPurple,
                               ),
                             ),
-                            Text("Cambiar\nNúmero",
+                            const Text("Cambiar\nNúmero",
                                 style: TextStyle(
                                     fontSize: 14,
-                                    color: ColorStyle.mainBlue,
+                                    color: ColorStyle.darkPurple,
                                     fontFamily: "Montserrat")),
                           ],
                         ),
                       ),
                       Container(
-                        margin: const EdgeInsets.only(top: 62, bottom: 22),
+                        margin: const EdgeInsets.only(top: 56, bottom: 16),
                         width: 342,
                         child: const Text(
-                          "Verifica tu sms",
+                          "Verifica tu mail",
                           style: TextStyle(
                             fontFamily: 'Montserrat',
                             fontSize: 22,
                           ),
                         ),
                       ),
-                      Text(
+                      const Text(
                         "El código vence en:",
                         style: TextStyle(
                           fontFamily: 'Montserrat',
@@ -149,7 +173,7 @@ class _SMSVerificationPageState extends State<SMSVerificationPage> {
                         ),
                       ),
                       Container(
-                        margin: const EdgeInsets.only(bottom: 58),
+                        margin: const EdgeInsets.only(bottom: 56),
                         width: 342,
                         child: Text(
                           "${_start ~/ 60}:${(_start % 60).toString().padLeft(2, '0')}",
@@ -191,7 +215,7 @@ class _SMSVerificationPageState extends State<SMSVerificationPage> {
                               }
                             }
                           } else {
-                            showErrorSnackBar(context, "Expiró el SMS");
+                            showErrorSnackBar(context, "Expiró el OTP");
                           }
                         },
                         child: Container(
@@ -212,7 +236,66 @@ class _SMSVerificationPageState extends State<SMSVerificationPage> {
                                 fontSize: 20),
                           ),
                         ),
-                      )
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      Visibility(
+                        visible:
+                            _resendTokenStart > 0 && _resendTokenStart != 60,
+                        child: Text(
+                          _resendTokenStart > 0
+                              ? "Volver a enviar en $_resendTokenStart"
+                              : "Toca para reenviar",
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          if (_canResendCode) {
+                            // Comprueba si el usuario puede reenviar el código
+                            final bool requestOTP =
+                                await ApiService().requestOTP(widget.email);
+
+                            if (requestOTP) {
+                              if (mounted) {
+                                showSuccessSnackBar(context,
+                                    message:
+                                        "Se ha enviado el código al correo");
+                                startResendTokenTimer(); // Inicia el temporizador
+                                _canResendCode =
+                                    false; // Deshabilita el reenvío hasta que el temporizador termine
+                              }
+                            }
+                          } else {
+                            // Opcional: Mostrar un mensaje de error o una cuenta regresiva
+                            showErrorSnackBar(context,
+                                "Espera ${_resendTokenStart} segundos para reenviar el código");
+                          }
+                        },
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Reenviar código a ',
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              ),
+                              TextSpan(
+                                  text: '${widget.email}',
+                                  style: TextStyle(
+                                      letterSpacing: 0.02 * 1,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color.fromRGBO(100, 31, 137, 1))),
+                            ],
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

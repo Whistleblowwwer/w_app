@@ -11,8 +11,9 @@ class CustomTextFormField extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final TextInputType? type;
 
-  CustomTextFormField(
-      {required this.controller,
+  const CustomTextFormField(
+      {super.key,
+      required this.controller,
       this.focusNode,
       this.nextFocusNode,
       required this.labelText,
@@ -22,49 +23,51 @@ class CustomTextFormField extends StatefulWidget {
       this.type});
 
   @override
-  _CustomTextFormFieldState createState() => _CustomTextFormFieldState();
+  CustomTextFormFieldState createState() => CustomTextFormFieldState();
 }
 
-class _CustomTextFormFieldState extends State<CustomTextFormField> {
+class CustomTextFormFieldState extends State<CustomTextFormField> {
   bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         controller: widget.controller,
         keyboardType: widget.type,
-        style: TextStyle(
+        style: const TextStyle(
           fontFamily: 'Montserrat',
           fontSize: 14,
         ),
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
           labelText: widget.labelText,
-          floatingLabelStyle: TextStyle(
+          floatingLabelStyle: const TextStyle(
               color: ColorStyle.textGrey,
               fontSize: 16,
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.w600),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               color: ColorStyle.textGrey,
               fontFamily: 'Montserrat',
               fontSize: 14,
               fontWeight: FontWeight.w600),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(6),
-            borderSide: BorderSide(color: ColorStyle.borderGrey, width: 1.0),
+            borderSide:
+                const BorderSide(color: ColorStyle.borderGrey, width: 1.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(6),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
                 color: ColorStyle.borderGrey,
                 width: 1.0), // Color y grosor cuando está enfocado
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(6),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
                 color: ColorStyle.borderGrey,
                 width:
                     1.0), // Color y grosor cuando está habilitado pero no enfocado

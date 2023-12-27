@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -141,7 +142,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
   @override
   Widget build(BuildContext context) {
     final sizeW = MediaQuery.of(context).size.width / 100;
-    final sizeH = MediaQuery.of(context).size.height / 100;
+    // final sizeH = MediaQuery.of(context).size.height / 100;
     return Scaffold(
       body: BlocListener<FeedBloc, FeedState>(
         listener: (BuildContext context, state) {
@@ -161,14 +162,14 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   await Future.delayed(const Duration(milliseconds: 300));
                 },
                 child: CustomScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
                     SliverToBoxAdapter(
                       child: Container(
                         height: 160,
                         width: double.maxFinite,
-                        padding:
-                            EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                        padding: const EdgeInsets.only(
+                            left: 16, right: 16, bottom: 16),
                         decoration: const BoxDecoration(
                             gradient: LinearGradient(
                                 begin: Alignment.topCenter,
@@ -190,7 +191,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                     widget.business.name,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16,
                                         fontFamily: 'Montserrat'),
@@ -199,7 +200,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                     widget.business.city,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 14,
                                         color: Colors.black,
@@ -221,7 +222,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                         itemCount: 5,
                                         itemPadding: const EdgeInsets.symmetric(
                                             horizontal: 0.5),
-                                        itemBuilder: (context, _) => Icon(
+                                        itemBuilder: (context, _) => const Icon(
                                           Icons.star,
                                           color: ColorStyle.solidBlue,
                                         ),
@@ -231,7 +232,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                         "  (${widget.business.averageRating.toStringAsFixed(2)})",
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w400,
                                             color: ColorStyle.lightGrey,
                                             fontSize: 14,
@@ -249,8 +250,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                 _followBusiness();
                               },
                               child: Container(
-                                margin: EdgeInsets.only(left: 16),
-                                padding: EdgeInsets.symmetric(
+                                margin: const EdgeInsets.only(left: 16),
+                                padding: const EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 10),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
@@ -290,7 +291,12 @@ class _BusinessScreenState extends State<BusinessScreen> {
                             child: Padding(
                               padding: EdgeInsets.only(top: 96),
                               child: Center(
-                                  child: CircularProgressIndicator.adaptive()),
+                                  child: CircularProgressIndicator.adaptive(
+                                backgroundColor:
+                                    ColorStyle.grey, // Fondo del indicador
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    ColorStyle.darkPurple),
+                              )),
                             ),
                           )
                         : reviews.isEmpty
@@ -308,111 +314,169 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                       ),
                                     )),
                               )
-                            : SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                  childCount: reviews
-                                      .length, // número de items en la lista
-                                  (BuildContext context, int index) {
-                                    print(index);
-                                    return ReviewCard(
-                                      isActiveBusiness: false,
-                                      showBusiness: false,
-                                      review: reviews[index],
-                                      onFollowUser: () async {
-                                        _feedBloc.add(FollowUser(
-                                            reviews[index].user.idUser));
-                                        _followUser(reviews[index]);
-                                      },
-                                      onFollowBusinnes: () {
-                                        _feedBloc.add(FollowBusiness(
-                                            widget.business.idBusiness));
-                                        _followBusiness();
-                                      },
-                                      onLike: () {
-                                        // Call the API to update the 'like' status
-                                        _feedBloc
-                                            .add(LikeReview(reviews[index]));
-                                        _likeReview(reviews[index]);
-                                      },
-                                      onComment: () async {
-                                        final userBloc =
-                                            BlocProvider.of<UserBloc>(context);
-                                        final userState = userBloc.state;
-                                        if (userState is UserLoaded) {
-                                          Map<String, dynamic>? response =
-                                              await showModalBottomSheet(
-                                                  context: context,
-                                                  isScrollControlled: true,
-                                                  useRootNavigator: true,
-                                                  barrierColor:
-                                                      const Color.fromRGBO(
-                                                          0, 0, 0, 0.1),
-                                                  shape:
-                                                      const RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(20.0),
-                                                      topRight:
-                                                          Radius.circular(20.0),
+                            : SliverPadding(
+                                padding: EdgeInsets.only(bottom: 160),
+                                sliver: SliverList(
+                                  delegate: SliverChildBuilderDelegate(
+                                    childCount: reviews
+                                        .length, // número de items en la lista
+                                    (BuildContext context, int index) {
+                                      print(index);
+                                      return ReviewCard(
+                                        isActiveBusiness: false,
+                                        showBusiness: false,
+                                        review: reviews[index],
+                                        onFollowUser: () async {
+                                          _feedBloc.add(FollowUser(
+                                              reviews[index].user.idUser));
+                                          _followUser(reviews[index]);
+                                        },
+                                        onFollowBusinnes: () {
+                                          _feedBloc.add(FollowBusiness(
+                                              widget.business.idBusiness));
+                                          _followBusiness();
+                                        },
+                                        onLike: () {
+                                          // Call the API to update the 'like' status
+                                          _feedBloc
+                                              .add(LikeReview(reviews[index]));
+                                          _likeReview(reviews[index]);
+                                        },
+                                        onComment: () async {
+                                          final userBloc =
+                                              BlocProvider.of<UserBloc>(
+                                                  context);
+                                          final userState = userBloc.state;
+                                          if (userState is UserLoaded) {
+                                            Map<String, dynamic>? response =
+                                                await showModalBottomSheet(
+                                                    context: context,
+                                                    isScrollControlled: true,
+                                                    useRootNavigator: true,
+                                                    barrierColor:
+                                                        const Color.fromRGBO(
+                                                            0, 0, 0, 0.1),
+                                                    shape:
+                                                        const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(
+                                                                20.0),
+                                                        topRight:
+                                                            Radius.circular(
+                                                                20.0),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  builder: (context) =>
-                                                      BackdropFilter(
-                                                          filter:
-                                                              ImageFilter.blur(
-                                                                  sigmaX: 6,
-                                                                  sigmaY: 6),
-                                                          child:
-                                                              CommentBottomSheet(
-                                                            user:
-                                                                userState.user,
-                                                            name: reviews[index]
-                                                                .user
-                                                                .name,
-                                                            lastName:
-                                                                reviews[index]
-                                                                    .user
-                                                                    .lastName,
-                                                            content:
-                                                                reviews[index]
-                                                                    .content,
-                                                            images:
-                                                                reviews[index]
-                                                                    .images,
-                                                          )));
+                                                    builder: (context) =>
+                                                        BackdropFilter(
+                                                            filter: ImageFilter
+                                                                .blur(
+                                                                    sigmaX: 6,
+                                                                    sigmaY: 6),
+                                                            child:
+                                                                CommentBottomSheet(
+                                                              user: userState
+                                                                  .user,
+                                                              name:
+                                                                  reviews[index]
+                                                                      .user
+                                                                      .name,
+                                                              lastName:
+                                                                  reviews[index]
+                                                                      .user
+                                                                      .lastName,
+                                                              content:
+                                                                  reviews[index]
+                                                                      .content,
+                                                              images:
+                                                                  reviews[index]
+                                                                      .images,
+                                                            )));
 
-                                          if (response != null) {
-                                            try {
-                                              final commentResponse =
-                                                  await ApiService()
-                                                      .commentReview(
-                                                          content: response[
-                                                              'content'],
-                                                          idReview:
-                                                              reviews[index]
-                                                                  .idReview);
+                                            if (response != null) {
+                                              try {
+                                                final responseComment =
+                                                    await ApiService()
+                                                        .commentReview(
+                                                            content: response[
+                                                                'content'],
+                                                            idReview:
+                                                                reviews[index]
+                                                                    .idReview);
+                                                addCommentToReview(
+                                                    reviews[index].idReview);
+                                                if (mounted) {
+                                                  showSuccessSnackBar(context);
+                                                }
 
-                                              addCommentToReview(
-                                                reviews[index].idReview,
-                                              );
+                                                try {
+                                                  if (response['images'] !=
+                                                      null) {
+                                                    final imagesResponse =
+                                                        await ApiService()
+                                                            .uploadCommentImages(
+                                                      responseComment.idComment,
+                                                      response['images'],
+                                                    );
 
-                                              _feedBloc.add(AddComment(
-                                                  comment: commentResponse,
-                                                  reviewId:
-                                                      reviews[index].idReview));
-                                              return 200;
-                                            } catch (e) {
-                                              if (mounted) {
-                                                showErrorSnackBar(context,
-                                                    'No se pudo agregar el comentario');
+                                                    print(imagesResponse
+                                                        .statusCode);
+
+                                                    if (imagesResponse
+                                                                .statusCode ==
+                                                            201 ||
+                                                        imagesResponse
+                                                                .statusCode ==
+                                                            200) {
+                                                      print(
+                                                          imagesResponse.body);
+                                                      final jsonImageResponse =
+                                                          json.decode(
+                                                              imagesResponse
+                                                                  .body);
+
+                                                      print(jsonImageResponse);
+
+                                                      // Convierte cada elemento de la lista a una cadena (String)
+                                                      List<String> dynamicList =
+                                                          List<String>.from(
+                                                              jsonImageResponse[
+                                                                      'Images']
+                                                                  .map((e) => e
+                                                                      .toString()));
+
+                                                      // newReview = newReview.copyWith(
+                                                      //     images: stringList);
+                                                    }
+                                                  }
+                                                } catch (e) {
+                                                  if (mounted) {
+                                                    showErrorSnackBar(context,
+                                                        "No se logró subir imagenes");
+                                                  }
+                                                }
+
+                                                _feedBloc.add(AddComment(
+                                                    comment: responseComment,
+                                                    reviewId: reviews[index]
+                                                        .idReview));
+
+                                                return 200;
+                                              } catch (e) {
+                                                if (mounted) {
+                                                  print("a--a");
+                                                  print(e);
+                                                  showErrorSnackBar(context,
+                                                      'No se pudo agregar el comentario');
+                                                }
                                               }
                                             }
                                           }
-                                        }
-                                      },
-                                    );
-                                  },
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ),
                               )
                   ],
@@ -423,13 +487,13 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 bottom: 80,
                 child: Container(
                   width: sizeW * 100,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.white,
                       border: Border.symmetric(
                           horizontal: BorderSide(
                               color: ColorStyle.borderGrey, width: 0.5))),
-                  padding:
-                      EdgeInsets.only(bottom: 16, top: 16, left: 16, right: 16),
+                  padding: const EdgeInsets.only(
+                      bottom: 16, top: 16, left: 16, right: 16),
                   child: PressTransform(
                     onPressed: () async {
                       final userState = _userBloc.state;
@@ -457,7 +521,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                     child: Container(
                       width: double.maxFinite,
                       height: 40,
-                      padding: EdgeInsets.only(left: 16, right: 16),
+                      padding: const EdgeInsets.only(left: 16, right: 16),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           color: ColorStyle.lightGrey),
@@ -474,14 +538,14 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   fontFamily: 'Montserrat'),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 4,
                           ),
                           SvgPicture.asset(
                             'assets/images/icons/Whistle.svg',
                             width: 32,
                             height: 32,
-                            colorFilter: ColorFilter.mode(
+                            colorFilter: const ColorFilter.mode(
                                 ColorStyle.darkPurple, BlendMode.srcIn),
                           ),
                         ],
@@ -494,7 +558,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
               child: Container(
                 width: sizeW * 100,
                 height: Platform.isIOS ? 102 : 56,
-                padding: EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.only(bottom: 16),
                 color: Colors.white,
                 alignment: Alignment.bottomCenter,
                 child: Stack(
@@ -504,7 +568,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
                             padding: EdgeInsets.only(left: 16, right: 8),
@@ -520,7 +584,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                         ],
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Proyecto/Empresa",
                       style: TextStyle(
                           fontFamily: 'Montserrat',

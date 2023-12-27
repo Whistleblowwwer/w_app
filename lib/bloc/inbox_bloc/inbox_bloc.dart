@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:w_app/bloc/inbox_bloc/inbox_event.dart';
 import 'package:w_app/bloc/inbox_bloc/inbox_state.dart';
 import 'package:w_app/services/api/api_service.dart';
-import 'package:intl/intl.dart';
 
 class InboxBloc extends Bloc<InboxEvent, InboxState> {
   InboxBloc() : super(InboxInitial()) {
@@ -22,7 +21,7 @@ class InboxBloc extends Bloc<InboxEvent, InboxState> {
 
     on<NewMessageReceived>((event, emit) {
       if (state is InboxLoaded) {
-        final currentState = state as InboxLoaded;
+        // final currentState = state as InboxLoaded;
         // Aquí debes encontrar la conversación correspondiente y actualizarla con el nuevo mensaje
         // Luego emitir el estado actualizado
       }
@@ -50,10 +49,6 @@ class MessageModel {
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
-    final date = DateFormat('yyyy-MM-dd HH:mm:ss')
-        .format(DateTime.parse(json['createdAt']).toLocal());
-    print('-----');
-    print(date);
     return MessageModel(
       id: json['_id_message'],
       content: json['content'],

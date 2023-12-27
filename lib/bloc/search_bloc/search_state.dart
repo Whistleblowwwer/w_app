@@ -14,7 +14,7 @@ class Searching extends SearchState {
   final String searchText;
   final List<String> lastSearchs;
 
-  Searching(this.searchText, this.lastSearchs);
+  const Searching(this.searchText, this.lastSearchs);
 
   @override
   List<Object> get props => [searchText, lastSearchs];

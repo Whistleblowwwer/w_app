@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,9 +71,14 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: Colors.white,
               flexibleSpace: FlexibleSpaceBar(
                 background: Container(
-                  padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+                  padding:
+                      const EdgeInsets.only(bottom: 16, left: 16, right: 16),
                   width: double.maxFinite,
-                  decoration: BoxDecoration(color: Colors.white),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                          bottom: BorderSide(
+                              color: ColorStyle.borderGrey, width: 0.3))),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,16 +92,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           PressTransform(
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => LawyersScreen()));
+                                  builder: (context) => const LawyersScreen()));
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 4),
-                              margin: EdgeInsets.only(right: 8),
+                              margin: const EdgeInsets.only(right: 8),
                               decoration: BoxDecoration(
                                   color: ColorStyle.sectionBase,
                                   borderRadius: BorderRadius.circular(8)),
-                              child: Text(
+                              child: const Text(
                                 "Abogados",
                                 style: TextStyle(
                                     fontFamily: 'Montserrat',
@@ -109,13 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => AdvisorScreen()),
+                                    builder: (context) =>
+                                        const AdvisorScreen()),
                               );
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 4),
-                              margin: EdgeInsets.only(right: 16),
+                              margin: const EdgeInsets.only(right: 16),
                               decoration: BoxDecoration(
                                   color: ColorStyle.sectionBase,
                                   borderRadius: BorderRadius.circular(8)),
@@ -134,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (userState is UserLoaded) {
                                 Navigator.of(context, rootNavigator: true)
                                     .push(MaterialPageRoute(
-                                        settings: RouteSettings(),
+                                        settings: const RouteSettings(),
                                         builder: (context) => ChatPage(
                                               user: userState.user,
                                             )));
@@ -142,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             child: Stack(
                               children: [
-                                Padding(
+                                const Padding(
                                   padding: EdgeInsets.only(right: 2),
                                   child: Icon(
                                     FeatherIcons.mail,
@@ -160,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.circular(20),
                                         color: ColorStyle.darkPurple,
                                       ),
-                                      child: Text(
+                                      child: const Text(
                                         "1",
                                         style: TextStyle(
                                             fontFamily: 'Montserrat',
@@ -173,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -183,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         body: RefreshIndicator.adaptive(
           color: ColorStyle.darkPurple,
+          backgroundColor: ColorStyle.grey,
           onRefresh: () async {
             _feedBloc.add(FetchFeedReviews());
             await Future.delayed(const Duration(milliseconds: 1200));
@@ -269,20 +276,65 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                   if (response != null) {
                                     try {
-                                      final commentResponse = await ApiService()
+                                      final responseComment = await ApiService()
                                           .commentReview(
                                               content: response['content'],
                                               idReview: state
                                                   .reviews[index].idReview);
 
+                                      if (mounted) {
+                                        showSuccessSnackBar(context);
+                                      }
+
+                                      try {
+                                        if (response['images'] != null) {
+                                          final imagesResponse =
+                                              await ApiService()
+                                                  .uploadCommentImages(
+                                            responseComment.idComment,
+                                            response['images'],
+                                          );
+
+                                          print(imagesResponse.statusCode);
+
+                                          if (imagesResponse.statusCode ==
+                                                  201 ||
+                                              imagesResponse.statusCode ==
+                                                  200) {
+                                            print(imagesResponse.body);
+                                            final jsonImageResponse = json
+                                                .decode(imagesResponse.body);
+
+                                            print(jsonImageResponse);
+
+                                            // Convierte cada elemento de la lista a una cadena (String)
+                                            List<String> dynamicList =
+                                                List<String>.from(
+                                                    jsonImageResponse['Images']
+                                                        .map((e) =>
+                                                            e.toString()));
+
+                                            // newReview = newReview.copyWith(
+                                            //     images: stringList);
+                                          }
+                                        }
+                                      } catch (e) {
+                                        if (mounted) {
+                                          showErrorSnackBar(context,
+                                              "No se logró subir imagenes");
+                                        }
+                                      }
+
                                       _feedBloc.add(AddComment(
-                                          comment: commentResponse,
+                                          comment: responseComment,
                                           reviewId:
                                               state.reviews[index].idReview));
 
                                       return 200;
                                     } catch (e) {
                                       if (mounted) {
+                                        print("a--a");
+                                        print(e);
                                         showErrorSnackBar(context,
                                             'No se pudo agregar el comentario');
                                       }
@@ -292,10 +344,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             );
                           } else {
-                            return const Padding(
-                              padding: EdgeInsets.only(top: 32, bottom: 128),
-                              child: CircularProgressIndicator.adaptive(),
+                            return SizedBox(
+                              height: 96,
                             );
+                            // return const Padding(
+                            //   padding: EdgeInsets.only(top: 32, bottom: 128),
+                            //   child: CircularProgressIndicator.adaptive(
+                            //     backgroundColor:
+                            //         ColorStyle.grey, // Fondo del indicador
+                            //     valueColor: AlwaysStoppedAnimation<Color>(
+                            //         ColorStyle.darkPurple),
+                            //   ),
+                            // );
                           }
                         },
                       ),
@@ -304,8 +364,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     return const SliverToBoxAdapter(
                       child: Padding(
                         padding: EdgeInsets.only(top: 32),
-                        child:
-                            Center(child: CircularProgressIndicator.adaptive()),
+                        child: Center(
+                            child: CircularProgressIndicator.adaptive(
+                          backgroundColor:
+                              ColorStyle.grey, // Fondo del indicador
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              ColorStyle.darkPurple),
+                        )),
                       ),
                     );
                   } else if (state is FeedError) {
@@ -325,13 +390,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 16,
                           ),
                           Text(
                             'Parece que hubo un error\n${state.error.toString()}',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontFamily: "Montserrat",
                                 fontSize: 18,
                                 fontWeight: FontWeight.w400),
@@ -340,7 +405,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   } else {
-                    return SliverToBoxAdapter();
+                    return const SliverToBoxAdapter();
                   }
                 },
               ),

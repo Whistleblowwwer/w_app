@@ -12,11 +12,11 @@ SnackBar customSnackBar(
           icon,
           color: Colors.white,
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Anuphan',
               overflow: TextOverflow.ellipsis,
               fontWeight: FontWeight.w600,
@@ -26,7 +26,7 @@ SnackBar customSnackBar(
       ],
     ),
     backgroundColor: backgroundColor,
-    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10.0),
@@ -36,7 +36,7 @@ SnackBar customSnackBar(
 
 void showSuccessSnackBar(BuildContext context, {String? message}) {
   ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
-    message ?? 'Se agregó una consulta exitosamente',
+    message ?? 'Se agregó exitosamente',
     Colors.lightGreen,
     Icons.check,
   ));

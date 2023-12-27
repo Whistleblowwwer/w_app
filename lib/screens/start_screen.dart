@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +20,6 @@ import 'package:w_app/screens/profile/profile_screen.dart';
 import 'package:w_app/screens/search/search_screen.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
-import 'package:w_app/widgets/snackbar.dart';
 
 class StartPage extends StatefulWidget {
   final UserRepository userRepository;
@@ -77,7 +75,7 @@ class StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    double displayWidth = MediaQuery.of(context).size.width / 100;
+    // double displayWidth = MediaQuery.of(context).size.width / 100;
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
         if (state is UserTokenError) {
@@ -92,10 +90,13 @@ class StartPageState extends State<StartPage> {
         body: BlocBuilder<UserBloc, UserState>(
           builder: (context, state) {
             if (state is UserLoading) {
-              return const Center(child: CircularProgressIndicator.adaptive());
+              return const Center(
+                  child: CircularProgressIndicator.adaptive(
+                backgroundColor: ColorStyle.grey, // Fondo del indicador
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(ColorStyle.darkPurple),
+              ));
             } else if (state is UserLoaded) {
-              print("TAAAAASSSSSS");
-              print("ZAPATEO");
               return IndexedStack(
                 index: currentIndex,
                 children: [

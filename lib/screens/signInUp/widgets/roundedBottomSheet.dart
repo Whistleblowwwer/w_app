@@ -6,10 +6,10 @@ class RoundedBottomSheet extends StatefulWidget {
   const RoundedBottomSheet({Key? key}) : super(key: key);
 
   @override
-  _RoundedBottomSheetState createState() => _RoundedBottomSheetState();
+  RoundedBottomSheetState createState() => RoundedBottomSheetState();
 }
 
-class _RoundedBottomSheetState extends State<RoundedBottomSheet>
+class RoundedBottomSheetState extends State<RoundedBottomSheet>
     with SingleTickerProviderStateMixin {
   int currentPage = 0;
 
@@ -28,7 +28,6 @@ class _RoundedBottomSheetState extends State<RoundedBottomSheet>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -53,13 +52,13 @@ class _RoundedBottomSheetState extends State<RoundedBottomSheet>
               titleOpacity = (offset > maxPadding)
                   ? 1.0
                   : (offset.abs() / maxPadding).clamp(0.0, 1.0);
-              ;
+
               // Limita el valor máximo del padding
             });
           });
 
           return ClipRRect(
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(32.0),
               topRight: Radius.circular(32.0),
             ),
@@ -88,9 +87,9 @@ class _RoundedBottomSheetState extends State<RoundedBottomSheet>
                   child: Container(
                     height: sizeV * 100,
                     child: SingleChildScrollView(
-                      padding: EdgeInsets.only(bottom: 200, top: 48),
+                      padding: const EdgeInsets.only(bottom: 200, top: 48),
                       controller: scrollController,
-                      child: Column(
+                      child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -224,7 +223,7 @@ Monterrey, Nuevo León. México. Diciembre 21, 2023.""", // Tus términos y cond
                       children: [
                         AnimatedContainer(
                           duration: const Duration(microseconds: 100),
-                          margin: EdgeInsets.symmetric(horizontal: 24),
+                          margin: const EdgeInsets.symmetric(horizontal: 24),
                           padding: EdgeInsets.only(top: currentPadding + 0),
                           width: double.maxFinite,
                           child: Row(
@@ -244,7 +243,7 @@ Monterrey, Nuevo León. México. Diciembre 21, 2023.""", // Tus términos y cond
                                 width: sizeH * 70,
                                 child: Opacity(
                                   opacity: titleOpacity,
-                                  child: Column(
+                                  child: const Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
@@ -270,10 +269,10 @@ Monterrey, Nuevo León. México. Diciembre 21, 2023.""", // Tus términos y cond
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 16),
+                          margin: const EdgeInsets.only(top: 16),
                           width: double.maxFinite,
                           height: 1,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Color.fromARGB(255, 218, 218, 218),
                           ),
                         ),
@@ -287,7 +286,7 @@ Monterrey, Nuevo León. México. Diciembre 21, 2023.""", // Tus términos y cond
                     width: 56,
                     height: 6,
                     decoration: BoxDecoration(
-                        color: Color(0xFFE4E4E4),
+                        color: const Color(0xFFE4E4E4),
                         borderRadius: BorderRadius.circular(24)),
                   ),
                 ),
@@ -321,10 +320,10 @@ Monterrey, Nuevo León. México. Diciembre 21, 2023.""", // Tus términos y cond
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
-                                    border:
-                                        Border.all(color: Color(0xFFD6D6D6)),
+                                    border: Border.all(
+                                        color: const Color(0xFFD6D6D6)),
                                     borderRadius: BorderRadius.circular(16)),
-                                child: Text(
+                                child: const Text(
                                   "Cancelar",
                                   style: TextStyle(
                                       fontSize: 18,
@@ -345,7 +344,7 @@ Monterrey, Nuevo León. México. Diciembre 21, 2023.""", // Tus términos y cond
                                     gradient:
                                         GradientStyle().whistleBlowwerGradient,
                                     borderRadius: BorderRadius.circular(16)),
-                                child: Text(
+                                child: const Text(
                                   "Aceptar",
                                   style: TextStyle(
                                       fontSize: 18,

@@ -6,16 +6,17 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
 
-  CustomTextField(
-      {required this.focusNode,
+  const CustomTextField(
+      {super.key,
+      required this.focusNode,
       required this.controller,
       this.validator}); // Añade este constructor
 
   @override
-  _CustomTextFieldState createState() => _CustomTextFieldState();
+  CustomTextFieldState createState() => CustomTextFieldState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
+class CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,7 +50,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         decoration: InputDecoration(
           hintText: 'Escribe algo...',
           contentPadding: const EdgeInsets.only(bottom: 16),
-          errorStyle: TextStyle(
+          errorStyle: const TextStyle(
               fontFamily: 'Montserrat',
               color: ColorStyle.accentRed,
               fontSize: 12),
@@ -72,7 +73,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         builder: (context, value, child) {
           return Text(
             '${widget.controller.text.length}/1200',
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 14,
               fontFamily: 'Montserrat',

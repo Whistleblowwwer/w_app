@@ -2,21 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
-import 'package:w_app/bloc/socket_bloc/socket_event.dart';
 import 'package:w_app/bloc/socket_bloc/socket_state.dart';
 import 'package:w_app/models/user.dart';
-import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/chat/new_chat_screen.dart';
 import 'package:w_app/screens/chat/widgets/chat_card.dart';
 import 'package:w_app/services/api/api_service.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:w_app/styles/color_style.dart';
-import 'package:w_app/widgets/press_transform_widget.dart';
 import 'package:w_app/widgets/snackbar.dart';
 
 class ChatPage extends StatefulWidget {
   final User user;
-  ChatPage({super.key, required this.user});
+  const ChatPage({super.key, required this.user});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -51,7 +47,6 @@ class _ChatPageState extends State<ChatPage> {
     final state = _socketBloc.state;
     if (state is Connected) {
       state.socket.on('updateConversations', (_) {
-        print("Actualizando chats");
         loadChats();
       });
     }
@@ -86,7 +81,6 @@ class _ChatPageState extends State<ChatPage> {
         conversations = conv;
         listFilter = [...conv];
       });
-      print(conv);
     } catch (e) {
       showErrorSnackBar(context, "No se cargaron los chats");
     }
@@ -103,7 +97,7 @@ class _ChatPageState extends State<ChatPage> {
             Container(
                 width: sizeW * 100,
                 height: sizeH * 100,
-                padding: EdgeInsets.only(top: 88),
+                padding: const EdgeInsets.only(top: 88),
                 child: RefreshIndicator.adaptive(
                   color: ColorStyle.darkPurple,
                   onRefresh: () async {
@@ -115,7 +109,7 @@ class _ChatPageState extends State<ChatPage> {
                         child: Container(
                           height: 40,
                           width: double.maxFinite,
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                               left: 16, right: 16, bottom: 8, top: 8),
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           decoration: BoxDecoration(
@@ -124,14 +118,14 @@ class _ChatPageState extends State<ChatPage> {
                             controller: controllerSearch,
                             maxLines: 1,
                             focusNode: focusNodeSearch,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'Montserrat',
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
                             decoration: InputDecoration(
                               hintText: 'Buscar',
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                   fontFamily: 'Montserrat',
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -142,14 +136,14 @@ class _ChatPageState extends State<ChatPage> {
                               ),
                               filled: true,
                               fillColor: ColorStyle.lightGrey,
-                              prefixIcon: Icon(FeatherIcons.search,
+                              prefixIcon: const Icon(FeatherIcons.search,
                                   size: 18, color: ColorStyle.textGrey),
                               suffixIcon: controllerSearch.text.isNotEmpty
                                   ? IconButton(
                                       onPressed: () {
                                         controllerSearch.clear();
                                       },
-                                      icon: Icon(Icons.clear,
+                                      icon: const Icon(Icons.clear,
                                           size: 20, color: ColorStyle.textGrey),
                                     )
                                   : null,
@@ -204,7 +198,7 @@ class _ChatPageState extends State<ChatPage> {
               width: double.maxFinite,
               height: 88,
               color: Colors.white,
-              padding: EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 40),
               child: Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
@@ -212,7 +206,7 @@ class _ChatPageState extends State<ChatPage> {
                     onTap: () {
                       Navigator.of(context).pop();
                     },
-                    child: Row(
+                    child: const Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(left: 16, right: 8),
@@ -221,7 +215,7 @@ class _ChatPageState extends State<ChatPage> {
                       ],
                     ),
                   ),
-                  Text(
+                  const Text(
                     "Mensajes",
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -236,10 +230,10 @@ class _ChatPageState extends State<ChatPage> {
                       onTap: () {
                         Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
-                                settings: RouteSettings(),
+                                settings: const RouteSettings(),
                                 builder: (context) => NewChatPage()));
                       },
-                      child: Icon(
+                      child: const Icon(
                         FeatherIcons.edit,
                         size: 24,
                       ),

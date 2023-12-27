@@ -1,23 +1,18 @@
-import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:w_app/bloc/search_bloc/search_bloc.dart';
 import 'package:w_app/bloc/search_bloc/search_event.dart';
 import 'package:w_app/bloc/search_bloc/search_state.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
-import 'package:w_app/bloc/user_bloc/user_bloc_event.dart';
 import 'package:w_app/models/article_model.dart';
 import 'package:w_app/models/company_model.dart';
-import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/add/add_business_screen.dart';
 import 'package:w_app/screens/business_screen.dart';
-import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/screens/profile/foreign_profile_screen.dart';
 import 'package:w_app/screens/search/notice_detail_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
@@ -35,12 +30,11 @@ class SearchScreen extends StatefulWidget {
   const SearchScreen(this.userRepository);
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  SearchScreenState createState() => SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen>
+class SearchScreenState extends State<SearchScreen>
     with TickerProviderStateMixin {
-  late UserBloc _userBloc;
   late SearchBloc _searchBloc;
   TabController? _tabController;
   TabController? _tabControllerSearched;
@@ -55,11 +49,9 @@ class _SearchScreenState extends State<SearchScreen>
     _tabControllerSearched = TabController(length: 2, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // await widget.userRepository.deleteToken();
-      _userBloc = BlocProvider.of<UserBloc>(context);
       _searchBloc = BlocProvider.of<SearchBloc>(context);
       controllerSearch.addListener(() {
         setState(() {
-          print(controllerSearch.text);
           // try {
           futureSearch = ApiService().getSearch(controllerSearch.text);
           // } catch (e) {}
@@ -72,10 +64,10 @@ class _SearchScreenState extends State<SearchScreen>
 
   UnderlineTabIndicator _customUnderlineIndicator() {
     return UnderlineTabIndicator(
-      borderSide: BorderSide(
+      borderSide: const BorderSide(
           width: 3.0, color: Colors.purple), // Grosor y color del indicador
       borderRadius: BorderRadius.circular(2),
-      insets: EdgeInsets.fromLTRB(8.0, 0.0, 8.0,
+      insets: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0,
           0.0), // Ajusta el espacio a los lados y debajo del texto
     );
   }
@@ -83,7 +75,7 @@ class _SearchScreenState extends State<SearchScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: double.maxFinite,
         width: double.maxFinite,
         child: Stack(
@@ -92,7 +84,7 @@ class _SearchScreenState extends State<SearchScreen>
               if (state is SearchEmpty) {
                 return TabBarView(
                   controller: _tabController,
-                  children: [
+                  children: const [
                     ForYouScreen(),
                     Center(child: Text('Contenido de Tendencias')),
                     NoticeScreen(),
@@ -101,13 +93,14 @@ class _SearchScreenState extends State<SearchScreen>
                 );
               } else if (state is Searching) {
                 return SingleChildScrollView(
-                  physics: BouncingScrollPhysics(), //ClampingScrollPhysics(),
-                  padding: EdgeInsets.only(bottom: 128, top: 200),
+                  physics:
+                      const BouncingScrollPhysics(), //ClampingScrollPhysics(),
+                  padding: const EdgeInsets.only(bottom: 128, top: 200),
                   child: Column(
                     children: [
                       Container(
                         width: double.maxFinite,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             // color: Colors.white,
                             ),
                         child: Column(
@@ -123,20 +116,20 @@ class _SearchScreenState extends State<SearchScreen>
                                     child: Container(
                                       height: 48,
                                       width: double.maxFinite,
-                                      padding:
-                                          EdgeInsets.only(left: 16, right: 24),
+                                      padding: const EdgeInsets.only(
+                                          left: 16, right: 24),
                                       child: Row(
                                         children: [
                                           Expanded(
                                             child: Text(
                                               state.lastSearchs[index],
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily: 'Montserrat',
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w400),
                                             ),
                                           ),
-                                          Icon(
+                                          const Icon(
                                             FeatherIcons.arrowUpLeft,
                                             size: 18,
                                             color: ColorStyle.darkPurple,
@@ -147,7 +140,7 @@ class _SearchScreenState extends State<SearchScreen>
                                   )),
                         ),
                       ),
-                      Divider(
+                      const Divider(
                         color: ColorStyle.borderGrey, // Color del borde.
                         height: 0.5,
                       ),
@@ -167,7 +160,7 @@ class _SearchScreenState extends State<SearchScreen>
                                     child: Text(
                                       'Al parecer hubo un error: \n"${snapshot.error}"',
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontFamily: 'Montserrat',
                                           color: ColorStyle.textGrey,
                                           fontWeight: FontWeight.w500,
@@ -177,7 +170,7 @@ class _SearchScreenState extends State<SearchScreen>
                             } else if (!snapshot.hasData ||
                                 snapshot.data!.isEmpty) {
                               return Padding(
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     top: 32, left: 24, right: 24),
                                 child: PressTransform(
                                   onPressed: () {
@@ -192,15 +185,15 @@ class _SearchScreenState extends State<SearchScreen>
                                                 const AddBusinessScreen()),
                                       );
                                     },
-                                    child: RoundedDotterRectangleBorder(
+                                    child: const RoundedDotterRectangleBorder(
                                         height: 52,
                                         width: double.maxFinite,
                                         color: ColorStyle.darkPurple,
                                         borderWidth: 1,
-                                        icon: Container(
+                                        icon: SizedBox(
                                           width: double.maxFinite,
                                           height: double.maxFinite,
-                                          child: const Row(
+                                          child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
@@ -259,7 +252,8 @@ class _SearchScreenState extends State<SearchScreen>
                                                     const EdgeInsets.symmetric(
                                                         vertical: 16,
                                                         horizontal: 16),
-                                                decoration: BoxDecoration(),
+                                                decoration:
+                                                    const BoxDecoration(),
                                                 child: Row(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.center,
@@ -288,7 +282,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                               snapshot
                                                                   .data![index]
                                                                   .name,
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w600,
@@ -298,7 +292,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                             ),
                                                             Text(
                                                               '${snapshot.data![index].entity} • ${snapshot.data![index].city}',
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -319,11 +313,12 @@ class _SearchScreenState extends State<SearchScreen>
                                                               8),
                                                       alignment:
                                                           Alignment.center,
-                                                      decoration: BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: ColorStyle
-                                                              .lightGrey),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: ColorStyle
+                                                                  .lightGrey),
                                                       child: SvgPicture.asset(
                                                         'assets/images/icons/WhistleActive.svg',
                                                         width: 24,
@@ -334,7 +329,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                 ),
                                               )
                                             : Padding(
-                                                padding: EdgeInsets.only(
+                                                padding: const EdgeInsets.only(
                                                     top: 32,
                                                     left: 24,
                                                     right: 24),
@@ -352,19 +347,19 @@ class _SearchScreenState extends State<SearchScreen>
                                                       );
                                                     },
                                                     child:
-                                                        RoundedDotterRectangleBorder(
+                                                        const RoundedDotterRectangleBorder(
                                                             height: 52,
                                                             width: double
                                                                 .maxFinite,
                                                             color: ColorStyle
                                                                 .darkPurple,
                                                             borderWidth: 1,
-                                                            icon: Container(
+                                                            icon: SizedBox(
                                                               width: double
                                                                   .maxFinite,
                                                               height: double
                                                                   .maxFinite,
-                                                              child: const Row(
+                                                              child: Row(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
                                                                         .center,
@@ -416,7 +411,7 @@ class _SearchScreenState extends State<SearchScreen>
                               child: Text(
                                 'Al parecer hubo un error: \n"${snapshot.error}"',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'Montserrat',
                                     color: ColorStyle.textGrey,
                                     fontWeight: FontWeight.w500,
@@ -426,7 +421,8 @@ class _SearchScreenState extends State<SearchScreen>
                           } else if (!snapshot.hasData ||
                               snapshot.data!.isEmpty) {
                             return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -434,13 +430,13 @@ class _SearchScreenState extends State<SearchScreen>
                                   Text(
                                     'No encontramos un proyecto, empresa o sucursal que se llame "${state.searchSelection}"',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: ColorStyle.textGrey,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 24,
                                   ),
                                   PressTransform(
@@ -490,7 +486,8 @@ class _SearchScreenState extends State<SearchScreen>
                             );
                           } else {
                             return SingleChildScrollView(
-                              padding: EdgeInsets.only(top: 184, bottom: 128),
+                              padding:
+                                  const EdgeInsets.only(top: 184, bottom: 128),
                               child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: List.generate(
@@ -523,7 +520,8 @@ class _SearchScreenState extends State<SearchScreen>
                                                     const EdgeInsets.symmetric(
                                                         vertical: 16,
                                                         horizontal: 16),
-                                                decoration: BoxDecoration(),
+                                                decoration:
+                                                    const BoxDecoration(),
                                                 child: Row(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.center,
@@ -543,7 +541,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                               snapshot
                                                                   .data![index]
                                                                   .name,
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w600,
@@ -553,7 +551,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                             ),
                                                             Text(
                                                               '${snapshot.data![index].entity} • ${snapshot.data![index].city}',
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -574,11 +572,12 @@ class _SearchScreenState extends State<SearchScreen>
                                                               8),
                                                       alignment:
                                                           Alignment.center,
-                                                      decoration: BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: ColorStyle
-                                                              .lightGrey),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: ColorStyle
+                                                                  .lightGrey),
                                                       child: SvgPicture.asset(
                                                         'assets/images/icons/WhistleActive.svg',
                                                         width: 24,
@@ -589,7 +588,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                 ),
                                               )
                                             : Padding(
-                                                padding: EdgeInsets.only(
+                                                padding: const EdgeInsets.only(
                                                     top: 32,
                                                     left: 24,
                                                     right: 24),
@@ -667,7 +666,7 @@ class _SearchScreenState extends State<SearchScreen>
                               child: Text(
                                 'Al parecer hubo un error: \n"${snapshot.error}"',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'Montserrat',
                                     color: ColorStyle.textGrey,
                                     fontWeight: FontWeight.w500,
@@ -680,7 +679,7 @@ class _SearchScreenState extends State<SearchScreen>
                               child: Text(
                                 'No encontramos a nadie\nque se llame "${state.searchSelection}"',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'Montserrat',
                                     color: ColorStyle.textGrey,
                                     fontWeight: FontWeight.w500,
@@ -689,7 +688,8 @@ class _SearchScreenState extends State<SearchScreen>
                             );
                           } else {
                             return SingleChildScrollView(
-                                padding: EdgeInsets.only(top: 184, bottom: 112),
+                                padding: const EdgeInsets.only(
+                                    top: 184, bottom: 112),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: List.generate(
@@ -717,22 +717,22 @@ class _SearchScreenState extends State<SearchScreen>
                                             width: double.maxFinite,
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 16, horizontal: 16),
-                                            decoration: BoxDecoration(),
+                                            decoration: const BoxDecoration(),
                                             child: Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 CircularAvatarW(
                                                   externalRadius:
-                                                      Offset(38, 38),
+                                                      const Offset(38, 38),
                                                   internalRadius:
-                                                      Offset(34, 34),
+                                                      const Offset(34, 34),
                                                   nameAvatar:
                                                       '${snapshot.data![index].name.substring(0, 1).toUpperCase()}${snapshot.data![index].lastName.substring(0, 1).toUpperCase()}',
                                                   isCompany: false,
                                                   sizeText: 16,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 10,
                                                 ),
                                                 Flexible(
@@ -758,7 +758,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                         ),
                                                         Text(
                                                           '@${snapshot.data![index].userName!.isEmpty ? 'User$index' : snapshot.data![index].userName!}',
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400,
@@ -781,7 +781,7 @@ class _SearchScreenState extends State<SearchScreen>
                   ],
                 );
               } else {
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               }
             }),
             BlocBuilder<SearchBloc, SearchState>(
@@ -790,7 +790,7 @@ class _SearchScreenState extends State<SearchScreen>
                   height:
                       state is SearchEmpty || state is Searched ? 176 : null,
                   width: double.maxFinite,
-                  padding: EdgeInsets.only(top: 56),
+                  padding: const EdgeInsets.only(top: 56),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       boxShadow: [ShadowStyle().dropComponentShadow]),
@@ -799,8 +799,8 @@ class _SearchScreenState extends State<SearchScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AnimatedPadding(
-                        duration: Duration(milliseconds: 100),
-                        padding: EdgeInsets.only(left: 24, bottom: 8),
+                        duration: const Duration(milliseconds: 100),
+                        padding: const EdgeInsets.only(left: 24, bottom: 8),
                         child: Row(
                           children: [
                             Visibility(
@@ -813,13 +813,13 @@ class _SearchScreenState extends State<SearchScreen>
                                           controllerSearch.text));
                                     });
                                   },
-                                  child: Icon(FeatherIcons.x)),
+                                  child: const Icon(FeatherIcons.x)),
                             ),
                             AnimatedPadding(
-                              duration: Duration(milliseconds: 100),
+                              duration: const Duration(milliseconds: 100),
                               padding: EdgeInsets.only(
                                   left: state is Searching ? 8 : 0),
-                              child: Text(
+                              child: const Text(
                                 "Buscar",
                                 style: TextStyle(
                                     fontSize: 22,
@@ -833,23 +833,23 @@ class _SearchScreenState extends State<SearchScreen>
                       Container(
                         height: 40,
                         width: double.maxFinite,
-                        margin:
-                            EdgeInsets.only(left: 24, right: 24, bottom: 16),
+                        margin: const EdgeInsets.only(
+                            left: 24, right: 24, bottom: 16),
                         decoration: BoxDecoration(
-                            color: Color.fromRGBO(118, 118, 118, 0.12),
+                            color: const Color.fromRGBO(118, 118, 118, 0.12),
                             borderRadius: BorderRadius.circular(8)),
                         child: TextField(
                           controller: controllerSearch,
                           maxLines: 1,
                           focusNode: focusNodeSearch,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Montserrat',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                           decoration: InputDecoration(
                             hintText: 'Buscar por establecimiento/persona',
-                            hintStyle: TextStyle(
+                            hintStyle: const TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -860,7 +860,7 @@ class _SearchScreenState extends State<SearchScreen>
                             ),
                             filled: true,
                             fillColor: Colors.grey[100],
-                            prefixIcon: Icon(FeatherIcons.search,
+                            prefixIcon: const Icon(FeatherIcons.search,
                                 size: 18, color: ColorStyle.textGrey),
                             // suffixIcon: controllerSearch.text.isNotEmpty
                             //     ? IconButton(
@@ -886,16 +886,16 @@ class _SearchScreenState extends State<SearchScreen>
                             controller: _tabController,
                             labelColor: Colors.black,
                             isScrollable: true,
-                            physics: BouncingScrollPhysics(),
-                            padding: EdgeInsets.only(left: 24),
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.only(left: 24),
                             unselectedLabelColor: Colors.grey,
                             indicator: _customUnderlineIndicator(),
                             indicatorColor: Colors.purple,
                             indicatorWeight: 4.0,
-                            labelStyle: TextStyle(
+                            labelStyle: const TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.w600),
-                            tabs: [
+                            tabs: const [
                               Tab(text: 'Para ti'),
                               Tab(text: 'Tendencias'),
                               Tab(text: 'Noticias'),
@@ -911,16 +911,16 @@ class _SearchScreenState extends State<SearchScreen>
                             controller: _tabControllerSearched,
                             labelColor: Colors.black,
                             isScrollable: true,
-                            physics: BouncingScrollPhysics(),
-                            padding: EdgeInsets.only(left: 24),
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.only(left: 24),
                             unselectedLabelColor: Colors.grey,
                             indicator: _customUnderlineIndicator(),
                             indicatorColor: Colors.purple,
                             indicatorWeight: 4.0,
-                            labelStyle: TextStyle(
+                            labelStyle: const TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.w600),
-                            tabs: [
+                            tabs: const [
                               Tab(text: 'Empresas'),
                               Tab(text: 'Personas'),
                             ],
@@ -935,38 +935,38 @@ class _SearchScreenState extends State<SearchScreen>
                               },
                               child: Container(
                                 width: double.maxFinite,
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     left: 32, bottom: 8, top: 8),
-                                margin: EdgeInsets.only(),
+                                margin: const EdgeInsets.only(),
                                 child: Column(
                                   children: [
                                     Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           FeatherIcons.search,
                                           color: ColorStyle.textGrey,
                                           size: 20,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 16,
                                         ),
                                         Expanded(
                                           child: Text(
                                             'Buscar "${controllerSearch.text}"',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontFamily: 'Montserrat',
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w600),
                                           ),
                                         ),
-                                        Icon(
+                                        const Icon(
                                           FeatherIcons.chevronRight,
                                           color: ColorStyle.textGrey,
                                           size: 20,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 24,
                                         ),
                                       ],
@@ -975,14 +975,14 @@ class _SearchScreenState extends State<SearchScreen>
                                       height: 0.5,
                                       width: double.maxFinite,
                                       color: ColorStyle.borderGrey,
-                                      margin:
-                                          EdgeInsets.only(left: 32, top: 16),
+                                      margin: const EdgeInsets.only(
+                                          left: 32, top: 16),
                                     ),
                                   ],
                                 ),
                               ),
                             )
-                          : SizedBox.shrink()
+                          : const SizedBox.shrink()
                     ],
                   ),
                 );
@@ -1005,7 +1005,7 @@ class NoticeScreen extends StatelessWidget {
     List<Article> articles = [
       Article(
           id: '',
-          title: 'Titulo increible',
+          title: 'HOLA SOMOS WHISTLEBLOWER',
           content: """Hola! Somos Whistleblowwer. 
 Nosotros al igual que tu, fuimos víctimas de un incumplimiento de una desarrolladora inmobiliaria. 
 Durante años estuvimos puntualmente pagando. Con esfuerzo logramos reunir un enganche y privándonos de vacaciones, salidas al cine, etc. estuvímos pagando nuestras mensualidades para que al final no nos cumplieran. 
@@ -1020,16 +1020,16 @@ SOMOS UNA PEQUEÑA STARTUP. PORFAVOR COMPARTE EN TUS REDES SOCIALES PARA LLEGAR 
     ];
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.only(top: 170, bottom: 160),
+      padding: const EdgeInsets.only(top: 170, bottom: 160),
       child: Column(
         children: [
           Container(
             height: 256,
             width: double.maxFinite,
-            padding: EdgeInsets.only(left: 24, bottom: 4),
+            padding: const EdgeInsets.only(left: 24, bottom: 4),
             decoration: BoxDecoration(
                 gradient: GradientStyle().grayGradient,
-                image: DecorationImage(
+                image: const DecorationImage(
                     image: AssetImage('assets/images/ilustrations/169.jpg'))),
             child: Stack(
               children: [
@@ -1059,11 +1059,11 @@ SOMOS UNA PEQUEÑA STARTUP. PORFAVOR COMPARTE EN TUS REDES SOCIALES PARA LLEGAR 
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 16,
           ),
           FutureBuilder(
-              future: Future.delayed(Duration(milliseconds: 500)),
+              future: Future.delayed(const Duration(milliseconds: 500)),
               builder: (context, snapshot) {
                 return Column(
                   children: List.generate(
@@ -1078,9 +1078,9 @@ SOMOS UNA PEQUEÑA STARTUP. PORFAVOR COMPARTE EN TUS REDES SOCIALES PARA LLEGAR 
                                           )));
                             },
                             child: Container(
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                   horizontal: 24, vertical: 8),
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
                               decoration: BoxDecoration(
                                   color: Colors.white,
@@ -1090,7 +1090,7 @@ SOMOS UNA PEQUEÑA STARTUP. PORFAVOR COMPARTE EN TUS REDES SOCIALES PARA LLEGAR 
                                 children: [
                                   Container(
                                     width: double.maxFinite,
-                                    margin: EdgeInsets.only(bottom: 10),
+                                    margin: const EdgeInsets.only(bottom: 10),
                                     clipBehavior: Clip.antiAliasWithSaveLayer,
                                     decoration: BoxDecoration(
                                         color: Colors.white,
@@ -1110,24 +1110,24 @@ SOMOS UNA PEQUEÑA STARTUP. PORFAVOR COMPARTE EN TUS REDES SOCIALES PARA LLEGAR 
                                   ),
                                   Text(
                                     articles[index].title,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Montserrat',
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 4,
                                   ),
                                   Text(
                                     articles[index].content,
                                     maxLines: 4,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 4,
                                   ),
                                   Align(
@@ -1135,7 +1135,7 @@ SOMOS UNA PEQUEÑA STARTUP. PORFAVOR COMPARTE EN TUS REDES SOCIALES PARA LLEGAR 
                                     child: Text(
                                       articles[index].formatDate(),
                                       textAlign: TextAlign.right,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: ColorStyle.textGrey,
                                           fontFamily: 'Montserrat',
                                           fontSize: 12,
@@ -1163,14 +1163,15 @@ class ForYouScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.only(top: 162, bottom: 160),
+      padding: const EdgeInsets.only(bottom: 160),
       child: Column(
         children: [
           Container(
             height: 256,
+            margin: EdgeInsets.only(top: 162),
             width: double.maxFinite,
-            padding: EdgeInsets.only(left: 24, bottom: 16),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.only(left: 24, bottom: 16),
+            decoration: const BoxDecoration(
                 // gradient: GradientStyle().grayGradient,
                 image: DecorationImage(
                     image: AssetImage(
@@ -1187,7 +1188,7 @@ class ForYouScreen extends StatelessWidget {
                     //         fontFamily: 'Montserrat',
                     //         fontSize: 14,
                     //         fontWeight: FontWeight.w500)),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Text(
@@ -1207,9 +1208,9 @@ class ForYouScreen extends StatelessWidget {
             children: List.generate(
                 1,
                 (index) => Container(
-                      margin: EdgeInsets.symmetric(horizontal: 24),
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      child: Column(
+                      margin: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -1245,7 +1246,7 @@ class ForYouScreen extends StatelessWidget {
                       ),
                     )),
           ),
-          Divider(
+          const Divider(
             color: ColorStyle.midToneGrey,
           ),
           // ReviewCardDefault(

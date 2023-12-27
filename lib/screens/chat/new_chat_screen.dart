@@ -9,7 +9,7 @@ import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 
 class NewChatPage extends StatefulWidget {
-  NewChatPage({super.key});
+  const NewChatPage({super.key});
 
   @override
   State<NewChatPage> createState() => _NewChatPageState();
@@ -74,7 +74,7 @@ class _NewChatPageState extends State<NewChatPage> {
             Container(
                 width: sizeW * 100,
                 height: sizeH * 100,
-                padding: EdgeInsets.only(top: 88),
+                padding: const EdgeInsets.only(top: 88),
                 child: RefreshIndicator.adaptive(
                   color: ColorStyle.darkPurple,
                   onRefresh: () async {
@@ -86,7 +86,7 @@ class _NewChatPageState extends State<NewChatPage> {
                         child: Container(
                           height: 40,
                           width: double.maxFinite,
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                               left: 16, right: 16, bottom: 8, top: 8),
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           decoration: BoxDecoration(
@@ -95,20 +95,20 @@ class _NewChatPageState extends State<NewChatPage> {
                             controller: controllerSearch,
                             maxLines: 1,
                             focusNode: focusNodeSearch,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'Montserrat',
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Buscar',
                               hintStyle: TextStyle(
                                   fontFamily: 'Montserrat',
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: ColorStyle.textGrey),
-                              contentPadding: const EdgeInsets.only(),
-                              border: const OutlineInputBorder(
+                              contentPadding: EdgeInsets.only(),
+                              border: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
                               filled: true,
@@ -134,7 +134,7 @@ class _NewChatPageState extends State<NewChatPage> {
                             listFilter.isNotEmpty ? listFilter.length : 1,
                         itemBuilder: (context, index) {
                           if (listFilter.isEmpty) {
-                            return Padding(
+                            return const Padding(
                               padding: EdgeInsets.only(top: 200),
                               child: Center(
                                   child: Text(
@@ -165,7 +165,7 @@ class _NewChatPageState extends State<NewChatPage> {
               width: double.maxFinite,
               height: 88,
               color: Colors.white,
-              padding: EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 40),
               child: Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
@@ -173,7 +173,7 @@ class _NewChatPageState extends State<NewChatPage> {
                     onTap: () {
                       Navigator.of(context).pop();
                     },
-                    child: Row(
+                    child: const Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(left: 16, right: 8),
@@ -189,7 +189,7 @@ class _NewChatPageState extends State<NewChatPage> {
                       ],
                     ),
                   ),
-                  Text(
+                  const Text(
                     "Nuevo Chat",
                     textAlign: TextAlign.center,
                     style: TextStyle(

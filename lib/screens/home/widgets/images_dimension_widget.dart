@@ -25,11 +25,13 @@ Widget buildAspectRatioWidget(
             loadingBuilder: (BuildContext context, Widget child,
                 ImageChunkEvent? loadingProgress) {
               if (loadingProgress == null) return child; // Imagen cargada
-              return Container(
+              return SizedBox(
                 height: 200,
                 child: Center(
                   child: CircularProgressIndicator.adaptive(
-                    backgroundColor: ColorStyle.darkPurple,
+                    backgroundColor: ColorStyle.grey, // Fondo del indicador
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                        ColorStyle.darkPurple),
                     value: loadingProgress.expectedTotalBytes != null
                         ? loadingProgress.cumulativeBytesLoaded /
                             loadingProgress.expectedTotalBytes!
@@ -42,7 +44,7 @@ Widget buildAspectRatioWidget(
             errorBuilder:
                 (BuildContext context, Object error, StackTrace? stackTrace) {
               // Aquí puedes agregar lógica adicional si necesitas manejar diferentes tipos de errores de manera diferente
-              return Container(
+              return const SizedBox(
                 height: 200,
                 child: Center(
                   child: Icon(Icons.error_outline_outlined),
@@ -61,7 +63,9 @@ Widget buildAspectRatioWidget(
                 if (loadingProgress == null) return child; // Imagen cargada
                 return Center(
                   child: CircularProgressIndicator.adaptive(
-                    backgroundColor: ColorStyle.darkPurple,
+                    backgroundColor: ColorStyle.grey, // Fondo del indicador
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                        ColorStyle.darkPurple),
                     value: loadingProgress.expectedTotalBytes != null
                         ? loadingProgress.cumulativeBytesLoaded /
                             loadingProgress.expectedTotalBytes!
@@ -73,7 +77,7 @@ Widget buildAspectRatioWidget(
               errorBuilder:
                   (BuildContext context, Object error, StackTrace? stackTrace) {
                 // Aquí puedes agregar lógica adicional si necesitas manejar diferentes tipos de errores de manera diferente
-                return Center(
+                return const Center(
                   child: Icon(Icons.error_outline_outlined),
                 );
               },
@@ -98,7 +102,7 @@ Widget buildDynamicLayout(List<String> images, BuildContext context) {
         images,
         context,
       )),
-      Container(
+      const SizedBox(
         width: 2,
         height: double.maxFinite,
       ),
@@ -116,17 +120,17 @@ Widget buildDynamicLayout(List<String> images, BuildContext context) {
     return Row(
       children: [
         Expanded(child: buildAspectRatioWidget(9 / 16, 0, images, context)),
-        Container(
+        const SizedBox(
           width: 2,
           height: double.maxFinite,
         ),
         Column(
           children: [
-            Expanded(child: buildAspectRatioWidget(16 / 9, 1, images, context)),
+            Expanded(child: buildAspectRatioWidget(4 / 3, 1, images, context)),
             Container(
               height: 2,
             ),
-            Expanded(child: buildAspectRatioWidget(16 / 9, 2, images, context)),
+            Expanded(child: buildAspectRatioWidget(4 / 3, 2, images, context)),
           ],
         ),
         // Column(

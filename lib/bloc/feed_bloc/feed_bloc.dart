@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_event.dart';
 import 'package:w_app/bloc/feed_bloc/feed_side_effects.dart';
 import 'package:w_app/bloc/feed_bloc/feed_state.dart';
-import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/services/api/api_service.dart';
 
@@ -31,8 +29,6 @@ class FeedBloc extends Bloc<FeedBlocEvent, FeedState> {
         final updatedReviews = List<Review>.from(currentState.reviews)
           ..insert(0, event.review);
 
-        print(event.review);
-        print(updatedReviews);
         emit(FeedLoaded(updatedReviews));
       } catch (e) {
         emit(FeedError('Failed to add review: ${e.toString()}'));
@@ -57,12 +53,10 @@ class FeedBloc extends Bloc<FeedBlocEvent, FeedState> {
       InitialFeedReviews event, Emitter<FeedState> emit) async {
     emit(FeedLoading());
     try {
-      print("aa");
       final response = await apiService.getReviews();
       emit(FeedLoaded(response));
     } catch (e) {
       if (e.toString().contains('Token is invalid or expired')) {
-        print("eeee");
         emit(FeedError(e.toString()));
       } else {
         emit(FeedError(e.toString()));
@@ -73,12 +67,10 @@ class FeedBloc extends Bloc<FeedBlocEvent, FeedState> {
   FutureOr<void> _onFetchFeedReviews(
       FetchFeedReviews event, Emitter<FeedState> emit) async {
     try {
-      print("aa");
       final response = await apiService.getReviews();
       emit(FeedLoaded(response));
     } catch (e) {
       if (e.toString().contains('Token is invalid or expired')) {
-        print("eeee");
         emit(FeedError(e.toString()));
       } else {
         emit(FeedError(e.toString()));

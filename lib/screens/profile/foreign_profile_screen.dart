@@ -1,9 +1,8 @@
-import 'dart:io';
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
@@ -150,7 +149,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
           Container(
             width: sizeW * 100,
             height: 102,
-            padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+            padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
             color: Colors.white,
             alignment: Alignment.bottomCenter,
             child: Row(
@@ -161,7 +160,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                   onTap: () {
                     Navigator.of(context).pop();
                   },
-                  child: Padding(
+                  child: const Padding(
                     padding: EdgeInsets.only(left: 0, right: 8),
                     child: Icon(FeatherIcons.arrowLeft),
                   ),
@@ -171,7 +170,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                     '${currentUser.name} ${currentUser.lastName}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
                         fontFamily: 'Montserrat'),
@@ -189,7 +188,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                           if (mounted) {
                             Navigator.of(context, rootNavigator: true).push(
                                 MaterialPageRoute(
-                                    settings: RouteSettings(),
+                                    settings: const RouteSettings(),
                                     builder: (context) => InboxScreen(
                                         receiver: currentUser.idUser,
                                         receiverName: currentUser.name +
@@ -202,7 +201,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                           if (mounted) {
                             Navigator.of(context, rootNavigator: true)
                                 .push(MaterialPageRoute(
-                                    settings: RouteSettings(),
+                                    settings: const RouteSettings(),
                                     builder: (context) => ChatPage(
                                           user: userMain,
                                         )));
@@ -248,14 +247,14 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                       collapsedHeight: 184,
                       backgroundColor: Colors.white,
                       flexibleSpace: FlexibleSpaceBar(
-                        background: Container(
+                        background: SizedBox(
                           height: 184,
                           child: Stack(
                             children: [
                               Container(
                                 height: 112,
                                 width: double.maxFinite,
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     left: 16, right: 16, bottom: 16),
                                 decoration: const BoxDecoration(
                                     gradient: LinearGradient(
@@ -347,11 +346,12 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                                 setState(() {});
                                               },
                                               child: Container(
-                                                margin:
-                                                    EdgeInsets.only(left: 16),
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 16,
-                                                    vertical: 10),
+                                                margin: const EdgeInsets.only(
+                                                    left: 16),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 10),
                                                 decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -400,7 +400,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                                 .getFormattedCreationDate(),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 14,
                                                 color: ColorStyle.textGrey,
@@ -416,11 +416,12 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                 top: 56,
                                 left: 16,
                                 child: CircularAvatarW(
-                                  externalRadius: Offset(88, 88),
-                                  internalRadius: Offset(82, 82),
+                                  externalRadius: const Offset(88, 88),
+                                  internalRadius: const Offset(82, 82),
                                   nameAvatar: currentUser.name.substring(0, 1),
                                   isCompany: false,
                                   sizeText: 40,
+                                  urlImage: currentUser.profilePictureUrl,
                                 ),
                               )
                             ],
@@ -436,8 +437,8 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                             controller: _tabController,
                             labelColor: Colors.black,
                             isScrollable: true,
-                            physics: BouncingScrollPhysics(),
-                            padding: EdgeInsets.only(left: 24),
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.only(left: 24),
                             unselectedLabelColor: Colors.grey,
                             indicator: _customUnderlineIndicator(),
                             indicatorColor: ColorStyle.darkPurple,
@@ -445,7 +446,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                             labelStyle: const TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.w600),
-                            tabs: [
+                            tabs: const [
                               Tab(text: 'Reseñas'),
                               Tab(text: 'Comentarios'),
                               Tab(text: 'Me gusta'),
@@ -545,7 +546,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                                           )));
                                           if (response != null) {
                                             try {
-                                              final commentResponse =
+                                              final responseComment =
                                                   await ApiService()
                                                       .commentReview(
                                                           content: response[
@@ -555,16 +556,67 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                                                   .idReview);
 
                                               addCommentToReview(
-                                                reviews[index].idReview,
-                                              );
+                                                  reviews[index].idReview);
 
-                                              feedBloc.add(AddComment(
-                                                  comment: commentResponse,
-                                                  reviewId:
-                                                      reviews[index].idReview));
+                                              if (mounted) {
+                                                showSuccessSnackBar(context);
+                                              }
+
+                                              try {
+                                                if (response['images'] !=
+                                                    null) {
+                                                  final imagesResponse =
+                                                      await ApiService()
+                                                          .uploadCommentImages(
+                                                    responseComment.idComment,
+                                                    response['images'],
+                                                  );
+
+                                                  if (imagesResponse
+                                                              .statusCode ==
+                                                          201 ||
+                                                      imagesResponse
+                                                              .statusCode ==
+                                                          200) {
+                                                    final jsonImageResponse =
+                                                        json.decode(
+                                                            imagesResponse
+                                                                .body);
+
+                                                    print(jsonImageResponse);
+
+                                                    // Convierte cada elemento de la lista a una cadena (String)
+                                                    List<String> dynamicList =
+                                                        List<String>.from(
+                                                            jsonImageResponse[
+                                                                    'Images']
+                                                                .map((e) => e
+                                                                    .toString()));
+
+                                                    // newReview = newReview.copyWith(
+                                                    //     images: stringList);
+                                                  }
+                                                }
+                                              } catch (e) {
+                                                if (mounted) {
+                                                  showErrorSnackBar(context,
+                                                      "No se logró subir imagenes");
+                                                }
+                                              }
+
+                                              // _feedBloc.add(AddComment(
+                                              //     comment:
+                                              //         responseComment,
+                                              //     reviewId: state
+                                              //         .reviews[
+                                              //             index]
+                                              //         .idReview));
+
                                               return 200;
                                             } catch (e) {
                                               if (mounted) {
+                                                print("a--a");
+                                                print(e);
                                                 showErrorSnackBar(context,
                                                     'No se pudo agregar el comentario');
                                               }
@@ -590,10 +642,10 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
 
   UnderlineTabIndicator _customUnderlineIndicator() {
     return UnderlineTabIndicator(
-      borderSide: BorderSide(
+      borderSide: const BorderSide(
           width: 3.0, color: Colors.purple), // Grosor y color del indicador
       borderRadius: BorderRadius.circular(2),
-      insets: EdgeInsets.fromLTRB(8.0, 0.0, 8.0,
+      insets: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0,
           0.0), // Ajusta el espacio a los lados y debajo del texto
     );
   }

@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_state.dart';
@@ -26,19 +23,21 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
     emit(AuthUnauthenticated());
     await userRepository.deleteToken();
     try {
-      print('pichulaaa');
       final response = await apiService.signIn(event.username, event.password);
       print(response);
+
       if (response.containsKey('token')) {
         await userRepository.saveToken(response['token']);
 
         emit(AuthAuthenticated());
       } else {
-        print('Sign in failed');
-        emit(AuthError('Sign in failed'));
+        if (response.containsKey('message')) {
+          emit(AuthError(response['message']));
+        } else {
+          emit(AuthError('Sign in failed'));
+        }
       }
     } catch (e) {
-      print(e);
       emit(AuthError(e.toString()));
     }
   }
@@ -48,11 +47,8 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
     emit(AuthLoading());
     try {
       final token = await userRepository.getToken();
-      print('pichulaaa');
-      //(token != null && apiService.validateToken(token))
       if (token != null) {
         final validate = await apiService.validateAccesToken(token);
-        print(validate);
 
         if (validate) {
           emit(AuthAuthenticated());
@@ -99,7 +95,6 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
         }
       }
     } catch (e) {
-      print(e);
       emit(AuthError(e.toString()));
     }
   }

@@ -1,9 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:w_app/bloc/user_bloc/user_bloc.dart';
-import 'package:w_app/bloc/user_bloc/user_bloc_event.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/styles/color_style.dart';
 
@@ -17,29 +12,29 @@ class AlertScreen extends StatefulWidget {
 }
 
 class _AlertScreenState extends State<AlertScreen> {
-  late UserBloc _userBloc;
+  // late UserBloc _userBloc;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // await widget.userRepository.deleteToken();
-      _userBloc = BlocProvider.of<UserBloc>(context);
+      // _userBloc = BlocProvider.of<UserBloc>(context);
       // _fetchUserProfile();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final sizeW = MediaQuery.of(context).size.width / 100;
-    final sizeH = MediaQuery.of(context).size.height / 100;
+    // final sizeW = MediaQuery.of(context).size.width / 100;
+    // final sizeH = MediaQuery.of(context).size.height / 100;
     return Scaffold(
       body: Container(
         height: double.maxFinite,
         width: double.maxFinite,
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 88,
             ),
             Row(
@@ -53,7 +48,7 @@ class _AlertScreenState extends State<AlertScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24),
                           color: ColorStyle.darkPurple.withOpacity(0.2)),
-                      child: Text(
+                      child: const Text(
                         "1",
                         style: TextStyle(
                             color: ColorStyle.darkPurple,
@@ -73,13 +68,13 @@ class _AlertScreenState extends State<AlertScreen> {
             ),
             Expanded(
               child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.only(top: 24),
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.only(top: 24),
                 itemCount: 1,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 12,
                       ),
                       ListTile(
@@ -91,7 +86,7 @@ class _AlertScreenState extends State<AlertScreen> {
                                   'assets/images/logos/imagew.png',
                                   width: 32,
                                 )
-                              : Text(
+                              : const Text(
                                   "W",
                                   style: TextStyle(
                                       fontFamily: 'Montserrat',
@@ -112,7 +107,7 @@ class _AlertScreenState extends State<AlertScreen> {
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.w500),
                         ),
-                        subtitle: Column(
+                        subtitle: const Column(
                           children: [
                             Text(
                               "Conoce todo lo que la aplicacion de Whistleblowwer te puede ofrecer",
@@ -124,7 +119,7 @@ class _AlertScreenState extends State<AlertScreen> {
                             Row(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(right: 4),
+                                  padding: EdgeInsets.only(right: 4),
                                   child: Icon(
                                     Icons.date_range,
                                     size: 13,
@@ -141,8 +136,8 @@ class _AlertScreenState extends State<AlertScreen> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 12),
                         child: Divider(
                           height: 0,
                           color: ColorStyle.borderGrey,

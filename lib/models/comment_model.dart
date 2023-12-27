@@ -33,8 +33,6 @@ class Comment extends Equatable {
       this.images});
 
   factory Comment.fromJson(Map<String, dynamic> json) {
-    print('comentariooo');
-    print(json);
     return Comment(
       idComment: json['_id_comment'],
       content: json['content'],
@@ -56,7 +54,7 @@ class Comment extends Equatable {
       children: json['children'] != null
           ? (json['children'] as List).map((c) => Comment.fromJson(c)).toList()
           : null,
-      images: json['images'] != null ? List<String>.from(json['images']) : null,
+      images: json['Images'] != null ? List<String>.from(json['Images']) : null,
     );
   }
 
@@ -68,11 +66,11 @@ class Comment extends Equatable {
     if (createdAt == null) return 'Fecha desconocida';
 
     final now = DateTime.now();
-    final difference = now.difference(createdAt!);
+    final difference = now.difference(createdAt);
 
     if (difference.inDays >= 1) {
       // Si la diferencia es mayor a un día, devuelve la fecha en formato día/mes/año.
-      return DateFormat('dd/MM/yy').format(createdAt!);
+      return DateFormat('dd/MM/yy').format(createdAt);
     } else if (difference.inHours >= 1) {
       // Si ha pasado al menos una hora, pero menos de un día.
       return '${difference.inHours} ${difference.inHours == 1 ? 'hora' : 'horas'}';

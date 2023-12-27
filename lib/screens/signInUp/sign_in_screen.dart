@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
-import 'package:w_app/bloc/auth_bloc/auth_bloc_state.dart';
 import 'package:w_app/screens/signInUp/sign_up_screen.dart';
 import 'package:w_app/screens/signInUp/widgets/custom_textfield_widget.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
-import 'package:w_app/widgets/snackbar.dart';
 
 class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
+
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
@@ -51,30 +51,30 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Inicia sesión',
           style: TextStyle(
             fontFamily: 'Montserrat',
           ),
         ),
-        backgroundColor: Color.fromRGBO(16, 28, 43, 1),
+        backgroundColor: const Color.fromRGBO(16, 28, 43, 1),
       ),
       body: Form(
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 48,
                 ),
                 Image.asset(
                   'assets/images/logos/imagew.png',
                   width: 102,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 48,
                 ),
                 CustomTextFormField(
@@ -91,7 +91,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 0,
                 ),
                 CustomTextFormField(
@@ -109,7 +109,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     // _onSignInButtonPressed();
                   },
                 ),
-                Align(
+                const Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: EdgeInsets.only(top: 8, bottom: 16),
@@ -125,14 +125,14 @@ class _SignInScreenState extends State<SignInScreen> {
                 PressTransform(
                   onPressed: _onSignInButtonPressed,
                   child: Container(
-                    margin: EdgeInsets.only(bottom: 32),
+                    margin: const EdgeInsets.only(bottom: 32),
                     width: double.maxFinite,
                     height: 56,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Color.fromRGBO(100, 31, 137, 1)),
-                    child: Text(
+                        color: const Color.fromRGBO(100, 31, 137, 1)),
+                    child: const Text(
                       "Ingresar",
                       style: TextStyle(
                           color: Colors.white,
@@ -159,7 +159,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         MaterialPageRoute(
                             builder: (context) => const SignUpPage()));
                   },
-                  child: Text.rich(
+                  child: const Text.rich(
                     TextSpan(
                       children: [
                         TextSpan(
@@ -201,17 +201,17 @@ class SignInWithButton extends StatelessWidget {
     return Container(
       width: double.maxFinite,
       height: 56,
-      margin: EdgeInsets.only(top: 32, bottom: 48),
+      margin: const EdgeInsets.only(top: 32, bottom: 48),
       alignment: Alignment.center,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           border: Border.all(
             width: 1,
-            color: Color.fromRGBO(217, 217, 217, 1),
+            color: const Color.fromRGBO(217, 217, 217, 1),
           )),
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.w400,
           fontFamily: 'Montserrat',
         ),
@@ -233,13 +233,13 @@ class InterceptionTextWidget extends StatelessWidget {
         Expanded(
           child: Container(
             height: 1,
-            margin: EdgeInsets.only(right: 8),
-            color: Color.fromRGBO(217, 217, 217, 1),
+            margin: const EdgeInsets.only(right: 8),
+            color: const Color.fromRGBO(217, 217, 217, 1),
           ),
         ),
         Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 14,
             fontFamily: 'Montserrat',
@@ -248,8 +248,8 @@ class InterceptionTextWidget extends StatelessWidget {
         Expanded(
           child: Container(
             height: 1,
-            margin: EdgeInsets.only(left: 8),
-            color: Color.fromRGBO(217, 217, 217, 1),
+            margin: const EdgeInsets.only(left: 8),
+            color: const Color.fromRGBO(217, 217, 217, 1),
           ),
         )
       ],

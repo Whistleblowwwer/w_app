@@ -23,19 +23,20 @@ class MessageContainer extends StatelessWidget {
       children: [
         if (showDate)
           Container(
-            margin: EdgeInsets.only(bottom: 16, top: 8),
+            margin: const EdgeInsets.only(bottom: 16, top: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     // color: ColorStyle.grey.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     message.getFormattedDate(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       fontFamily: 'Montserrat',
                       color: ColorStyle.midToneGrey,
@@ -53,7 +54,7 @@ class MessageContainer extends StatelessWidget {
                 bottom: isMine ? 0 : 1,
                 left: isMine ? MediaQuery.of(context).size.width * 0.20 : 0,
                 right: isMine ? 0 : MediaQuery.of(context).size.width * 0.20),
-            constraints: BoxConstraints(minWidth: 96),
+            constraints: const BoxConstraints(minWidth: 96),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -71,7 +72,7 @@ class MessageContainer extends StatelessWidget {
             child: Stack(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(bottom: 2),
+                  padding: const EdgeInsets.only(bottom: 2),
                   child: RichText(
                     text: TextSpan(
                       children: [

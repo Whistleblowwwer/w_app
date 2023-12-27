@@ -3,15 +3,15 @@ import 'package:w_app/styles/gradient_style.dart';
 import 'package:w_app/styles/shadow_style.dart';
 
 class CircularAvatarW extends StatelessWidget {
-  const CircularAvatarW({
-    super.key,
-    required this.externalRadius,
-    required this.internalRadius,
-    required this.nameAvatar,
-    this.sizeText,
-    required this.isCompany,
-    this.sizeIcon,
-  });
+  const CircularAvatarW(
+      {super.key,
+      required this.externalRadius,
+      required this.internalRadius,
+      required this.nameAvatar,
+      this.sizeText,
+      required this.isCompany,
+      this.sizeIcon,
+      this.urlImage});
 
   final Offset externalRadius;
   final Offset internalRadius;
@@ -19,6 +19,7 @@ class CircularAvatarW extends StatelessWidget {
   final double? sizeText;
   final double? sizeIcon;
   final bool isCompany;
+  final String? urlImage;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,7 @@ class CircularAvatarW extends StatelessWidget {
         alignment: Alignment.center,
         height: internalRadius.dy,
         width: internalRadius.dx,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: GradientStyle().profileGradient,
@@ -44,13 +46,18 @@ class CircularAvatarW extends StatelessWidget {
                 color: Colors.white,
                 size: sizeIcon ?? 20,
               )
-            : Text(
-                nameAvatar,
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: sizeText ?? 25,
-                    color: Colors.white),
-              ),
+            : urlImage != null
+                ? Image.network(
+                    urlImage!,
+                    fit: BoxFit.cover,
+                  )
+                : Text(
+                    nameAvatar,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: sizeText ?? 25,
+                        color: Colors.white),
+                  ),
       ),
     );
   }

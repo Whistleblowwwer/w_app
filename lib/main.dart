@@ -6,8 +6,6 @@ import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_state.dart';
 import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
-import 'package:w_app/bloc/feed_bloc/feed_state.dart';
-import 'package:w_app/bloc/lifecycle_bloc/lifecycle_bloc.dart';
 import 'package:w_app/bloc/search_bloc/search_bloc.dart';
 import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
@@ -16,6 +14,7 @@ import 'package:w_app/screens/signInUp/sign_in_screen.dart';
 import 'package:w_app/screens/start_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/snackbar.dart';
 import 'repository/user_repository.dart';
 
@@ -59,7 +58,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
             case '/':
               return AuthHandler(widget.userRepository);
             case '/SignInPage':
-              return SignInScreen();
+              return const SignInScreen();
             default:
               return Scaffold(
                 body: Center(child: Text('Unknown route: ${settings.name}')),
@@ -151,11 +150,15 @@ class AuthHandler extends StatelessWidget {
         if (state is AuthAuthenticated) {
           return StartPage(userRepository: userRepository);
         } else if (state is AuthUnauthenticated || state is AuthError) {
-          return SignInScreen();
+          return const SignInScreen();
         } else {
           return const Scaffold(
             body: Center(
-              child: CircularProgressIndicator.adaptive(),
+              child: CircularProgressIndicator.adaptive(
+                backgroundColor: ColorStyle.grey, // Fondo del indicador
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(ColorStyle.darkPurple),
+              ),
             ),
           );
         }

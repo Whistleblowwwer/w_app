@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,12 +8,10 @@ import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/review_model.dart';
-import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/add/add_review.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/screens/home/widgets/comment_card.dart';
-import 'package:w_app/screens/home/widgets/review_extended.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
@@ -48,16 +45,14 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     review = widget.review;
     _userBloc = BlocProvider.of<UserBloc>(context);
-    _loadReviews();
+    _loadComments();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     comments.clear();
     // _userBloc.close();
 
@@ -72,7 +67,7 @@ class _ReviewPageState extends State<ReviewPage> {
     final stateUser = BlocProvider.of<UserBloc>(context).state;
 
     return Scaffold(
-      body: Container(
+      body: SizedBox(
           width: double.maxFinite,
           height: double.maxFinite,
           child: Stack(
@@ -82,13 +77,14 @@ class _ReviewPageState extends State<ReviewPage> {
                 child: stateUser is UserLoaded
                     ? RefreshIndicator.adaptive(
                         color: ColorStyle.darkPurple,
+                        backgroundColor: ColorStyle.grey,
                         onRefresh: () async {
-                          await _loadReviews();
+                          await _loadComments();
                           await Future.delayed(
                               const Duration(milliseconds: 300));
                         },
                         child: CustomScrollView(
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           slivers: [
                             SliverToBoxAdapter(
                               child: ReviewCard(
@@ -103,11 +99,10 @@ class _ReviewPageState extends State<ReviewPage> {
                                   //falta arreglar esto
                                   await widget.onComment().then((value) async {
                                     if (value == 200) {
-                                      print(value);
                                       addCommentToReview();
                                     }
                                   });
-                                  await _loadReviews();
+                                  await _loadComments();
 
                                   setState(() {});
                                 },
@@ -260,25 +255,34 @@ class _ReviewPageState extends State<ReviewPage> {
                                                               ));
 
                                                   if (response != null) {
-                                                    // _feedBloc.add(AddComment(
-                                                    //     content: response['content'],
-                                                    //    ));
-                                                    print(
-                                                        '-- ${comments[index].idParent}');
-                                                    ApiService().commentReview(
-                                                        content:
-                                                            response['content'],
-                                                        idReview:
-                                                            comments[index]
-                                                                .idReview,
-                                                        idParent:
-                                                            comments[index]
-                                                                .idComment);
+                                                    try {
+                                                      await ApiService()
+                                                          .commentReview(
+                                                              content: response[
+                                                                  'content'],
+                                                              idReview:
+                                                                  comments[
+                                                                          index]
+                                                                      .idReview,
+                                                              idParent: comments[
+                                                                      index]
+                                                                  .idComment);
+                                                      if (mounted) {
+                                                        showSuccessSnackBar(
+                                                            context);
+                                                      }
+
+                                                      addCommentToComment(
+                                                          index);
+                                                      await _loadComments();
+                                                    } catch (e) {
+                                                      if (mounted) {
+                                                        showErrorSnackBar(
+                                                            context,
+                                                            e.toString());
+                                                      }
+                                                    }
                                                   }
-
-                                                  await _loadReviews();
-
-                                                  setState(() {});
                                                 }
                                               },
                                             );
@@ -291,19 +295,19 @@ class _ReviewPageState extends State<ReviewPage> {
                           ],
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
               ),
               Positioned(
                 bottom: 80,
                 child: Container(
                   width: sizeW * 100,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.white,
                       border: Border.symmetric(
                           horizontal: BorderSide(
                               color: ColorStyle.borderGrey, width: 0.5))),
-                  padding:
-                      EdgeInsets.only(bottom: 16, top: 16, left: 16, right: 16),
+                  padding: const EdgeInsets.only(
+                      bottom: 16, top: 16, left: 16, right: 16),
                   child: PressTransform(
                     onPressed: () async {
                       final userState = _userBloc.state;
@@ -342,13 +346,13 @@ class _ReviewPageState extends State<ReviewPage> {
                                           widget.review.business!.followed),
                                 )));
 
-                        await _loadReviews();
+                        await _loadComments();
                       }
                     },
                     child: Container(
                       width: double.maxFinite,
                       height: 40,
-                      padding: EdgeInsets.only(left: 16, right: 16),
+                      padding: const EdgeInsets.only(left: 16, right: 16),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           color: ColorStyle.lightGrey),
@@ -365,14 +369,14 @@ class _ReviewPageState extends State<ReviewPage> {
                                   fontFamily: 'Montserrat'),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 4,
                           ),
                           SvgPicture.asset(
                             'assets/images/icons/Whistle.svg',
                             width: 32,
                             height: 32,
-                            colorFilter: ColorFilter.mode(
+                            colorFilter: const ColorFilter.mode(
                                 ColorStyle.darkPurple, BlendMode.srcIn),
                           ),
                         ],
@@ -384,8 +388,8 @@ class _ReviewPageState extends State<ReviewPage> {
               Container(
                 width: double.maxFinite,
                 height: 96,
-                padding: EdgeInsets.only(top: 32),
-                decoration: BoxDecoration(color: Colors.white),
+                padding: const EdgeInsets.only(top: 32),
+                decoration: const BoxDecoration(color: Colors.white),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -393,7 +397,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
                             padding: EdgeInsets.only(left: 16, right: 8),
@@ -409,7 +413,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         ],
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Hilo",
                       style: TextStyle(
                           fontFamily: 'Montserrat',
@@ -428,17 +432,21 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Future<void> _loadReviews() async {
+  Future<void> _loadComments() async {
     try {
       var commentsList =
           await ApiService().getReviewsParentComments(widget.review.idReview);
+
+      print(widget.review.idReview);
       setState(() {
         comments = commentsList;
         isLoading = false;
       });
     } catch (e) {
       // Handle the error or set state to show an error message
-      showErrorSnackBar(context, e.toString());
+      if (mounted) {
+        showErrorSnackBar(context, e.toString());
+      }
       setState(() {
         isLoading = false;
       });
@@ -511,6 +519,16 @@ class _ReviewPageState extends State<ReviewPage> {
   void addCommentToReview() {
     setState(() {
       review = review.copyWith(comments: review.comments + 1);
+    });
+  }
+
+  void addCommentToComment(int index) {
+    setState(() {
+      comments = comments.map((itemComment) {
+        return itemComment.idComment == comments[index].idComment
+            ? comments[index].copyWith(comments: comments[index].comments + 1)
+            : itemComment;
+      }).toList();
     });
   }
 }

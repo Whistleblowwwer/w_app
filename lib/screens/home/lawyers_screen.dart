@@ -5,16 +5,16 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:w_app/styles/color_style.dart';
 
 class LawyersScreen extends StatefulWidget {
-  const LawyersScreen();
+  const LawyersScreen({super.key});
 
   @override
-  _LawyersScreenState createState() => _LawyersScreenState();
+  LawyersScreenState createState() => LawyersScreenState();
 }
 
-class _LawyersScreenState extends State<LawyersScreen> {
+class LawyersScreenState extends State<LawyersScreen> {
   int currentPage = 0;
   int itemCountBoard = 2;
-  PageController _boardController =
+  final PageController _boardController =
       PageController(initialPage: 0, viewportFraction: 1);
 
   @override
@@ -25,8 +25,8 @@ class _LawyersScreenState extends State<LawyersScreen> {
 
   AnimatedContainer doIndicator(index) {
     return AnimatedContainer(
-      margin: EdgeInsets.only(right: 4, left: 4),
-      duration: Duration(milliseconds: 300),
+      margin: const EdgeInsets.only(right: 4, left: 4),
+      duration: const Duration(milliseconds: 300),
       height: 8,
       width: currentPage == index ? 8 : 12,
       decoration: BoxDecoration(
@@ -56,7 +56,7 @@ class _LawyersScreenState extends State<LawyersScreen> {
               Positioned.fill(
                 top: 48,
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: 80),
+                  padding: const EdgeInsets.only(bottom: 80),
                   child: Column(
                     children: [
                       SizedBox(
@@ -75,11 +75,12 @@ class _LawyersScreenState extends State<LawyersScreen> {
                                   controller: _boardController,
                                   itemCount: itemCountBoard,
                                   itemBuilder: (context, snapshot) {
-                                    var _scale =
+                                    var scale =
                                         currentPage == snapshot ? 1.0 : 1.0;
                                     return TweenAnimationBuilder(
-                                      duration: Duration(milliseconds: 350),
-                                      tween: Tween(begin: _scale, end: _scale),
+                                      duration:
+                                          const Duration(milliseconds: 350),
+                                      tween: Tween(begin: scale, end: scale),
                                       curve: Curves.ease,
                                       builder: (BuildContext context,
                                           double value, Widget? child) {
@@ -106,8 +107,8 @@ class _LawyersScreenState extends State<LawyersScreen> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
+                      const Padding(
+                        padding: EdgeInsets.only(
                             left: 16, right: 16, bottom: 16, top: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,27 +138,27 @@ class _LawyersScreenState extends State<LawyersScreen> {
                                   alignment: Alignment.bottomLeft,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(
+                                      margin: const EdgeInsets.only(
                                           left: 24,
                                           right: 24,
                                           top: 8,
                                           bottom: 8),
-                                      padding: EdgeInsets.only(
+                                      padding: const EdgeInsets.only(
                                           left: 108,
                                           top: 10,
                                           bottom: 10,
                                           right: 16),
                                       width: double.maxFinite,
                                       decoration: BoxDecoration(
-                                          color:
-                                              Color.fromRGBO(164, 187, 255, 1),
+                                          color: const Color.fromRGBO(
+                                              164, 187, 255, 1),
                                           borderRadius:
                                               BorderRadius.circular(12)),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
+                                          const Text(
                                             "Nombre Abogado",
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -166,7 +167,7 @@ class _LawyersScreenState extends State<LawyersScreen> {
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w700),
                                           ),
-                                          Row(
+                                          const Row(
                                             children: [
                                               Flexible(
                                                 child: Text(
@@ -193,9 +194,9 @@ class _LawyersScreenState extends State<LawyersScreen> {
                                             ],
                                           ),
                                           Container(
-                                            margin: EdgeInsets.only(
+                                            margin: const EdgeInsets.only(
                                                 left: 0, right: 0, top: 10),
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 8, top: 8, bottom: 8),
                                             width: double.maxFinite,
                                             alignment: Alignment.centerLeft,
@@ -203,7 +204,7 @@ class _LawyersScreenState extends State<LawyersScreen> {
                                                 color: ColorStyle.lightGrey,
                                                 borderRadius:
                                                     BorderRadius.circular(5)),
-                                            child: Text(
+                                            child: const Text(
                                               "¿Cómo te puedo ayudar?",
                                               style: TextStyle(
                                                   color: ColorStyle.textGrey,
@@ -214,17 +215,17 @@ class _LawyersScreenState extends State<LawyersScreen> {
                                       ),
                                     ),
                                     Padding(
-                                      padding:
-                                          EdgeInsets.only(left: 24, bottom: 8),
+                                      padding: const EdgeInsets.only(
+                                          left: 24, bottom: 8),
                                       child: Image.asset(
                                           'assets/images/ilustrations/abogado.png'),
                                     )
                                   ],
                                 )
                               : Container(
-                                  margin: EdgeInsets.only(
+                                  margin: const EdgeInsets.only(
                                       left: 24, right: 24, top: 24, bottom: 8),
-                                  padding: EdgeInsets.only(
+                                  padding: const EdgeInsets.only(
                                       left: 16, top: 10, bottom: 10, right: 16),
                                   width: double.maxFinite,
                                   decoration: BoxDecoration(
@@ -239,7 +240,7 @@ class _LawyersScreenState extends State<LawyersScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            const Text(
                                               "¿Quieres ofrecer tu ayuda?",
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -249,7 +250,7 @@ class _LawyersScreenState extends State<LawyersScreen> {
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w700),
                                             ),
-                                            Text(
+                                            const Text(
                                               "Sigamos rompiendo barreras.",
                                               maxLines: 2,
                                               style: TextStyle(
@@ -259,19 +260,20 @@ class _LawyersScreenState extends State<LawyersScreen> {
                                                   fontSize: 10),
                                             ),
                                             Container(
-                                              margin: EdgeInsets.only(top: 10),
-                                              padding: EdgeInsets.only(
+                                              margin: const EdgeInsets.only(
+                                                  top: 10),
+                                              padding: const EdgeInsets.only(
                                                 top: 8,
                                                 bottom: 8,
                                               ),
                                               width: 108,
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
-                                                  color: Color.fromRGBO(
+                                                  color: const Color.fromRGBO(
                                                       170, 50, 155, 1),
                                                   borderRadius:
                                                       BorderRadius.circular(5)),
-                                              child: Text(
+                                              child: const Text(
                                                 "¡Me interesa!",
                                                 style: TextStyle(
                                                     color: Colors.white,
@@ -293,11 +295,11 @@ class _LawyersScreenState extends State<LawyersScreen> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(bottom: 32),
+                margin: const EdgeInsets.only(bottom: 32),
                 height: 56,
                 width: double.maxFinite,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(color: Colors.white),
+                decoration: const BoxDecoration(color: Colors.white),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -305,7 +307,7 @@ class _LawyersScreenState extends State<LawyersScreen> {
                       onTap: () {
                         Navigator.of(context).pop();
                       },
-                      child: Align(
+                      child: const Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
                           padding: EdgeInsets.only(left: 16, right: 8),
@@ -313,7 +315,7 @@ class _LawyersScreenState extends State<LawyersScreen> {
                         ),
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Abogados",
                       style: TextStyle(
                           fontFamily: 'Montserrat',

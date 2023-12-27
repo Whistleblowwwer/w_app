@@ -25,7 +25,6 @@ class UserBloc extends Bloc<UserBlocEvent, UserState> {
       emit(UserLoaded(user));
     } catch (e) {
       if (e.toString().contains('Token is invalid or expired')) {
-        print("eeee");
         emit(UserTokenError(e.toString()));
       } else {
         emit(UserError(e.toString()));
@@ -37,14 +36,12 @@ class UserBloc extends Bloc<UserBlocEvent, UserState> {
       LoadUserProfile event, Emitter<UserState> emit) async {
     // emit(UserLoading());
     try {
-      print("aa");
       final response = await apiService.getUserProfile();
       User user = User.fromJson(response['user']);
 
       emit(UserLoaded(user));
     } catch (e) {
       if (e.toString().contains('Token is invalid or expired')) {
-        print("eeee");
         emit(UserTokenError(e.toString()));
       } else {
         emit(UserError(e.toString()));

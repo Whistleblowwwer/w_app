@@ -1,5 +1,4 @@
 // Define los eventos adicionales
-import 'package:intl/intl.dart';
 
 abstract class SocketEvent {}
 
@@ -65,9 +64,6 @@ class Message {
 
   bool isToday() {
     final now = DateTime.now().toLocal();
-    print("--");
-    print(now);
-    print(createdAt);
     return createdAt.year == now.year &&
         createdAt.month == now.month &&
         createdAt.day == now.day;

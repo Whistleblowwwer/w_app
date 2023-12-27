@@ -19,7 +19,7 @@ final countries = [
     "nationality": "Afghan",
     "timezones": [
       {
-        "zoneName": "Asia\/Kabul",
+        "zoneName": "Asia/Kabul",
         "gmtOffset": 16200,
         "gmtOffsetName": "UTC+04:30",
         "abbreviation": "AFT",
@@ -66,7 +66,7 @@ final countries = [
     "nationality": "Aland Island",
     "timezones": [
       {
-        "zoneName": "Europe\/Mariehamn",
+        "zoneName": "Europe/Mariehamn",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -113,7 +113,7 @@ final countries = [
     "nationality": "Albanian ",
     "timezones": [
       {
-        "zoneName": "Europe\/Tirane",
+        "zoneName": "Europe/Tirane",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -160,7 +160,7 @@ final countries = [
     "nationality": "Algerian",
     "timezones": [
       {
-        "zoneName": "Africa\/Algiers",
+        "zoneName": "Africa/Algiers",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -207,7 +207,7 @@ final countries = [
     "nationality": "American Samoan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Pago_Pago",
+        "zoneName": "Pacific/Pago_Pago",
         "gmtOffset": -39600,
         "gmtOffsetName": "UTC-11:00",
         "abbreviation": "SST",
@@ -254,7 +254,7 @@ final countries = [
     "nationality": "Andorran",
     "timezones": [
       {
-        "zoneName": "Europe\/Andorra",
+        "zoneName": "Europe/Andorra",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -301,7 +301,7 @@ final countries = [
     "nationality": "Angolan",
     "timezones": [
       {
-        "zoneName": "Africa\/Luanda",
+        "zoneName": "Africa/Luanda",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
@@ -348,7 +348,7 @@ final countries = [
     "nationality": "Anguillan",
     "timezones": [
       {
-        "zoneName": "America\/Anguilla",
+        "zoneName": "America/Anguilla",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -395,70 +395,70 @@ final countries = [
     "nationality": "Antarctic",
     "timezones": [
       {
-        "zoneName": "Antarctica\/Casey",
+        "zoneName": "Antarctica/Casey",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "AWST",
         "tzName": "Australian Western Standard Time"
       },
       {
-        "zoneName": "Antarctica\/Davis",
+        "zoneName": "Antarctica/Davis",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "DAVT",
         "tzName": "Davis Time"
       },
       {
-        "zoneName": "Antarctica\/DumontDUrville",
+        "zoneName": "Antarctica/DumontDUrville",
         "gmtOffset": 36000,
         "gmtOffsetName": "UTC+10:00",
         "abbreviation": "DDUT",
         "tzName": "Dumont d'Urville Time"
       },
       {
-        "zoneName": "Antarctica\/Mawson",
+        "zoneName": "Antarctica/Mawson",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "MAWT",
         "tzName": "Mawson Station Time"
       },
       {
-        "zoneName": "Antarctica\/McMurdo",
+        "zoneName": "Antarctica/McMurdo",
         "gmtOffset": 46800,
         "gmtOffsetName": "UTC+13:00",
         "abbreviation": "NZDT",
         "tzName": "New Zealand Daylight Time"
       },
       {
-        "zoneName": "Antarctica\/Palmer",
+        "zoneName": "Antarctica/Palmer",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "CLST",
         "tzName": "Chile Summer Time"
       },
       {
-        "zoneName": "Antarctica\/Rothera",
+        "zoneName": "Antarctica/Rothera",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ROTT",
         "tzName": "Rothera Research Station Time"
       },
       {
-        "zoneName": "Antarctica\/Syowa",
+        "zoneName": "Antarctica/Syowa",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "SYOT",
         "tzName": "Showa Station Time"
       },
       {
-        "zoneName": "Antarctica\/Troll",
+        "zoneName": "Antarctica/Troll",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
         "tzName": "Greenwich Mean Time"
       },
       {
-        "zoneName": "Antarctica\/Vostok",
+        "zoneName": "Antarctica/Vostok",
         "gmtOffset": 21600,
         "gmtOffsetName": "UTC+06:00",
         "abbreviation": "VOST",
@@ -505,7 +505,7 @@ final countries = [
     "nationality": "Antiguan or Barbudan",
     "timezones": [
       {
-        "zoneName": "America\/Antigua",
+        "zoneName": "America/Antigua",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -552,84 +552,84 @@ final countries = [
     "nationality": "Argentine",
     "timezones": [
       {
-        "zoneName": "America\/Argentina\/Buenos_Aires",
+        "zoneName": "America/Argentina/Buenos_Aires",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/Catamarca",
+        "zoneName": "America/Argentina/Catamarca",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/Cordoba",
+        "zoneName": "America/Argentina/Cordoba",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/Jujuy",
+        "zoneName": "America/Argentina/Jujuy",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/La_Rioja",
+        "zoneName": "America/Argentina/La_Rioja",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/Mendoza",
+        "zoneName": "America/Argentina/Mendoza",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/Rio_Gallegos",
+        "zoneName": "America/Argentina/Rio_Gallegos",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/Salta",
+        "zoneName": "America/Argentina/Salta",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/San_Juan",
+        "zoneName": "America/Argentina/San_Juan",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/San_Luis",
+        "zoneName": "America/Argentina/San_Luis",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/Tucuman",
+        "zoneName": "America/Argentina/Tucuman",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
         "tzName": "Argentina Time"
       },
       {
-        "zoneName": "America\/Argentina\/Ushuaia",
+        "zoneName": "America/Argentina/Ushuaia",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "ART",
@@ -676,7 +676,7 @@ final countries = [
     "nationality": "Armenian",
     "timezones": [
       {
-        "zoneName": "Asia\/Yerevan",
+        "zoneName": "Asia/Yerevan",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "AMT",
@@ -723,7 +723,7 @@ final countries = [
     "nationality": "Aruban",
     "timezones": [
       {
-        "zoneName": "America\/Aruba",
+        "zoneName": "America/Aruba",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -770,91 +770,91 @@ final countries = [
     "nationality": "Australian",
     "timezones": [
       {
-        "zoneName": "Antarctica\/Macquarie",
+        "zoneName": "Antarctica/Macquarie",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "MIST",
         "tzName": "Macquarie Island Station Time"
       },
       {
-        "zoneName": "Australia\/Adelaide",
+        "zoneName": "Australia/Adelaide",
         "gmtOffset": 37800,
         "gmtOffsetName": "UTC+10:30",
         "abbreviation": "ACDT",
         "tzName": "Australian Central Daylight Saving Time"
       },
       {
-        "zoneName": "Australia\/Brisbane",
+        "zoneName": "Australia/Brisbane",
         "gmtOffset": 36000,
         "gmtOffsetName": "UTC+10:00",
         "abbreviation": "AEST",
         "tzName": "Australian Eastern Standard Time"
       },
       {
-        "zoneName": "Australia\/Broken_Hill",
+        "zoneName": "Australia/Broken_Hill",
         "gmtOffset": 37800,
         "gmtOffsetName": "UTC+10:30",
         "abbreviation": "ACDT",
         "tzName": "Australian Central Daylight Saving Time"
       },
       {
-        "zoneName": "Australia\/Currie",
+        "zoneName": "Australia/Currie",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "AEDT",
         "tzName": "Australian Eastern Daylight Saving Time"
       },
       {
-        "zoneName": "Australia\/Darwin",
+        "zoneName": "Australia/Darwin",
         "gmtOffset": 34200,
         "gmtOffsetName": "UTC+09:30",
         "abbreviation": "ACST",
         "tzName": "Australian Central Standard Time"
       },
       {
-        "zoneName": "Australia\/Eucla",
+        "zoneName": "Australia/Eucla",
         "gmtOffset": 31500,
         "gmtOffsetName": "UTC+08:45",
         "abbreviation": "ACWST",
         "tzName": "Australian Central Western Standard Time (Unofficial)"
       },
       {
-        "zoneName": "Australia\/Hobart",
+        "zoneName": "Australia/Hobart",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "AEDT",
         "tzName": "Australian Eastern Daylight Saving Time"
       },
       {
-        "zoneName": "Australia\/Lindeman",
+        "zoneName": "Australia/Lindeman",
         "gmtOffset": 36000,
         "gmtOffsetName": "UTC+10:00",
         "abbreviation": "AEST",
         "tzName": "Australian Eastern Standard Time"
       },
       {
-        "zoneName": "Australia\/Lord_Howe",
+        "zoneName": "Australia/Lord_Howe",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "LHST",
         "tzName": "Lord Howe Summer Time"
       },
       {
-        "zoneName": "Australia\/Melbourne",
+        "zoneName": "Australia/Melbourne",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "AEDT",
         "tzName": "Australian Eastern Daylight Saving Time"
       },
       {
-        "zoneName": "Australia\/Perth",
+        "zoneName": "Australia/Perth",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "AWST",
         "tzName": "Australian Western Standard Time"
       },
       {
-        "zoneName": "Australia\/Sydney",
+        "zoneName": "Australia/Sydney",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "AEDT",
@@ -901,7 +901,7 @@ final countries = [
     "nationality": "Austrian",
     "timezones": [
       {
-        "zoneName": "Europe\/Vienna",
+        "zoneName": "Europe/Vienna",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -948,7 +948,7 @@ final countries = [
     "nationality": "Azerbaijani, Azeri",
     "timezones": [
       {
-        "zoneName": "Asia\/Baku",
+        "zoneName": "Asia/Baku",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "AZT",
@@ -995,7 +995,7 @@ final countries = [
     "nationality": "Bahraini",
     "timezones": [
       {
-        "zoneName": "Asia\/Bahrain",
+        "zoneName": "Asia/Bahrain",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "AST",
@@ -1042,7 +1042,7 @@ final countries = [
     "nationality": "Bangladeshi",
     "timezones": [
       {
-        "zoneName": "Asia\/Dhaka",
+        "zoneName": "Asia/Dhaka",
         "gmtOffset": 21600,
         "gmtOffsetName": "UTC+06:00",
         "abbreviation": "BDT",
@@ -1089,7 +1089,7 @@ final countries = [
     "nationality": "Barbadian",
     "timezones": [
       {
-        "zoneName": "America\/Barbados",
+        "zoneName": "America/Barbados",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -1136,7 +1136,7 @@ final countries = [
     "nationality": "Belarusian",
     "timezones": [
       {
-        "zoneName": "Europe\/Minsk",
+        "zoneName": "Europe/Minsk",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "MSK",
@@ -1183,7 +1183,7 @@ final countries = [
     "nationality": "Belgian",
     "timezones": [
       {
-        "zoneName": "Europe\/Brussels",
+        "zoneName": "Europe/Brussels",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -1230,7 +1230,7 @@ final countries = [
     "nationality": "Belizean",
     "timezones": [
       {
-        "zoneName": "America\/Belize",
+        "zoneName": "America/Belize",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
@@ -1277,7 +1277,7 @@ final countries = [
     "nationality": "Beninese, Beninois",
     "timezones": [
       {
-        "zoneName": "Africa\/Porto-Novo",
+        "zoneName": "Africa/Porto-Novo",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
@@ -1324,7 +1324,7 @@ final countries = [
     "nationality": "Bermudian, Bermudan",
     "timezones": [
       {
-        "zoneName": "Atlantic\/Bermuda",
+        "zoneName": "Atlantic/Bermuda",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -1371,7 +1371,7 @@ final countries = [
     "nationality": "Bhutanese",
     "timezones": [
       {
-        "zoneName": "Asia\/Thimphu",
+        "zoneName": "Asia/Thimphu",
         "gmtOffset": 21600,
         "gmtOffsetName": "UTC+06:00",
         "abbreviation": "BTT",
@@ -1418,7 +1418,7 @@ final countries = [
     "nationality": "Bolivian",
     "timezones": [
       {
-        "zoneName": "America\/La_Paz",
+        "zoneName": "America/La_Paz",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "BOT",
@@ -1465,7 +1465,7 @@ final countries = [
     "nationality": "Bonaire",
     "timezones": [
       {
-        "zoneName": "America\/Anguilla",
+        "zoneName": "America/Anguilla",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -1508,7 +1508,7 @@ final countries = [
     "nationality": "Bosnian or Herzegovinian",
     "timezones": [
       {
-        "zoneName": "Europe\/Sarajevo",
+        "zoneName": "Europe/Sarajevo",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -1555,7 +1555,7 @@ final countries = [
     "nationality": "Motswana, Botswanan",
     "timezones": [
       {
-        "zoneName": "Africa\/Gaborone",
+        "zoneName": "Africa/Gaborone",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "CAT",
@@ -1602,7 +1602,7 @@ final countries = [
     "nationality": "Bouvet Island",
     "timezones": [
       {
-        "zoneName": "Europe\/Oslo",
+        "zoneName": "Europe/Oslo",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -1649,112 +1649,112 @@ final countries = [
     "nationality": "Brazilian",
     "timezones": [
       {
-        "zoneName": "America\/Araguaina",
+        "zoneName": "America/Araguaina",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "BRT",
         "tzName": "Brasília Time"
       },
       {
-        "zoneName": "America\/Bahia",
+        "zoneName": "America/Bahia",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "BRT",
         "tzName": "Brasília Time"
       },
       {
-        "zoneName": "America\/Belem",
+        "zoneName": "America/Belem",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "BRT",
         "tzName": "Brasília Time"
       },
       {
-        "zoneName": "America\/Boa_Vista",
+        "zoneName": "America/Boa_Vista",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AMT",
         "tzName": "Amazon Time (Brazil)[3"
       },
       {
-        "zoneName": "America\/Campo_Grande",
+        "zoneName": "America/Campo_Grande",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AMT",
         "tzName": "Amazon Time (Brazil)[3"
       },
       {
-        "zoneName": "America\/Cuiaba",
+        "zoneName": "America/Cuiaba",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "BRT",
         "tzName": "Brasilia Time"
       },
       {
-        "zoneName": "America\/Eirunepe",
+        "zoneName": "America/Eirunepe",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "ACT",
         "tzName": "Acre Time"
       },
       {
-        "zoneName": "America\/Fortaleza",
+        "zoneName": "America/Fortaleza",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "BRT",
         "tzName": "Brasília Time"
       },
       {
-        "zoneName": "America\/Maceio",
+        "zoneName": "America/Maceio",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "BRT",
         "tzName": "Brasília Time"
       },
       {
-        "zoneName": "America\/Manaus",
+        "zoneName": "America/Manaus",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AMT",
         "tzName": "Amazon Time (Brazil)"
       },
       {
-        "zoneName": "America\/Noronha",
+        "zoneName": "America/Noronha",
         "gmtOffset": -7200,
         "gmtOffsetName": "UTC-02:00",
         "abbreviation": "FNT",
         "tzName": "Fernando de Noronha Time"
       },
       {
-        "zoneName": "America\/Porto_Velho",
+        "zoneName": "America/Porto_Velho",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AMT",
         "tzName": "Amazon Time (Brazil)[3"
       },
       {
-        "zoneName": "America\/Recife",
+        "zoneName": "America/Recife",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "BRT",
         "tzName": "Brasília Time"
       },
       {
-        "zoneName": "America\/Rio_Branco",
+        "zoneName": "America/Rio_Branco",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "ACT",
         "tzName": "Acre Time"
       },
       {
-        "zoneName": "America\/Santarem",
+        "zoneName": "America/Santarem",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "BRT",
         "tzName": "Brasília Time"
       },
       {
-        "zoneName": "America\/Sao_Paulo",
+        "zoneName": "America/Sao_Paulo",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "BRT",
@@ -1801,7 +1801,7 @@ final countries = [
     "nationality": "BIOT",
     "timezones": [
       {
-        "zoneName": "Indian\/Chagos",
+        "zoneName": "Indian/Chagos",
         "gmtOffset": 21600,
         "gmtOffsetName": "UTC+06:00",
         "abbreviation": "IOT",
@@ -1848,7 +1848,7 @@ final countries = [
     "nationality": "Bruneian",
     "timezones": [
       {
-        "zoneName": "Asia\/Brunei",
+        "zoneName": "Asia/Brunei",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "BNT",
@@ -1895,7 +1895,7 @@ final countries = [
     "nationality": "Bulgarian",
     "timezones": [
       {
-        "zoneName": "Europe\/Sofia",
+        "zoneName": "Europe/Sofia",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -1942,7 +1942,7 @@ final countries = [
     "nationality": "Burkinabe",
     "timezones": [
       {
-        "zoneName": "Africa\/Ouagadougou",
+        "zoneName": "Africa/Ouagadougou",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -1989,7 +1989,7 @@ final countries = [
     "nationality": "Burundian",
     "timezones": [
       {
-        "zoneName": "Africa\/Bujumbura",
+        "zoneName": "Africa/Bujumbura",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "CAT",
@@ -2036,7 +2036,7 @@ final countries = [
     "nationality": "Cambodian",
     "timezones": [
       {
-        "zoneName": "Asia\/Phnom_Penh",
+        "zoneName": "Asia/Phnom_Penh",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "ICT",
@@ -2083,7 +2083,7 @@ final countries = [
     "nationality": "Cameroonian",
     "timezones": [
       {
-        "zoneName": "Africa\/Douala",
+        "zoneName": "Africa/Douala",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
@@ -2130,196 +2130,196 @@ final countries = [
     "nationality": "Canadian",
     "timezones": [
       {
-        "zoneName": "America\/Atikokan",
+        "zoneName": "America/Atikokan",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America)"
       },
       {
-        "zoneName": "America\/Blanc-Sablon",
+        "zoneName": "America/Blanc-Sablon",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
         "tzName": "Atlantic Standard Time"
       },
       {
-        "zoneName": "America\/Cambridge_Bay",
+        "zoneName": "America/Cambridge_Bay",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America)"
       },
       {
-        "zoneName": "America\/Creston",
+        "zoneName": "America/Creston",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America)"
       },
       {
-        "zoneName": "America\/Dawson",
+        "zoneName": "America/Dawson",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America)"
       },
       {
-        "zoneName": "America\/Dawson_Creek",
+        "zoneName": "America/Dawson_Creek",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America)"
       },
       {
-        "zoneName": "America\/Edmonton",
+        "zoneName": "America/Edmonton",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America)"
       },
       {
-        "zoneName": "America\/Fort_Nelson",
+        "zoneName": "America/Fort_Nelson",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America)"
       },
       {
-        "zoneName": "America\/Glace_Bay",
+        "zoneName": "America/Glace_Bay",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
         "tzName": "Atlantic Standard Time"
       },
       {
-        "zoneName": "America\/Goose_Bay",
+        "zoneName": "America/Goose_Bay",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
         "tzName": "Atlantic Standard Time"
       },
       {
-        "zoneName": "America\/Halifax",
+        "zoneName": "America/Halifax",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
         "tzName": "Atlantic Standard Time"
       },
       {
-        "zoneName": "America\/Inuvik",
+        "zoneName": "America/Inuvik",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America"
       },
       {
-        "zoneName": "America\/Iqaluit",
+        "zoneName": "America/Iqaluit",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Moncton",
+        "zoneName": "America/Moncton",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
         "tzName": "Atlantic Standard Time"
       },
       {
-        "zoneName": "America\/Nipigon",
+        "zoneName": "America/Nipigon",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Pangnirtung",
+        "zoneName": "America/Pangnirtung",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Rainy_River",
+        "zoneName": "America/Rainy_River",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Rankin_Inlet",
+        "zoneName": "America/Rankin_Inlet",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Regina",
+        "zoneName": "America/Regina",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Resolute",
+        "zoneName": "America/Resolute",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/St_Johns",
+        "zoneName": "America/St_Johns",
         "gmtOffset": -12600,
         "gmtOffsetName": "UTC-03:30",
         "abbreviation": "NST",
         "tzName": "Newfoundland Standard Time"
       },
       {
-        "zoneName": "America\/Swift_Current",
+        "zoneName": "America/Swift_Current",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Thunder_Bay",
+        "zoneName": "America/Thunder_Bay",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Toronto",
+        "zoneName": "America/Toronto",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Vancouver",
+        "zoneName": "America/Vancouver",
         "gmtOffset": -28800,
         "gmtOffsetName": "UTC-08:00",
         "abbreviation": "PST",
         "tzName": "Pacific Standard Time (North America"
       },
       {
-        "zoneName": "America\/Whitehorse",
+        "zoneName": "America/Whitehorse",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America"
       },
       {
-        "zoneName": "America\/Winnipeg",
+        "zoneName": "America/Winnipeg",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Yellowknife",
+        "zoneName": "America/Yellowknife",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
@@ -2366,7 +2366,7 @@ final countries = [
     "nationality": "Verdean",
     "timezones": [
       {
-        "zoneName": "Atlantic\/Cape_Verde",
+        "zoneName": "Atlantic/Cape_Verde",
         "gmtOffset": -3600,
         "gmtOffsetName": "UTC-01:00",
         "abbreviation": "CVT",
@@ -2413,7 +2413,7 @@ final countries = [
     "nationality": "Caymanian",
     "timezones": [
       {
-        "zoneName": "America\/Cayman",
+        "zoneName": "America/Cayman",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
@@ -2460,7 +2460,7 @@ final countries = [
     "nationality": "Central African",
     "timezones": [
       {
-        "zoneName": "Africa\/Bangui",
+        "zoneName": "Africa/Bangui",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
@@ -2507,7 +2507,7 @@ final countries = [
     "nationality": "Chadian",
     "timezones": [
       {
-        "zoneName": "Africa\/Ndjamena",
+        "zoneName": "Africa/Ndjamena",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
@@ -2554,21 +2554,21 @@ final countries = [
     "nationality": "Chilean",
     "timezones": [
       {
-        "zoneName": "America\/Punta_Arenas",
+        "zoneName": "America/Punta_Arenas",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "CLST",
         "tzName": "Chile Summer Time"
       },
       {
-        "zoneName": "America\/Santiago",
+        "zoneName": "America/Santiago",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "CLST",
         "tzName": "Chile Summer Time"
       },
       {
-        "zoneName": "Pacific\/Easter",
+        "zoneName": "Pacific/Easter",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EASST",
@@ -2615,14 +2615,14 @@ final countries = [
     "nationality": "Chinese",
     "timezones": [
       {
-        "zoneName": "Asia\/Shanghai",
+        "zoneName": "Asia/Shanghai",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "CST",
         "tzName": "China Standard Time"
       },
       {
-        "zoneName": "Asia\/Urumqi",
+        "zoneName": "Asia/Urumqi",
         "gmtOffset": 21600,
         "gmtOffsetName": "UTC+06:00",
         "abbreviation": "XJT",
@@ -2669,7 +2669,7 @@ final countries = [
     "nationality": "Christmas Island",
     "timezones": [
       {
-        "zoneName": "Indian\/Christmas",
+        "zoneName": "Indian/Christmas",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "CXT",
@@ -2716,7 +2716,7 @@ final countries = [
     "nationality": "Cocos Island",
     "timezones": [
       {
-        "zoneName": "Indian\/Cocos",
+        "zoneName": "Indian/Cocos",
         "gmtOffset": 23400,
         "gmtOffsetName": "UTC+06:30",
         "abbreviation": "CCT",
@@ -2763,7 +2763,7 @@ final countries = [
     "nationality": "Colombian",
     "timezones": [
       {
-        "zoneName": "America\/Bogota",
+        "zoneName": "America/Bogota",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "COT",
@@ -2810,7 +2810,7 @@ final countries = [
     "nationality": "Comoran, Comorian",
     "timezones": [
       {
-        "zoneName": "Indian\/Comoro",
+        "zoneName": "Indian/Comoro",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -2857,7 +2857,7 @@ final countries = [
     "nationality": "Congolese",
     "timezones": [
       {
-        "zoneName": "Africa\/Brazzaville",
+        "zoneName": "Africa/Brazzaville",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
@@ -2904,7 +2904,7 @@ final countries = [
     "nationality": "Cook Island",
     "timezones": [
       {
-        "zoneName": "Pacific\/Rarotonga",
+        "zoneName": "Pacific/Rarotonga",
         "gmtOffset": -36000,
         "gmtOffsetName": "UTC-10:00",
         "abbreviation": "CKT",
@@ -2951,7 +2951,7 @@ final countries = [
     "nationality": "Costa Rican",
     "timezones": [
       {
-        "zoneName": "America\/Costa_Rica",
+        "zoneName": "America/Costa_Rica",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
@@ -2998,7 +2998,7 @@ final countries = [
     "nationality": "Ivorian",
     "timezones": [
       {
-        "zoneName": "Africa\/Abidjan",
+        "zoneName": "Africa/Abidjan",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -3045,7 +3045,7 @@ final countries = [
     "nationality": "Croatian",
     "timezones": [
       {
-        "zoneName": "Europe\/Zagreb",
+        "zoneName": "Europe/Zagreb",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -3092,7 +3092,7 @@ final countries = [
     "nationality": "Cuban",
     "timezones": [
       {
-        "zoneName": "America\/Havana",
+        "zoneName": "America/Havana",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "CST",
@@ -3139,7 +3139,7 @@ final countries = [
     "nationality": "Curacaoan",
     "timezones": [
       {
-        "zoneName": "America\/Curacao",
+        "zoneName": "America/Curacao",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -3183,14 +3183,14 @@ final countries = [
     "nationality": "Cypriot",
     "timezones": [
       {
-        "zoneName": "Asia\/Famagusta",
+        "zoneName": "Asia/Famagusta",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
         "tzName": "Eastern European Time"
       },
       {
-        "zoneName": "Asia\/Nicosia",
+        "zoneName": "Asia/Nicosia",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -3276,14 +3276,14 @@ final countries = [
     "nationality": "Congolese",
     "timezones": [
       {
-        "zoneName": "Africa\/Kinshasa",
+        "zoneName": "Africa/Kinshasa",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
         "tzName": "West Africa Time"
       },
       {
-        "zoneName": "Africa\/Lubumbashi",
+        "zoneName": "Africa/Lubumbashi",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "CAT",
@@ -3330,7 +3330,7 @@ final countries = [
     "nationality": "Danish",
     "timezones": [
       {
-        "zoneName": "Europe\/Copenhagen",
+        "zoneName": "Europe/Copenhagen",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -3377,7 +3377,7 @@ final countries = [
     "nationality": "Djiboutian",
     "timezones": [
       {
-        "zoneName": "Africa\/Djibouti",
+        "zoneName": "Africa/Djibouti",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -3424,7 +3424,7 @@ final countries = [
     "nationality": "Dominican",
     "timezones": [
       {
-        "zoneName": "America\/Dominica",
+        "zoneName": "America/Dominica",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -3471,7 +3471,7 @@ final countries = [
     "nationality": "Dominican",
     "timezones": [
       {
-        "zoneName": "America\/Santo_Domingo",
+        "zoneName": "America/Santo_Domingo",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -3518,7 +3518,7 @@ final countries = [
     "nationality": "Timorese",
     "timezones": [
       {
-        "zoneName": "Asia\/Dili",
+        "zoneName": "Asia/Dili",
         "gmtOffset": 32400,
         "gmtOffsetName": "UTC+09:00",
         "abbreviation": "TLT",
@@ -3565,14 +3565,14 @@ final countries = [
     "nationality": "Ecuadorian",
     "timezones": [
       {
-        "zoneName": "America\/Guayaquil",
+        "zoneName": "America/Guayaquil",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "ECT",
         "tzName": "Ecuador Time"
       },
       {
-        "zoneName": "Pacific\/Galapagos",
+        "zoneName": "Pacific/Galapagos",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "GALT",
@@ -3619,7 +3619,7 @@ final countries = [
     "nationality": "Egyptian",
     "timezones": [
       {
-        "zoneName": "Africa\/Cairo",
+        "zoneName": "Africa/Cairo",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -3666,7 +3666,7 @@ final countries = [
     "nationality": "Salvadoran",
     "timezones": [
       {
-        "zoneName": "America\/El_Salvador",
+        "zoneName": "America/El_Salvador",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
@@ -3713,7 +3713,7 @@ final countries = [
     "nationality": "Equatorial Guinean, Equatoguinean",
     "timezones": [
       {
-        "zoneName": "Africa\/Malabo",
+        "zoneName": "Africa/Malabo",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
@@ -3760,7 +3760,7 @@ final countries = [
     "nationality": "Eritrean",
     "timezones": [
       {
-        "zoneName": "Africa\/Asmara",
+        "zoneName": "Africa/Asmara",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -3807,7 +3807,7 @@ final countries = [
     "nationality": "Estonian",
     "timezones": [
       {
-        "zoneName": "Europe\/Tallinn",
+        "zoneName": "Europe/Tallinn",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -3854,7 +3854,7 @@ final countries = [
     "nationality": "Ethiopian",
     "timezones": [
       {
-        "zoneName": "Africa\/Addis_Ababa",
+        "zoneName": "Africa/Addis_Ababa",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -3901,7 +3901,7 @@ final countries = [
     "nationality": "Falkland Island",
     "timezones": [
       {
-        "zoneName": "Atlantic\/Stanley",
+        "zoneName": "Atlantic/Stanley",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "FKST",
@@ -3948,7 +3948,7 @@ final countries = [
     "nationality": "Faroese",
     "timezones": [
       {
-        "zoneName": "Atlantic\/Faroe",
+        "zoneName": "Atlantic/Faroe",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "WET",
@@ -3995,7 +3995,7 @@ final countries = [
     "nationality": "Fijian",
     "timezones": [
       {
-        "zoneName": "Pacific\/Fiji",
+        "zoneName": "Pacific/Fiji",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "FJT",
@@ -4042,7 +4042,7 @@ final countries = [
     "nationality": "Finnish",
     "timezones": [
       {
-        "zoneName": "Europe\/Helsinki",
+        "zoneName": "Europe/Helsinki",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -4089,7 +4089,7 @@ final countries = [
     "nationality": "French",
     "timezones": [
       {
-        "zoneName": "Europe\/Paris",
+        "zoneName": "Europe/Paris",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -4136,7 +4136,7 @@ final countries = [
     "nationality": "French Guianese",
     "timezones": [
       {
-        "zoneName": "America\/Cayenne",
+        "zoneName": "America/Cayenne",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "GFT",
@@ -4183,21 +4183,21 @@ final countries = [
     "nationality": "French Polynesia",
     "timezones": [
       {
-        "zoneName": "Pacific\/Gambier",
+        "zoneName": "Pacific/Gambier",
         "gmtOffset": -32400,
         "gmtOffsetName": "UTC-09:00",
         "abbreviation": "GAMT",
         "tzName": "Gambier Islands Time"
       },
       {
-        "zoneName": "Pacific\/Marquesas",
+        "zoneName": "Pacific/Marquesas",
         "gmtOffset": -34200,
         "gmtOffsetName": "UTC-09:30",
         "abbreviation": "MART",
         "tzName": "Marquesas Islands Time"
       },
       {
-        "zoneName": "Pacific\/Tahiti",
+        "zoneName": "Pacific/Tahiti",
         "gmtOffset": -36000,
         "gmtOffsetName": "UTC-10:00",
         "abbreviation": "TAHT",
@@ -4244,7 +4244,7 @@ final countries = [
     "nationality": "French Southern Territories",
     "timezones": [
       {
-        "zoneName": "Indian\/Kerguelen",
+        "zoneName": "Indian/Kerguelen",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "TFT",
@@ -4291,7 +4291,7 @@ final countries = [
     "nationality": "Gabonese",
     "timezones": [
       {
-        "zoneName": "Africa\/Libreville",
+        "zoneName": "Africa/Libreville",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
@@ -4338,7 +4338,7 @@ final countries = [
     "nationality": "Gambian",
     "timezones": [
       {
-        "zoneName": "Africa\/Banjul",
+        "zoneName": "Africa/Banjul",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -4385,7 +4385,7 @@ final countries = [
     "nationality": "Georgian",
     "timezones": [
       {
-        "zoneName": "Asia\/Tbilisi",
+        "zoneName": "Asia/Tbilisi",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "GET",
@@ -4432,14 +4432,14 @@ final countries = [
     "nationality": "German",
     "timezones": [
       {
-        "zoneName": "Europe\/Berlin",
+        "zoneName": "Europe/Berlin",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
         "tzName": "Central European Time"
       },
       {
-        "zoneName": "Europe\/Busingen",
+        "zoneName": "Europe/Busingen",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -4486,7 +4486,7 @@ final countries = [
     "nationality": "Ghanaian",
     "timezones": [
       {
-        "zoneName": "Africa\/Accra",
+        "zoneName": "Africa/Accra",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -4533,7 +4533,7 @@ final countries = [
     "nationality": "Gibraltar",
     "timezones": [
       {
-        "zoneName": "Europe\/Gibraltar",
+        "zoneName": "Europe/Gibraltar",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -4580,7 +4580,7 @@ final countries = [
     "nationality": "Greek, Hellenic",
     "timezones": [
       {
-        "zoneName": "Europe\/Athens",
+        "zoneName": "Europe/Athens",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -4627,28 +4627,28 @@ final countries = [
     "nationality": "Greenlandic",
     "timezones": [
       {
-        "zoneName": "America\/Danmarkshavn",
+        "zoneName": "America/Danmarkshavn",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
         "tzName": "Greenwich Mean Time"
       },
       {
-        "zoneName": "America\/Nuuk",
+        "zoneName": "America/Nuuk",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "WGT",
         "tzName": "West Greenland Time"
       },
       {
-        "zoneName": "America\/Scoresbysund",
+        "zoneName": "America/Scoresbysund",
         "gmtOffset": -3600,
         "gmtOffsetName": "UTC-01:00",
         "abbreviation": "EGT",
         "tzName": "Eastern Greenland Time"
       },
       {
-        "zoneName": "America\/Thule",
+        "zoneName": "America/Thule",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -4695,7 +4695,7 @@ final countries = [
     "nationality": "Grenadian",
     "timezones": [
       {
-        "zoneName": "America\/Grenada",
+        "zoneName": "America/Grenada",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -4742,7 +4742,7 @@ final countries = [
     "nationality": "Guadeloupe",
     "timezones": [
       {
-        "zoneName": "America\/Guadeloupe",
+        "zoneName": "America/Guadeloupe",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -4789,7 +4789,7 @@ final countries = [
     "nationality": "Guamanian, Guambat",
     "timezones": [
       {
-        "zoneName": "Pacific\/Guam",
+        "zoneName": "Pacific/Guam",
         "gmtOffset": 36000,
         "gmtOffsetName": "UTC+10:00",
         "abbreviation": "CHST",
@@ -4836,7 +4836,7 @@ final countries = [
     "nationality": "Guatemalan",
     "timezones": [
       {
-        "zoneName": "America\/Guatemala",
+        "zoneName": "America/Guatemala",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
@@ -4883,7 +4883,7 @@ final countries = [
     "nationality": "Channel Island",
     "timezones": [
       {
-        "zoneName": "Europe\/Guernsey",
+        "zoneName": "Europe/Guernsey",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -4930,7 +4930,7 @@ final countries = [
     "nationality": "Guinean",
     "timezones": [
       {
-        "zoneName": "Africa\/Conakry",
+        "zoneName": "Africa/Conakry",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -4977,7 +4977,7 @@ final countries = [
     "nationality": "Bissau-Guinean",
     "timezones": [
       {
-        "zoneName": "Africa\/Bissau",
+        "zoneName": "Africa/Bissau",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -5024,7 +5024,7 @@ final countries = [
     "nationality": "Guyanese",
     "timezones": [
       {
-        "zoneName": "America\/Guyana",
+        "zoneName": "America/Guyana",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "GYT",
@@ -5071,7 +5071,7 @@ final countries = [
     "nationality": "Haitian",
     "timezones": [
       {
-        "zoneName": "America\/Port-au-Prince",
+        "zoneName": "America/Port-au-Prince",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
@@ -5118,7 +5118,7 @@ final countries = [
     "nationality": "Heard Island or McDonald Islands",
     "timezones": [
       {
-        "zoneName": "Indian\/Kerguelen",
+        "zoneName": "Indian/Kerguelen",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "TFT",
@@ -5165,7 +5165,7 @@ final countries = [
     "nationality": "Honduran",
     "timezones": [
       {
-        "zoneName": "America\/Tegucigalpa",
+        "zoneName": "America/Tegucigalpa",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
@@ -5212,7 +5212,7 @@ final countries = [
     "nationality": "Hong Kong, Hong Kongese",
     "timezones": [
       {
-        "zoneName": "Asia\/Hong_Kong",
+        "zoneName": "Asia/Hong_Kong",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "HKT",
@@ -5259,7 +5259,7 @@ final countries = [
     "nationality": "Hungarian, Magyar",
     "timezones": [
       {
-        "zoneName": "Europe\/Budapest",
+        "zoneName": "Europe/Budapest",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -5306,7 +5306,7 @@ final countries = [
     "nationality": "Icelandic",
     "timezones": [
       {
-        "zoneName": "Atlantic\/Reykjavik",
+        "zoneName": "Atlantic/Reykjavik",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -5353,7 +5353,7 @@ final countries = [
     "nationality": "Indian",
     "timezones": [
       {
-        "zoneName": "Asia\/Kolkata",
+        "zoneName": "Asia/Kolkata",
         "gmtOffset": 19800,
         "gmtOffsetName": "UTC+05:30",
         "abbreviation": "IST",
@@ -5400,28 +5400,28 @@ final countries = [
     "nationality": "Indonesian",
     "timezones": [
       {
-        "zoneName": "Asia\/Jakarta",
+        "zoneName": "Asia/Jakarta",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "WIB",
         "tzName": "Western Indonesian Time"
       },
       {
-        "zoneName": "Asia\/Jayapura",
+        "zoneName": "Asia/Jayapura",
         "gmtOffset": 32400,
         "gmtOffsetName": "UTC+09:00",
         "abbreviation": "WIT",
         "tzName": "Eastern Indonesian Time"
       },
       {
-        "zoneName": "Asia\/Makassar",
+        "zoneName": "Asia/Makassar",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "WITA",
         "tzName": "Central Indonesia Time"
       },
       {
-        "zoneName": "Asia\/Pontianak",
+        "zoneName": "Asia/Pontianak",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "WIB",
@@ -5468,7 +5468,7 @@ final countries = [
     "nationality": "Iranian, Persian",
     "timezones": [
       {
-        "zoneName": "Asia\/Tehran",
+        "zoneName": "Asia/Tehran",
         "gmtOffset": 12600,
         "gmtOffsetName": "UTC+03:30",
         "abbreviation": "IRDT",
@@ -5514,7 +5514,7 @@ final countries = [
     "nationality": "Iraqi",
     "timezones": [
       {
-        "zoneName": "Asia\/Baghdad",
+        "zoneName": "Asia/Baghdad",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "AST",
@@ -5561,7 +5561,7 @@ final countries = [
     "nationality": "Irish",
     "timezones": [
       {
-        "zoneName": "Europe\/Dublin",
+        "zoneName": "Europe/Dublin",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -5608,7 +5608,7 @@ final countries = [
     "nationality": "Israeli",
     "timezones": [
       {
-        "zoneName": "Asia\/Jerusalem",
+        "zoneName": "Asia/Jerusalem",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "IST",
@@ -5655,7 +5655,7 @@ final countries = [
     "nationality": "Italian",
     "timezones": [
       {
-        "zoneName": "Europe\/Rome",
+        "zoneName": "Europe/Rome",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -5702,7 +5702,7 @@ final countries = [
     "nationality": "Jamaican",
     "timezones": [
       {
-        "zoneName": "America\/Jamaica",
+        "zoneName": "America/Jamaica",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
@@ -5749,7 +5749,7 @@ final countries = [
     "nationality": "Japanese",
     "timezones": [
       {
-        "zoneName": "Asia\/Tokyo",
+        "zoneName": "Asia/Tokyo",
         "gmtOffset": 32400,
         "gmtOffsetName": "UTC+09:00",
         "abbreviation": "JST",
@@ -5796,7 +5796,7 @@ final countries = [
     "nationality": "Channel Island",
     "timezones": [
       {
-        "zoneName": "Europe\/Jersey",
+        "zoneName": "Europe/Jersey",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -5843,7 +5843,7 @@ final countries = [
     "nationality": "Jordanian",
     "timezones": [
       {
-        "zoneName": "Asia\/Amman",
+        "zoneName": "Asia/Amman",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -5890,49 +5890,49 @@ final countries = [
     "nationality": "Kazakhstani, Kazakh",
     "timezones": [
       {
-        "zoneName": "Asia\/Almaty",
+        "zoneName": "Asia/Almaty",
         "gmtOffset": 21600,
         "gmtOffsetName": "UTC+06:00",
         "abbreviation": "ALMT",
         "tzName": "Alma-Ata Time[1"
       },
       {
-        "zoneName": "Asia\/Aqtau",
+        "zoneName": "Asia/Aqtau",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "AQTT",
         "tzName": "Aqtobe Time"
       },
       {
-        "zoneName": "Asia\/Aqtobe",
+        "zoneName": "Asia/Aqtobe",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "AQTT",
         "tzName": "Aqtobe Time"
       },
       {
-        "zoneName": "Asia\/Atyrau",
+        "zoneName": "Asia/Atyrau",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "MSD+1",
         "tzName": "Moscow Daylight Time+1"
       },
       {
-        "zoneName": "Asia\/Oral",
+        "zoneName": "Asia/Oral",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "ORAT",
         "tzName": "Oral Time"
       },
       {
-        "zoneName": "Asia\/Qostanay",
+        "zoneName": "Asia/Qostanay",
         "gmtOffset": 21600,
         "gmtOffsetName": "UTC+06:00",
         "abbreviation": "QYZST",
         "tzName": "Qyzylorda Summer Time"
       },
       {
-        "zoneName": "Asia\/Qyzylorda",
+        "zoneName": "Asia/Qyzylorda",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "QYZT",
@@ -5979,7 +5979,7 @@ final countries = [
     "nationality": "Kenyan",
     "timezones": [
       {
-        "zoneName": "Africa\/Nairobi",
+        "zoneName": "Africa/Nairobi",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -6026,21 +6026,21 @@ final countries = [
     "nationality": "I-Kiribati",
     "timezones": [
       {
-        "zoneName": "Pacific\/Enderbury",
+        "zoneName": "Pacific/Enderbury",
         "gmtOffset": 46800,
         "gmtOffsetName": "UTC+13:00",
         "abbreviation": "PHOT",
         "tzName": "Phoenix Island Time"
       },
       {
-        "zoneName": "Pacific\/Kiritimati",
+        "zoneName": "Pacific/Kiritimati",
         "gmtOffset": 50400,
         "gmtOffsetName": "UTC+14:00",
         "abbreviation": "LINT",
         "tzName": "Line Islands Time"
       },
       {
-        "zoneName": "Pacific\/Tarawa",
+        "zoneName": "Pacific/Tarawa",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "GILT",
@@ -6087,7 +6087,7 @@ final countries = [
     "nationality": "Kosovar, Kosovan",
     "timezones": [
       {
-        "zoneName": "Europe\/Belgrade",
+        "zoneName": "Europe/Belgrade",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -6120,7 +6120,7 @@ final countries = [
     "nationality": "Kuwaiti",
     "timezones": [
       {
-        "zoneName": "Asia\/Kuwait",
+        "zoneName": "Asia/Kuwait",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "AST",
@@ -6167,7 +6167,7 @@ final countries = [
     "nationality": "Kyrgyzstani, Kyrgyz, Kirgiz, Kirghiz",
     "timezones": [
       {
-        "zoneName": "Asia\/Bishkek",
+        "zoneName": "Asia/Bishkek",
         "gmtOffset": 21600,
         "gmtOffsetName": "UTC+06:00",
         "abbreviation": "KGT",
@@ -6214,7 +6214,7 @@ final countries = [
     "nationality": "Lao, Laotian",
     "timezones": [
       {
-        "zoneName": "Asia\/Vientiane",
+        "zoneName": "Asia/Vientiane",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "ICT",
@@ -6261,7 +6261,7 @@ final countries = [
     "nationality": "Latvian",
     "timezones": [
       {
-        "zoneName": "Europe\/Riga",
+        "zoneName": "Europe/Riga",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -6308,7 +6308,7 @@ final countries = [
     "nationality": "Lebanese",
     "timezones": [
       {
-        "zoneName": "Asia\/Beirut",
+        "zoneName": "Asia/Beirut",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -6355,7 +6355,7 @@ final countries = [
     "nationality": "Basotho",
     "timezones": [
       {
-        "zoneName": "Africa\/Maseru",
+        "zoneName": "Africa/Maseru",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "SAST",
@@ -6402,7 +6402,7 @@ final countries = [
     "nationality": "Liberian",
     "timezones": [
       {
-        "zoneName": "Africa\/Monrovia",
+        "zoneName": "Africa/Monrovia",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -6449,7 +6449,7 @@ final countries = [
     "nationality": "Libyan",
     "timezones": [
       {
-        "zoneName": "Africa\/Tripoli",
+        "zoneName": "Africa/Tripoli",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -6496,7 +6496,7 @@ final countries = [
     "nationality": "Liechtenstein",
     "timezones": [
       {
-        "zoneName": "Europe\/Vaduz",
+        "zoneName": "Europe/Vaduz",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -6543,7 +6543,7 @@ final countries = [
     "nationality": "Lithuanian",
     "timezones": [
       {
-        "zoneName": "Europe\/Vilnius",
+        "zoneName": "Europe/Vilnius",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -6590,7 +6590,7 @@ final countries = [
     "nationality": "Luxembourg, Luxembourgish",
     "timezones": [
       {
-        "zoneName": "Europe\/Luxembourg",
+        "zoneName": "Europe/Luxembourg",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -6637,7 +6637,7 @@ final countries = [
     "nationality": "Macanese, Chinese",
     "timezones": [
       {
-        "zoneName": "Asia\/Macau",
+        "zoneName": "Asia/Macau",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "CST",
@@ -6684,7 +6684,7 @@ final countries = [
     "nationality": "Malagasy",
     "timezones": [
       {
-        "zoneName": "Indian\/Antananarivo",
+        "zoneName": "Indian/Antananarivo",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -6731,7 +6731,7 @@ final countries = [
     "nationality": "Malawian",
     "timezones": [
       {
-        "zoneName": "Africa\/Blantyre",
+        "zoneName": "Africa/Blantyre",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "CAT",
@@ -6778,14 +6778,14 @@ final countries = [
     "nationality": "Malaysian",
     "timezones": [
       {
-        "zoneName": "Asia\/Kuala_Lumpur",
+        "zoneName": "Asia/Kuala_Lumpur",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "MYT",
         "tzName": "Malaysia Time"
       },
       {
-        "zoneName": "Asia\/Kuching",
+        "zoneName": "Asia/Kuching",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "MYT",
@@ -6832,7 +6832,7 @@ final countries = [
     "nationality": "Maldivian",
     "timezones": [
       {
-        "zoneName": "Indian\/Maldives",
+        "zoneName": "Indian/Maldives",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "MVT",
@@ -6879,7 +6879,7 @@ final countries = [
     "nationality": "Malian, Malinese",
     "timezones": [
       {
-        "zoneName": "Africa\/Bamako",
+        "zoneName": "Africa/Bamako",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -6926,7 +6926,7 @@ final countries = [
     "nationality": "Maltese",
     "timezones": [
       {
-        "zoneName": "Europe\/Malta",
+        "zoneName": "Europe/Malta",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -6973,7 +6973,7 @@ final countries = [
     "nationality": "Manx",
     "timezones": [
       {
-        "zoneName": "Europe\/Isle_of_Man",
+        "zoneName": "Europe/Isle_of_Man",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -7020,14 +7020,14 @@ final countries = [
     "nationality": "Marshallese",
     "timezones": [
       {
-        "zoneName": "Pacific\/Kwajalein",
+        "zoneName": "Pacific/Kwajalein",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "MHT",
         "tzName": "Marshall Islands Time"
       },
       {
-        "zoneName": "Pacific\/Majuro",
+        "zoneName": "Pacific/Majuro",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "MHT",
@@ -7074,7 +7074,7 @@ final countries = [
     "nationality": "Martiniquais, Martinican",
     "timezones": [
       {
-        "zoneName": "America\/Martinique",
+        "zoneName": "America/Martinique",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -7121,7 +7121,7 @@ final countries = [
     "nationality": "Mauritanian",
     "timezones": [
       {
-        "zoneName": "Africa\/Nouakchott",
+        "zoneName": "Africa/Nouakchott",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -7168,7 +7168,7 @@ final countries = [
     "nationality": "Mauritian",
     "timezones": [
       {
-        "zoneName": "Indian\/Mauritius",
+        "zoneName": "Indian/Mauritius",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "MUT",
@@ -7215,7 +7215,7 @@ final countries = [
     "nationality": "Mahoran",
     "timezones": [
       {
-        "zoneName": "Indian\/Mayotte",
+        "zoneName": "Indian/Mayotte",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -7262,77 +7262,77 @@ final countries = [
     "nationality": "Mexican",
     "timezones": [
       {
-        "zoneName": "America\/Bahia_Banderas",
+        "zoneName": "America/Bahia_Banderas",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Cancun",
+        "zoneName": "America/Cancun",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Chihuahua",
+        "zoneName": "America/Chihuahua",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America"
       },
       {
-        "zoneName": "America\/Hermosillo",
+        "zoneName": "America/Hermosillo",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America"
       },
       {
-        "zoneName": "America\/Matamoros",
+        "zoneName": "America/Matamoros",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Mazatlan",
+        "zoneName": "America/Mazatlan",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America"
       },
       {
-        "zoneName": "America\/Merida",
+        "zoneName": "America/Merida",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Mexico_City",
+        "zoneName": "America/Mexico_City",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Monterrey",
+        "zoneName": "America/Monterrey",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Ojinaga",
+        "zoneName": "America/Ojinaga",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America"
       },
       {
-        "zoneName": "America\/Tijuana",
+        "zoneName": "America/Tijuana",
         "gmtOffset": -28800,
         "gmtOffsetName": "UTC-08:00",
         "abbreviation": "PST",
@@ -7379,21 +7379,21 @@ final countries = [
     "nationality": "Micronesian",
     "timezones": [
       {
-        "zoneName": "Pacific\/Chuuk",
+        "zoneName": "Pacific/Chuuk",
         "gmtOffset": 36000,
         "gmtOffsetName": "UTC+10:00",
         "abbreviation": "CHUT",
         "tzName": "Chuuk Time"
       },
       {
-        "zoneName": "Pacific\/Kosrae",
+        "zoneName": "Pacific/Kosrae",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "KOST",
         "tzName": "Kosrae Time"
       },
       {
-        "zoneName": "Pacific\/Pohnpei",
+        "zoneName": "Pacific/Pohnpei",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "PONT",
@@ -7440,7 +7440,7 @@ final countries = [
     "nationality": "Moldovan",
     "timezones": [
       {
-        "zoneName": "Europe\/Chisinau",
+        "zoneName": "Europe/Chisinau",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -7487,7 +7487,7 @@ final countries = [
     "nationality": "Monegasque, Monacan",
     "timezones": [
       {
-        "zoneName": "Europe\/Monaco",
+        "zoneName": "Europe/Monaco",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -7534,21 +7534,21 @@ final countries = [
     "nationality": "Mongolian",
     "timezones": [
       {
-        "zoneName": "Asia\/Choibalsan",
+        "zoneName": "Asia/Choibalsan",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "CHOT",
         "tzName": "Choibalsan Standard Time"
       },
       {
-        "zoneName": "Asia\/Hovd",
+        "zoneName": "Asia/Hovd",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "HOVT",
         "tzName": "Hovd Time"
       },
       {
-        "zoneName": "Asia\/Ulaanbaatar",
+        "zoneName": "Asia/Ulaanbaatar",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "ULAT",
@@ -7595,7 +7595,7 @@ final countries = [
     "nationality": "Montenegrin",
     "timezones": [
       {
-        "zoneName": "Europe\/Podgorica",
+        "zoneName": "Europe/Podgorica",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -7642,7 +7642,7 @@ final countries = [
     "nationality": "Montserratian",
     "timezones": [
       {
-        "zoneName": "America\/Montserrat",
+        "zoneName": "America/Montserrat",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -7689,7 +7689,7 @@ final countries = [
     "nationality": "Moroccan",
     "timezones": [
       {
-        "zoneName": "Africa\/Casablanca",
+        "zoneName": "Africa/Casablanca",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WEST",
@@ -7736,7 +7736,7 @@ final countries = [
     "nationality": "Mozambican",
     "timezones": [
       {
-        "zoneName": "Africa\/Maputo",
+        "zoneName": "Africa/Maputo",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "CAT",
@@ -7783,7 +7783,7 @@ final countries = [
     "nationality": "Burmese",
     "timezones": [
       {
-        "zoneName": "Asia\/Yangon",
+        "zoneName": "Asia/Yangon",
         "gmtOffset": 23400,
         "gmtOffsetName": "UTC+06:30",
         "abbreviation": "MMT",
@@ -7830,7 +7830,7 @@ final countries = [
     "nationality": "Namibian",
     "timezones": [
       {
-        "zoneName": "Africa\/Windhoek",
+        "zoneName": "Africa/Windhoek",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "WAST",
@@ -7877,7 +7877,7 @@ final countries = [
     "nationality": "Nauruan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Nauru",
+        "zoneName": "Pacific/Nauru",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "NRT",
@@ -7924,7 +7924,7 @@ final countries = [
     "nationality": "Nepali, Nepalese",
     "timezones": [
       {
-        "zoneName": "Asia\/Kathmandu",
+        "zoneName": "Asia/Kathmandu",
         "gmtOffset": 20700,
         "gmtOffsetName": "UTC+05:45",
         "abbreviation": "NPT",
@@ -7971,7 +7971,7 @@ final countries = [
     "nationality": "Dutch, Netherlandic",
     "timezones": [
       {
-        "zoneName": "Europe\/Amsterdam",
+        "zoneName": "Europe/Amsterdam",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -8018,7 +8018,7 @@ final countries = [
     "nationality": "New Caledonian",
     "timezones": [
       {
-        "zoneName": "Pacific\/Noumea",
+        "zoneName": "Pacific/Noumea",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "NCT",
@@ -8065,14 +8065,14 @@ final countries = [
     "nationality": "New Zealand, NZ",
     "timezones": [
       {
-        "zoneName": "Pacific\/Auckland",
+        "zoneName": "Pacific/Auckland",
         "gmtOffset": 46800,
         "gmtOffsetName": "UTC+13:00",
         "abbreviation": "NZDT",
         "tzName": "New Zealand Daylight Time"
       },
       {
-        "zoneName": "Pacific\/Chatham",
+        "zoneName": "Pacific/Chatham",
         "gmtOffset": 49500,
         "gmtOffsetName": "UTC+13:45",
         "abbreviation": "CHAST",
@@ -8119,7 +8119,7 @@ final countries = [
     "nationality": "Nicaraguan",
     "timezones": [
       {
-        "zoneName": "America\/Managua",
+        "zoneName": "America/Managua",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
@@ -8166,7 +8166,7 @@ final countries = [
     "nationality": "Nigerien",
     "timezones": [
       {
-        "zoneName": "Africa\/Niamey",
+        "zoneName": "Africa/Niamey",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
@@ -8213,7 +8213,7 @@ final countries = [
     "nationality": "Nigerian",
     "timezones": [
       {
-        "zoneName": "Africa\/Lagos",
+        "zoneName": "Africa/Lagos",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WAT",
@@ -8260,7 +8260,7 @@ final countries = [
     "nationality": "Niuean",
     "timezones": [
       {
-        "zoneName": "Pacific\/Niue",
+        "zoneName": "Pacific/Niue",
         "gmtOffset": -39600,
         "gmtOffsetName": "UTC-11:00",
         "abbreviation": "NUT",
@@ -8307,7 +8307,7 @@ final countries = [
     "nationality": "Norfolk Island",
     "timezones": [
       {
-        "zoneName": "Pacific\/Norfolk",
+        "zoneName": "Pacific/Norfolk",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "NFT",
@@ -8354,7 +8354,7 @@ final countries = [
     "nationality": "North Korean",
     "timezones": [
       {
-        "zoneName": "Asia\/Pyongyang",
+        "zoneName": "Asia/Pyongyang",
         "gmtOffset": 32400,
         "gmtOffsetName": "UTC+09:00",
         "abbreviation": "KST",
@@ -8401,7 +8401,7 @@ final countries = [
     "nationality": "Macedonian",
     "timezones": [
       {
-        "zoneName": "Europe\/Skopje",
+        "zoneName": "Europe/Skopje",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -8448,7 +8448,7 @@ final countries = [
     "nationality": "Northern Marianan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Saipan",
+        "zoneName": "Pacific/Saipan",
         "gmtOffset": 36000,
         "gmtOffsetName": "UTC+10:00",
         "abbreviation": "ChST",
@@ -8495,7 +8495,7 @@ final countries = [
     "nationality": "Norwegian",
     "timezones": [
       {
-        "zoneName": "Europe\/Oslo",
+        "zoneName": "Europe/Oslo",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -8542,7 +8542,7 @@ final countries = [
     "nationality": "Omani",
     "timezones": [
       {
-        "zoneName": "Asia\/Muscat",
+        "zoneName": "Asia/Muscat",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "GST",
@@ -8589,7 +8589,7 @@ final countries = [
     "nationality": "Pakistani",
     "timezones": [
       {
-        "zoneName": "Asia\/Karachi",
+        "zoneName": "Asia/Karachi",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "PKT",
@@ -8636,7 +8636,7 @@ final countries = [
     "nationality": "Palauan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Palau",
+        "zoneName": "Pacific/Palau",
         "gmtOffset": 32400,
         "gmtOffsetName": "UTC+09:00",
         "abbreviation": "PWT",
@@ -8683,14 +8683,14 @@ final countries = [
     "nationality": "Palestinian",
     "timezones": [
       {
-        "zoneName": "Asia\/Gaza",
+        "zoneName": "Asia/Gaza",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
         "tzName": "Eastern European Time"
       },
       {
-        "zoneName": "Asia\/Hebron",
+        "zoneName": "Asia/Hebron",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -8727,7 +8727,7 @@ final countries = [
     "capital": "Panama City",
     "currency": "PAB",
     "currency_name": "Panamanian balboa",
-    "currency_symbol": "B\/.",
+    "currency_symbol": "B/.",
     "tld": ".pa",
     "native": "Panamá",
     "region": "Americas",
@@ -8737,7 +8737,7 @@ final countries = [
     "nationality": "Panamanian",
     "timezones": [
       {
-        "zoneName": "America\/Panama",
+        "zoneName": "America/Panama",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
@@ -8784,14 +8784,14 @@ final countries = [
     "nationality": "Papua New Guinean, Papuan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Bougainville",
+        "zoneName": "Pacific/Bougainville",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "BST",
         "tzName": "Bougainville Standard Time[6"
       },
       {
-        "zoneName": "Pacific\/Port_Moresby",
+        "zoneName": "Pacific/Port_Moresby",
         "gmtOffset": 36000,
         "gmtOffsetName": "UTC+10:00",
         "abbreviation": "PGT",
@@ -8838,7 +8838,7 @@ final countries = [
     "nationality": "Paraguayan",
     "timezones": [
       {
-        "zoneName": "America\/Asuncion",
+        "zoneName": "America/Asuncion",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "PYST",
@@ -8875,7 +8875,7 @@ final countries = [
     "capital": "Lima",
     "currency": "PEN",
     "currency_name": "Peruvian sol",
-    "currency_symbol": "S\/.",
+    "currency_symbol": "S/.",
     "tld": ".pe",
     "native": "Perú",
     "region": "Americas",
@@ -8885,7 +8885,7 @@ final countries = [
     "nationality": "Peruvian",
     "timezones": [
       {
-        "zoneName": "America\/Lima",
+        "zoneName": "America/Lima",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "PET",
@@ -8932,7 +8932,7 @@ final countries = [
     "nationality": "Philippine, Filipino",
     "timezones": [
       {
-        "zoneName": "Asia\/Manila",
+        "zoneName": "Asia/Manila",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "PHT",
@@ -8979,7 +8979,7 @@ final countries = [
     "nationality": "Pitcairn Island",
     "timezones": [
       {
-        "zoneName": "Pacific\/Pitcairn",
+        "zoneName": "Pacific/Pitcairn",
         "gmtOffset": -28800,
         "gmtOffsetName": "UTC-08:00",
         "abbreviation": "PST",
@@ -9026,7 +9026,7 @@ final countries = [
     "nationality": "Polish",
     "timezones": [
       {
-        "zoneName": "Europe\/Warsaw",
+        "zoneName": "Europe/Warsaw",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -9073,21 +9073,21 @@ final countries = [
     "nationality": "Portuguese",
     "timezones": [
       {
-        "zoneName": "Atlantic\/Azores",
+        "zoneName": "Atlantic/Azores",
         "gmtOffset": -3600,
         "gmtOffsetName": "UTC-01:00",
         "abbreviation": "AZOT",
         "tzName": "Azores Standard Time"
       },
       {
-        "zoneName": "Atlantic\/Madeira",
+        "zoneName": "Atlantic/Madeira",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "WET",
         "tzName": "Western European Time"
       },
       {
-        "zoneName": "Europe\/Lisbon",
+        "zoneName": "Europe/Lisbon",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "WET",
@@ -9134,7 +9134,7 @@ final countries = [
     "nationality": "Puerto Rican",
     "timezones": [
       {
-        "zoneName": "America\/Puerto_Rico",
+        "zoneName": "America/Puerto_Rico",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -9181,7 +9181,7 @@ final countries = [
     "nationality": "Qatari",
     "timezones": [
       {
-        "zoneName": "Asia\/Qatar",
+        "zoneName": "Asia/Qatar",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "AST",
@@ -9228,7 +9228,7 @@ final countries = [
     "nationality": "Reunionese, Reunionnais",
     "timezones": [
       {
-        "zoneName": "Indian\/Reunion",
+        "zoneName": "Indian/Reunion",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "RET",
@@ -9275,7 +9275,7 @@ final countries = [
     "nationality": "Romanian",
     "timezones": [
       {
-        "zoneName": "Europe\/Bucharest",
+        "zoneName": "Europe/Bucharest",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -9322,182 +9322,182 @@ final countries = [
     "nationality": "Russian",
     "timezones": [
       {
-        "zoneName": "Asia\/Anadyr",
+        "zoneName": "Asia/Anadyr",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "ANAT",
         "tzName": "Anadyr Time[4"
       },
       {
-        "zoneName": "Asia\/Barnaul",
+        "zoneName": "Asia/Barnaul",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "KRAT",
         "tzName": "Krasnoyarsk Time"
       },
       {
-        "zoneName": "Asia\/Chita",
+        "zoneName": "Asia/Chita",
         "gmtOffset": 32400,
         "gmtOffsetName": "UTC+09:00",
         "abbreviation": "YAKT",
         "tzName": "Yakutsk Time"
       },
       {
-        "zoneName": "Asia\/Irkutsk",
+        "zoneName": "Asia/Irkutsk",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "IRKT",
         "tzName": "Irkutsk Time"
       },
       {
-        "zoneName": "Asia\/Kamchatka",
+        "zoneName": "Asia/Kamchatka",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "PETT",
         "tzName": "Kamchatka Time"
       },
       {
-        "zoneName": "Asia\/Khandyga",
+        "zoneName": "Asia/Khandyga",
         "gmtOffset": 32400,
         "gmtOffsetName": "UTC+09:00",
         "abbreviation": "YAKT",
         "tzName": "Yakutsk Time"
       },
       {
-        "zoneName": "Asia\/Krasnoyarsk",
+        "zoneName": "Asia/Krasnoyarsk",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "KRAT",
         "tzName": "Krasnoyarsk Time"
       },
       {
-        "zoneName": "Asia\/Magadan",
+        "zoneName": "Asia/Magadan",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "MAGT",
         "tzName": "Magadan Time"
       },
       {
-        "zoneName": "Asia\/Novokuznetsk",
+        "zoneName": "Asia/Novokuznetsk",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "KRAT",
         "tzName": "Krasnoyarsk Time"
       },
       {
-        "zoneName": "Asia\/Novosibirsk",
+        "zoneName": "Asia/Novosibirsk",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "NOVT",
         "tzName": "Novosibirsk Time"
       },
       {
-        "zoneName": "Asia\/Omsk",
+        "zoneName": "Asia/Omsk",
         "gmtOffset": 21600,
         "gmtOffsetName": "UTC+06:00",
         "abbreviation": "OMST",
         "tzName": "Omsk Time"
       },
       {
-        "zoneName": "Asia\/Sakhalin",
+        "zoneName": "Asia/Sakhalin",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "SAKT",
         "tzName": "Sakhalin Island Time"
       },
       {
-        "zoneName": "Asia\/Srednekolymsk",
+        "zoneName": "Asia/Srednekolymsk",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "SRET",
         "tzName": "Srednekolymsk Time"
       },
       {
-        "zoneName": "Asia\/Tomsk",
+        "zoneName": "Asia/Tomsk",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "MSD+3",
         "tzName": "Moscow Daylight Time+3"
       },
       {
-        "zoneName": "Asia\/Ust-Nera",
+        "zoneName": "Asia/Ust-Nera",
         "gmtOffset": 36000,
         "gmtOffsetName": "UTC+10:00",
         "abbreviation": "VLAT",
         "tzName": "Vladivostok Time"
       },
       {
-        "zoneName": "Asia\/Vladivostok",
+        "zoneName": "Asia/Vladivostok",
         "gmtOffset": 36000,
         "gmtOffsetName": "UTC+10:00",
         "abbreviation": "VLAT",
         "tzName": "Vladivostok Time"
       },
       {
-        "zoneName": "Asia\/Yakutsk",
+        "zoneName": "Asia/Yakutsk",
         "gmtOffset": 32400,
         "gmtOffsetName": "UTC+09:00",
         "abbreviation": "YAKT",
         "tzName": "Yakutsk Time"
       },
       {
-        "zoneName": "Asia\/Yekaterinburg",
+        "zoneName": "Asia/Yekaterinburg",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "YEKT",
         "tzName": "Yekaterinburg Time"
       },
       {
-        "zoneName": "Europe\/Astrakhan",
+        "zoneName": "Europe/Astrakhan",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "SAMT",
         "tzName": "Samara Time"
       },
       {
-        "zoneName": "Europe\/Kaliningrad",
+        "zoneName": "Europe/Kaliningrad",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
         "tzName": "Eastern European Time"
       },
       {
-        "zoneName": "Europe\/Kirov",
+        "zoneName": "Europe/Kirov",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "MSK",
         "tzName": "Moscow Time"
       },
       {
-        "zoneName": "Europe\/Moscow",
+        "zoneName": "Europe/Moscow",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "MSK",
         "tzName": "Moscow Time"
       },
       {
-        "zoneName": "Europe\/Samara",
+        "zoneName": "Europe/Samara",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "SAMT",
         "tzName": "Samara Time"
       },
       {
-        "zoneName": "Europe\/Saratov",
+        "zoneName": "Europe/Saratov",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "MSD",
         "tzName": "Moscow Daylight Time+4"
       },
       {
-        "zoneName": "Europe\/Ulyanovsk",
+        "zoneName": "Europe/Ulyanovsk",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "SAMT",
         "tzName": "Samara Time"
       },
       {
-        "zoneName": "Europe\/Volgograd",
+        "zoneName": "Europe/Volgograd",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "MSK",
@@ -9544,7 +9544,7 @@ final countries = [
     "nationality": "Rwandan",
     "timezones": [
       {
-        "zoneName": "Africa\/Kigali",
+        "zoneName": "Africa/Kigali",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "CAT",
@@ -9591,7 +9591,7 @@ final countries = [
     "nationality": "Saint Helenian",
     "timezones": [
       {
-        "zoneName": "Atlantic\/St_Helena",
+        "zoneName": "Atlantic/St_Helena",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -9638,7 +9638,7 @@ final countries = [
     "nationality": "Kittitian or Nevisian",
     "timezones": [
       {
-        "zoneName": "America\/St_Kitts",
+        "zoneName": "America/St_Kitts",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -9685,7 +9685,7 @@ final countries = [
     "nationality": "Saint Lucian",
     "timezones": [
       {
-        "zoneName": "America\/St_Lucia",
+        "zoneName": "America/St_Lucia",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -9732,7 +9732,7 @@ final countries = [
     "nationality": "Saint-Pierrais or Miquelonnais",
     "timezones": [
       {
-        "zoneName": "America\/Miquelon",
+        "zoneName": "America/Miquelon",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "PMDT",
@@ -9779,7 +9779,7 @@ final countries = [
     "nationality": "Saint Vincentian, Vincentian",
     "timezones": [
       {
-        "zoneName": "America\/St_Vincent",
+        "zoneName": "America/St_Vincent",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -9826,7 +9826,7 @@ final countries = [
     "nationality": "Barthelemois",
     "timezones": [
       {
-        "zoneName": "America\/St_Barthelemy",
+        "zoneName": "America/St_Barthelemy",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -9873,7 +9873,7 @@ final countries = [
     "nationality": "Saint-Martinoise",
     "timezones": [
       {
-        "zoneName": "America\/Marigot",
+        "zoneName": "America/Marigot",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -9920,7 +9920,7 @@ final countries = [
     "nationality": "Samoan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Apia",
+        "zoneName": "Pacific/Apia",
         "gmtOffset": 50400,
         "gmtOffsetName": "UTC+14:00",
         "abbreviation": "WST",
@@ -9967,7 +9967,7 @@ final countries = [
     "nationality": "Sammarinese",
     "timezones": [
       {
-        "zoneName": "Europe\/San_Marino",
+        "zoneName": "Europe/San_Marino",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -10014,7 +10014,7 @@ final countries = [
     "nationality": "Sao Tomean",
     "timezones": [
       {
-        "zoneName": "Africa\/Sao_Tome",
+        "zoneName": "Africa/Sao_Tome",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -10061,7 +10061,7 @@ final countries = [
     "nationality": "Saudi, Saudi Arabian",
     "timezones": [
       {
-        "zoneName": "Asia\/Riyadh",
+        "zoneName": "Asia/Riyadh",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "AST",
@@ -10108,7 +10108,7 @@ final countries = [
     "nationality": "Senegalese",
     "timezones": [
       {
-        "zoneName": "Africa\/Dakar",
+        "zoneName": "Africa/Dakar",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -10155,7 +10155,7 @@ final countries = [
     "nationality": "Serbian",
     "timezones": [
       {
-        "zoneName": "Europe\/Belgrade",
+        "zoneName": "Europe/Belgrade",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -10202,7 +10202,7 @@ final countries = [
     "nationality": "Seychellois",
     "timezones": [
       {
-        "zoneName": "Indian\/Mahe",
+        "zoneName": "Indian/Mahe",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "SCT",
@@ -10249,7 +10249,7 @@ final countries = [
     "nationality": "Sierra Leonean",
     "timezones": [
       {
-        "zoneName": "Africa\/Freetown",
+        "zoneName": "Africa/Freetown",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -10296,7 +10296,7 @@ final countries = [
     "nationality": "Singaporean",
     "timezones": [
       {
-        "zoneName": "Asia\/Singapore",
+        "zoneName": "Asia/Singapore",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "SGT",
@@ -10343,7 +10343,7 @@ final countries = [
     "nationality": "Sint Maarten",
     "timezones": [
       {
-        "zoneName": "America\/Anguilla",
+        "zoneName": "America/Anguilla",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -10387,7 +10387,7 @@ final countries = [
     "nationality": "Slovak",
     "timezones": [
       {
-        "zoneName": "Europe\/Bratislava",
+        "zoneName": "Europe/Bratislava",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -10434,7 +10434,7 @@ final countries = [
     "nationality": "Slovenian, Slovene",
     "timezones": [
       {
-        "zoneName": "Europe\/Ljubljana",
+        "zoneName": "Europe/Ljubljana",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -10481,7 +10481,7 @@ final countries = [
     "nationality": "Solomon Island",
     "timezones": [
       {
-        "zoneName": "Pacific\/Guadalcanal",
+        "zoneName": "Pacific/Guadalcanal",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "SBT",
@@ -10528,7 +10528,7 @@ final countries = [
     "nationality": "Somali, Somalian",
     "timezones": [
       {
-        "zoneName": "Africa\/Mogadishu",
+        "zoneName": "Africa/Mogadishu",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -10575,7 +10575,7 @@ final countries = [
     "nationality": "South African",
     "timezones": [
       {
-        "zoneName": "Africa\/Johannesburg",
+        "zoneName": "Africa/Johannesburg",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "SAST",
@@ -10622,7 +10622,7 @@ final countries = [
     "nationality": "South Georgia or South Sandwich Islands",
     "timezones": [
       {
-        "zoneName": "Atlantic\/South_Georgia",
+        "zoneName": "Atlantic/South_Georgia",
         "gmtOffset": -7200,
         "gmtOffsetName": "UTC-02:00",
         "abbreviation": "GST",
@@ -10669,7 +10669,7 @@ final countries = [
     "nationality": "South Korean",
     "timezones": [
       {
-        "zoneName": "Asia\/Seoul",
+        "zoneName": "Asia/Seoul",
         "gmtOffset": 32400,
         "gmtOffsetName": "UTC+09:00",
         "abbreviation": "KST",
@@ -10716,7 +10716,7 @@ final countries = [
     "nationality": "South Sudanese",
     "timezones": [
       {
-        "zoneName": "Africa\/Juba",
+        "zoneName": "Africa/Juba",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -10763,21 +10763,21 @@ final countries = [
     "nationality": "Spanish",
     "timezones": [
       {
-        "zoneName": "Africa\/Ceuta",
+        "zoneName": "Africa/Ceuta",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
         "tzName": "Central European Time"
       },
       {
-        "zoneName": "Atlantic\/Canary",
+        "zoneName": "Atlantic/Canary",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "WET",
         "tzName": "Western European Time"
       },
       {
-        "zoneName": "Europe\/Madrid",
+        "zoneName": "Europe/Madrid",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -10824,7 +10824,7 @@ final countries = [
     "nationality": "Sri Lankan",
     "timezones": [
       {
-        "zoneName": "Asia\/Colombo",
+        "zoneName": "Asia/Colombo",
         "gmtOffset": 19800,
         "gmtOffsetName": "UTC+05:30",
         "abbreviation": "IST",
@@ -10871,7 +10871,7 @@ final countries = [
     "nationality": "Sudanese",
     "timezones": [
       {
-        "zoneName": "Africa\/Khartoum",
+        "zoneName": "Africa/Khartoum",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EAT",
@@ -10918,7 +10918,7 @@ final countries = [
     "nationality": "Surinamese",
     "timezones": [
       {
-        "zoneName": "America\/Paramaribo",
+        "zoneName": "America/Paramaribo",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "SRT",
@@ -10965,7 +10965,7 @@ final countries = [
     "nationality": "Svalbard",
     "timezones": [
       {
-        "zoneName": "Arctic\/Longyearbyen",
+        "zoneName": "Arctic/Longyearbyen",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -11012,7 +11012,7 @@ final countries = [
     "nationality": "Swazi",
     "timezones": [
       {
-        "zoneName": "Africa\/Mbabane",
+        "zoneName": "Africa/Mbabane",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "SAST",
@@ -11059,7 +11059,7 @@ final countries = [
     "nationality": "Swedish",
     "timezones": [
       {
-        "zoneName": "Europe\/Stockholm",
+        "zoneName": "Europe/Stockholm",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -11106,7 +11106,7 @@ final countries = [
     "nationality": "Swiss",
     "timezones": [
       {
-        "zoneName": "Europe\/Zurich",
+        "zoneName": "Europe/Zurich",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -11153,7 +11153,7 @@ final countries = [
     "nationality": "Syrian",
     "timezones": [
       {
-        "zoneName": "Asia\/Damascus",
+        "zoneName": "Asia/Damascus",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -11200,7 +11200,7 @@ final countries = [
     "nationality": "Chinese, Taiwanese",
     "timezones": [
       {
-        "zoneName": "Asia\/Taipei",
+        "zoneName": "Asia/Taipei",
         "gmtOffset": 28800,
         "gmtOffsetName": "UTC+08:00",
         "abbreviation": "CST",
@@ -11247,7 +11247,7 @@ final countries = [
     "nationality": "Tajikistani",
     "timezones": [
       {
-        "zoneName": "Asia\/Dushanbe",
+        "zoneName": "Asia/Dushanbe",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "TJT",
@@ -11294,7 +11294,7 @@ final countries = [
     "nationality": "Tanzanian",
     "timezones": [
       {
-        "zoneName": "Africa\/Dar_es_Salaam",
+        "zoneName": "Africa/Dar_es_Salaam",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -11341,7 +11341,7 @@ final countries = [
     "nationality": "Thai",
     "timezones": [
       {
-        "zoneName": "Asia\/Bangkok",
+        "zoneName": "Asia/Bangkok",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "ICT",
@@ -11388,7 +11388,7 @@ final countries = [
     "nationality": "Bahamian",
     "timezones": [
       {
-        "zoneName": "America\/Nassau",
+        "zoneName": "America/Nassau",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
@@ -11435,7 +11435,7 @@ final countries = [
     "nationality": "Togolese",
     "timezones": [
       {
-        "zoneName": "Africa\/Lome",
+        "zoneName": "Africa/Lome",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -11482,7 +11482,7 @@ final countries = [
     "nationality": "Tokelauan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Fakaofo",
+        "zoneName": "Pacific/Fakaofo",
         "gmtOffset": 46800,
         "gmtOffsetName": "UTC+13:00",
         "abbreviation": "TKT",
@@ -11529,7 +11529,7 @@ final countries = [
     "nationality": "Tongan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Tongatapu",
+        "zoneName": "Pacific/Tongatapu",
         "gmtOffset": 46800,
         "gmtOffsetName": "UTC+13:00",
         "abbreviation": "TOT",
@@ -11576,7 +11576,7 @@ final countries = [
     "nationality": "Trinidadian or Tobagonian",
     "timezones": [
       {
-        "zoneName": "America\/Port_of_Spain",
+        "zoneName": "America/Port_of_Spain",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -11623,7 +11623,7 @@ final countries = [
     "nationality": "Tunisian",
     "timezones": [
       {
-        "zoneName": "Africa\/Tunis",
+        "zoneName": "Africa/Tunis",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -11670,7 +11670,7 @@ final countries = [
     "nationality": "Turkish",
     "timezones": [
       {
-        "zoneName": "Europe\/Istanbul",
+        "zoneName": "Europe/Istanbul",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EET",
@@ -11717,7 +11717,7 @@ final countries = [
     "nationality": "Turkmen",
     "timezones": [
       {
-        "zoneName": "Asia\/Ashgabat",
+        "zoneName": "Asia/Ashgabat",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "TMT",
@@ -11764,7 +11764,7 @@ final countries = [
     "nationality": "Turks and Caicos Island",
     "timezones": [
       {
-        "zoneName": "America\/Grand_Turk",
+        "zoneName": "America/Grand_Turk",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
@@ -11811,7 +11811,7 @@ final countries = [
     "nationality": "Tuvaluan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Funafuti",
+        "zoneName": "Pacific/Funafuti",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "TVT",
@@ -11858,7 +11858,7 @@ final countries = [
     "nationality": "Ugandan",
     "timezones": [
       {
-        "zoneName": "Africa\/Kampala",
+        "zoneName": "Africa/Kampala",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "EAT",
@@ -11905,28 +11905,28 @@ final countries = [
     "nationality": "Ukrainian",
     "timezones": [
       {
-        "zoneName": "Europe\/Kiev",
+        "zoneName": "Europe/Kiev",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
         "tzName": "Eastern European Time"
       },
       {
-        "zoneName": "Europe\/Simferopol",
+        "zoneName": "Europe/Simferopol",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "MSK",
         "tzName": "Moscow Time"
       },
       {
-        "zoneName": "Europe\/Uzhgorod",
+        "zoneName": "Europe/Uzhgorod",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
         "tzName": "Eastern European Time"
       },
       {
-        "zoneName": "Europe\/Zaporozhye",
+        "zoneName": "Europe/Zaporozhye",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "EET",
@@ -11973,7 +11973,7 @@ final countries = [
     "nationality": "Emirati, Emirian, Emiri",
     "timezones": [
       {
-        "zoneName": "Asia\/Dubai",
+        "zoneName": "Asia/Dubai",
         "gmtOffset": 14400,
         "gmtOffsetName": "UTC+04:00",
         "abbreviation": "GST",
@@ -12020,7 +12020,7 @@ final countries = [
     "nationality": "British, UK",
     "timezones": [
       {
-        "zoneName": "Europe\/London",
+        "zoneName": "Europe/London",
         "gmtOffset": 0,
         "gmtOffsetName": "UTC±00",
         "abbreviation": "GMT",
@@ -12067,203 +12067,203 @@ final countries = [
     "nationality": "American",
     "timezones": [
       {
-        "zoneName": "America\/Adak",
+        "zoneName": "America/Adak",
         "gmtOffset": -36000,
         "gmtOffsetName": "UTC-10:00",
         "abbreviation": "HST",
         "tzName": "Hawaii–Aleutian Standard Time"
       },
       {
-        "zoneName": "America\/Anchorage",
+        "zoneName": "America/Anchorage",
         "gmtOffset": -32400,
         "gmtOffsetName": "UTC-09:00",
         "abbreviation": "AKST",
         "tzName": "Alaska Standard Time"
       },
       {
-        "zoneName": "America\/Boise",
+        "zoneName": "America/Boise",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America"
       },
       {
-        "zoneName": "America\/Chicago",
+        "zoneName": "America/Chicago",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Denver",
+        "zoneName": "America/Denver",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America"
       },
       {
-        "zoneName": "America\/Detroit",
+        "zoneName": "America/Detroit",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Indiana\/Indianapolis",
+        "zoneName": "America/Indiana/Indianapolis",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Indiana\/Knox",
+        "zoneName": "America/Indiana/Knox",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Indiana\/Marengo",
+        "zoneName": "America/Indiana/Marengo",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Indiana\/Petersburg",
+        "zoneName": "America/Indiana/Petersburg",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Indiana\/Tell_City",
+        "zoneName": "America/Indiana/Tell_City",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Indiana\/Vevay",
+        "zoneName": "America/Indiana/Vevay",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Indiana\/Vincennes",
+        "zoneName": "America/Indiana/Vincennes",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Indiana\/Winamac",
+        "zoneName": "America/Indiana/Winamac",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Juneau",
+        "zoneName": "America/Juneau",
         "gmtOffset": -32400,
         "gmtOffsetName": "UTC-09:00",
         "abbreviation": "AKST",
         "tzName": "Alaska Standard Time"
       },
       {
-        "zoneName": "America\/Kentucky\/Louisville",
+        "zoneName": "America/Kentucky/Louisville",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Kentucky\/Monticello",
+        "zoneName": "America/Kentucky/Monticello",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Los_Angeles",
+        "zoneName": "America/Los_Angeles",
         "gmtOffset": -28800,
         "gmtOffsetName": "UTC-08:00",
         "abbreviation": "PST",
         "tzName": "Pacific Standard Time (North America"
       },
       {
-        "zoneName": "America\/Menominee",
+        "zoneName": "America/Menominee",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Metlakatla",
+        "zoneName": "America/Metlakatla",
         "gmtOffset": -32400,
         "gmtOffsetName": "UTC-09:00",
         "abbreviation": "AKST",
         "tzName": "Alaska Standard Time"
       },
       {
-        "zoneName": "America\/New_York",
+        "zoneName": "America/New_York",
         "gmtOffset": -18000,
         "gmtOffsetName": "UTC-05:00",
         "abbreviation": "EST",
         "tzName": "Eastern Standard Time (North America"
       },
       {
-        "zoneName": "America\/Nome",
+        "zoneName": "America/Nome",
         "gmtOffset": -32400,
         "gmtOffsetName": "UTC-09:00",
         "abbreviation": "AKST",
         "tzName": "Alaska Standard Time"
       },
       {
-        "zoneName": "America\/North_Dakota\/Beulah",
+        "zoneName": "America/North_Dakota/Beulah",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/North_Dakota\/Center",
+        "zoneName": "America/North_Dakota/Center",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/North_Dakota\/New_Salem",
+        "zoneName": "America/North_Dakota/New_Salem",
         "gmtOffset": -21600,
         "gmtOffsetName": "UTC-06:00",
         "abbreviation": "CST",
         "tzName": "Central Standard Time (North America"
       },
       {
-        "zoneName": "America\/Phoenix",
+        "zoneName": "America/Phoenix",
         "gmtOffset": -25200,
         "gmtOffsetName": "UTC-07:00",
         "abbreviation": "MST",
         "tzName": "Mountain Standard Time (North America"
       },
       {
-        "zoneName": "America\/Sitka",
+        "zoneName": "America/Sitka",
         "gmtOffset": -32400,
         "gmtOffsetName": "UTC-09:00",
         "abbreviation": "AKST",
         "tzName": "Alaska Standard Time"
       },
       {
-        "zoneName": "America\/Yakutat",
+        "zoneName": "America/Yakutat",
         "gmtOffset": -32400,
         "gmtOffsetName": "UTC-09:00",
         "abbreviation": "AKST",
         "tzName": "Alaska Standard Time"
       },
       {
-        "zoneName": "Pacific\/Honolulu",
+        "zoneName": "Pacific/Honolulu",
         "gmtOffset": -36000,
         "gmtOffsetName": "UTC-10:00",
         "abbreviation": "HST",
@@ -12310,14 +12310,14 @@ final countries = [
     "nationality": "American",
     "timezones": [
       {
-        "zoneName": "Pacific\/Midway",
+        "zoneName": "Pacific/Midway",
         "gmtOffset": -39600,
         "gmtOffsetName": "UTC-11:00",
         "abbreviation": "SST",
         "tzName": "Samoa Standard Time"
       },
       {
-        "zoneName": "Pacific\/Wake",
+        "zoneName": "Pacific/Wake",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "WAKT",
@@ -12364,7 +12364,7 @@ final countries = [
     "nationality": "Uruguayan",
     "timezones": [
       {
-        "zoneName": "America\/Montevideo",
+        "zoneName": "America/Montevideo",
         "gmtOffset": -10800,
         "gmtOffsetName": "UTC-03:00",
         "abbreviation": "UYT",
@@ -12411,14 +12411,14 @@ final countries = [
     "nationality": "Uzbekistani, Uzbek",
     "timezones": [
       {
-        "zoneName": "Asia\/Samarkand",
+        "zoneName": "Asia/Samarkand",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "UZT",
         "tzName": "Uzbekistan Time"
       },
       {
-        "zoneName": "Asia\/Tashkent",
+        "zoneName": "Asia/Tashkent",
         "gmtOffset": 18000,
         "gmtOffsetName": "UTC+05:00",
         "abbreviation": "UZT",
@@ -12465,7 +12465,7 @@ final countries = [
     "nationality": "Ni-Vanuatu, Vanuatuan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Efate",
+        "zoneName": "Pacific/Efate",
         "gmtOffset": 39600,
         "gmtOffsetName": "UTC+11:00",
         "abbreviation": "VUT",
@@ -12512,7 +12512,7 @@ final countries = [
     "nationality": "Vatican",
     "timezones": [
       {
-        "zoneName": "Europe\/Vatican",
+        "zoneName": "Europe/Vatican",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "CET",
@@ -12559,7 +12559,7 @@ final countries = [
     "nationality": "Venezuelan",
     "timezones": [
       {
-        "zoneName": "America\/Caracas",
+        "zoneName": "America/Caracas",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "VET",
@@ -12606,7 +12606,7 @@ final countries = [
     "nationality": "Vietnamese",
     "timezones": [
       {
-        "zoneName": "Asia\/Ho_Chi_Minh",
+        "zoneName": "Asia/Ho_Chi_Minh",
         "gmtOffset": 25200,
         "gmtOffsetName": "UTC+07:00",
         "abbreviation": "ICT",
@@ -12653,7 +12653,7 @@ final countries = [
     "nationality": "British Virgin Island",
     "timezones": [
       {
-        "zoneName": "America\/Tortola",
+        "zoneName": "America/Tortola",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -12700,7 +12700,7 @@ final countries = [
     "nationality": "U.S. Virgin Island",
     "timezones": [
       {
-        "zoneName": "America\/St_Thomas",
+        "zoneName": "America/St_Thomas",
         "gmtOffset": -14400,
         "gmtOffsetName": "UTC-04:00",
         "abbreviation": "AST",
@@ -12746,7 +12746,7 @@ final countries = [
     "nationality": "Wallis and Futuna, Wallisian or Futunan",
     "timezones": [
       {
-        "zoneName": "Pacific\/Wallis",
+        "zoneName": "Pacific/Wallis",
         "gmtOffset": 43200,
         "gmtOffsetName": "UTC+12:00",
         "abbreviation": "WFT",
@@ -12793,7 +12793,7 @@ final countries = [
     "nationality": "Sahrawi, Sahrawian, Sahraouian",
     "timezones": [
       {
-        "zoneName": "Africa\/El_Aaiun",
+        "zoneName": "Africa/El_Aaiun",
         "gmtOffset": 3600,
         "gmtOffsetName": "UTC+01:00",
         "abbreviation": "WEST",
@@ -12840,7 +12840,7 @@ final countries = [
     "nationality": "Yemeni",
     "timezones": [
       {
-        "zoneName": "Asia\/Aden",
+        "zoneName": "Asia/Aden",
         "gmtOffset": 10800,
         "gmtOffsetName": "UTC+03:00",
         "abbreviation": "AST",
@@ -12887,7 +12887,7 @@ final countries = [
     "nationality": "Zambian",
     "timezones": [
       {
-        "zoneName": "Africa\/Lusaka",
+        "zoneName": "Africa/Lusaka",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "CAT",
@@ -12934,7 +12934,7 @@ final countries = [
     "nationality": "Zimbabwean",
     "timezones": [
       {
-        "zoneName": "Africa\/Harare",
+        "zoneName": "Africa/Harare",
         "gmtOffset": 7200,
         "gmtOffsetName": "UTC+02:00",
         "abbreviation": "CAT",

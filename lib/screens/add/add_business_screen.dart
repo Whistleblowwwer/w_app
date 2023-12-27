@@ -13,7 +13,6 @@ import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/countries_list_screen.dart';
 import 'package:w_app/widgets/custom_dropdown_menu.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
-import 'package:w_app/widgets/showLoadingModal.dart';
 import 'package:w_app/widgets/snackbar.dart';
 
 class AddBusinessScreen extends StatefulWidget {
@@ -51,7 +50,6 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _userBloc = BlocProvider.of<UserBloc>(context);
 
@@ -105,7 +103,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
-      print(response.statusCode);
+
       if (response.statusCode == 200) {
         final responseBody = await response.stream.bytesToString();
         final List<dynamic> list = json.decode(responseBody);
@@ -118,7 +116,6 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
       }
     } catch (e) {
       // Manejar errores de conexión, timeout, etc.
-      print('Ocurrió un error al realizar la solicitud: $e');
       return []; // O considera devolver null o lanzar la excepción
     } finally {
       // Cerrar la respuesta si es necesario
@@ -143,7 +140,8 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 24, left: 24, right: 24),
+                      margin:
+                          const EdgeInsets.only(top: 24, left: 24, right: 24),
                       width: double.maxFinite,
                       alignment: Alignment.centerLeft,
                       child: const Text(
@@ -187,8 +185,9 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                       child: Container(
                         width: double.maxFinite,
                         height: 48,
-                        margin: EdgeInsets.only(top: 2, left: 24, right: 24),
-                        padding: EdgeInsets.only(left: 12, right: 12),
+                        margin:
+                            const EdgeInsets.only(top: 2, left: 24, right: 24),
+                        padding: const EdgeInsets.only(left: 12, right: 12),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4.0),
                           border: Border.all(
@@ -203,10 +202,11 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                             Expanded(
                               child: Text(
                                 '${selectedCountry?['name'] ?? ''}',
-                                style: TextStyle(fontFamily: 'Montserrat'),
+                                style:
+                                    const TextStyle(fontFamily: 'Montserrat'),
                               ),
                             ),
-                            Icon(
+                            const Icon(
                               Icons.navigate_next_rounded,
                               color: ColorStyle.textGrey,
                             )
@@ -216,7 +216,8 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                     ),
 //
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 24, right: 24),
+                      margin:
+                          const EdgeInsets.only(top: 8, left: 24, right: 24),
                       width: double.maxFinite,
                       alignment: Alignment.centerLeft,
                       child: const Text(
@@ -257,8 +258,9 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                       child: Container(
                         width: double.maxFinite,
                         height: 48,
-                        margin: EdgeInsets.only(top: 2, left: 24, right: 24),
-                        padding: EdgeInsets.only(left: 12, right: 12),
+                        margin:
+                            const EdgeInsets.only(top: 2, left: 24, right: 24),
+                        padding: const EdgeInsets.only(left: 12, right: 12),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4.0),
                           border: Border.all(
@@ -273,12 +275,18 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                             Expanded(
                               child: Text(
                                 '${selectedState?['name'] ?? ''}',
-                                style: TextStyle(fontFamily: 'Montserrat'),
+                                style:
+                                    const TextStyle(fontFamily: 'Montserrat'),
                               ),
                             ),
                             loadingState || states == null
-                                ? CircularProgressIndicator.adaptive()
-                                : Icon(
+                                ? const CircularProgressIndicator.adaptive(
+                                    backgroundColor:
+                                        ColorStyle.grey, // Fondo del indicador
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        ColorStyle.darkPurple),
+                                  )
+                                : const Icon(
                                     Icons.navigate_next_rounded,
                                     color: ColorStyle.textGrey,
                                   )
@@ -287,7 +295,8 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 24, right: 24),
+                      margin:
+                          const EdgeInsets.only(top: 8, left: 24, right: 24),
                       width: double.maxFinite,
                       alignment: Alignment.centerLeft,
                       child: const Text(
@@ -315,8 +324,9 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                       child: Container(
                         width: double.maxFinite,
                         height: 48,
-                        margin: EdgeInsets.only(top: 2, left: 24, right: 24),
-                        padding: EdgeInsets.only(left: 12, right: 12),
+                        margin:
+                            const EdgeInsets.only(top: 2, left: 24, right: 24),
+                        padding: const EdgeInsets.only(left: 12, right: 12),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4.0),
                           border: Border.all(
@@ -331,12 +341,18 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                             Expanded(
                               child: Text(
                                 '${selectedCity?['name'] ?? ''}',
-                                style: TextStyle(fontFamily: 'Montserrat'),
+                                style:
+                                    const TextStyle(fontFamily: 'Montserrat'),
                               ),
                             ),
                             loadingCity || cities == null
-                                ? CircularProgressIndicator.adaptive()
-                                : Icon(
+                                ? const CircularProgressIndicator.adaptive(
+                                    backgroundColor:
+                                        ColorStyle.grey, // Fondo del indicador
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        ColorStyle.darkPurple),
+                                  )
+                                : const Icon(
                                     Icons.navigate_next_rounded,
                                     color: ColorStyle.textGrey,
                                   )
@@ -367,7 +383,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                     //     });
                     //   },
                     // ),
-                    Row(
+                    const Row(
                       children: [
                         // Expanded(
                         //   child: CustomDropdown(
@@ -398,7 +414,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                         // ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16,
                     ),
                     CustomDropdown(
@@ -410,7 +426,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                         'Restaurantes',
                         'Otro'
                       ],
-                      padding: EdgeInsets.only(left: 24, right: 24),
+                      padding: const EdgeInsets.only(left: 24, right: 24),
                       onSelected: (selected) {
                         setState(() {
                           selecteCategory = selected;
@@ -419,7 +435,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                         });
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
                     Visibility(
@@ -493,6 +509,9 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                                 context,
                                 Business.fromJson(
                                     jsonDecode(response.body)['business']));
+                          } else if (response.statusCode == 400) {
+                            showErrorSnackBar(
+                                context, "Hay algo malo con la información");
                           } else {
                             print(response.statusCode);
                             print(response.body);
@@ -507,13 +526,13 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                       child: Container(
                         width: double.maxFinite,
                         height: 56,
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 32),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: ColorStyle.solidBlue),
-                        child: Text(
+                        child: const Text(
                           "Crear",
                           style: TextStyle(
                               fontWeight: FontWeight.w700,
@@ -527,7 +546,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(bottom: 0),
+                padding: const EdgeInsets.only(bottom: 0),
                 height: 96,
                 color: Colors.white,
                 width: double.maxFinite,
@@ -535,7 +554,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Stack(
                         alignment: AlignmentDirectional.centerStart,
                         children: [
@@ -556,7 +575,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16,
                     ),
                     Container(
@@ -572,6 +591,5 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
         ),
       ),
     );
-    ;
   }
 }

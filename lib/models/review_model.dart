@@ -60,7 +60,7 @@ class Review extends Equatable {
   // }
 
   String get getLikes {
-    return likes == 1 ? '$likes Me gusta' : '$likes Me gustas';
+    return likes == 1 ? '$likes me gusta' : '$likes me gusta';
   }
 
   String get timeAgo {
@@ -164,7 +164,7 @@ class BusinessData extends Equatable {
   final double rating;
   final bool followed;
 
-  BusinessData({
+  const BusinessData({
     required this.idBusiness,
     required this.name,
     required this.entity,
@@ -213,13 +213,15 @@ class UserData extends Equatable {
   final String? userName;
   final String name;
   final String lastName;
+  final String? profilePictureUrl;
   final bool followed;
 
-  UserData(
+  const UserData(
       {required this.idUser,
       required this.name,
       required this.lastName,
       required this.followed,
+      this.profilePictureUrl,
       this.userName});
 
   factory UserData.fromJson(Map<String, dynamic> json) {
@@ -228,7 +230,8 @@ class UserData extends Equatable {
         name: json['name'],
         lastName: json['last_name'],
         followed: json['is_followed'] ?? false,
-        userName: json['nick_name'] ?? 'Usuario');
+        userName: json['nick_name'] ?? 'Usuario',
+        profilePictureUrl: json['profile_picture_url']);
   }
 
   Map<String, dynamic> toJson() {
@@ -237,25 +240,28 @@ class UserData extends Equatable {
       'name': name,
       'last_name': lastName,
       'is_followed': followed,
-      'nick_name': userName
+      'nick_name': userName,
+      'profile_picture_url': profilePictureUrl
     };
   }
 
-  UserData copyWith({
-    String? idUser,
-    String? name,
-    String? lastName,
-    bool? followed,
-    String? userName,
-  }) {
+  UserData copyWith(
+      {String? idUser,
+      String? name,
+      String? lastName,
+      bool? followed,
+      String? userName,
+      String? profilePictureUrl}) {
     return UserData(
         idUser: idUser ?? this.idUser,
         name: name ?? this.name,
         lastName: lastName ?? this.lastName,
         followed: followed ?? this.followed,
-        userName: userName ?? this.userName);
+        userName: userName ?? this.userName,
+        profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl);
   }
 
   @override
-  List<Object?> get props => [idUser, name, lastName, followed, userName];
+  List<Object?> get props =>
+      [idUser, name, lastName, followed, userName, profilePictureUrl];
 }

@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:w_app/styles/color_style.dart';
 
 class AdvisorScreen extends StatefulWidget {
-  const AdvisorScreen();
+  const AdvisorScreen({super.key});
 
   @override
   _AdvisorScreenState createState() => _AdvisorScreenState();
@@ -14,7 +12,7 @@ class AdvisorScreen extends StatefulWidget {
 class _AdvisorScreenState extends State<AdvisorScreen> {
   int currentPage = 0;
   int itemCountBoard = 2;
-  PageController _boardController =
+  final PageController _boardController =
       PageController(initialPage: 0, viewportFraction: 1);
 
   @override
@@ -25,8 +23,8 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
 
   AnimatedContainer doIndicator(index) {
     return AnimatedContainer(
-      margin: EdgeInsets.only(right: 4, left: 4),
-      duration: Duration(milliseconds: 300),
+      margin: const EdgeInsets.only(right: 4, left: 4),
+      duration: const Duration(milliseconds: 300),
       height: 8,
       width: currentPage == index ? 8 : 12,
       decoration: BoxDecoration(
@@ -48,7 +46,7 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Container(
+        body: SizedBox(
           height: double.maxFinite,
           width: double.maxFinite,
           child: Stack(
@@ -56,7 +54,7 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
               Positioned.fill(
                 top: 48,
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: 80),
+                  padding: const EdgeInsets.only(bottom: 80),
                   child: Column(
                     children: [
                       SizedBox(
@@ -75,11 +73,12 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                                   controller: _boardController,
                                   itemCount: itemCountBoard,
                                   itemBuilder: (context, snapshot) {
-                                    var _scale =
+                                    var scale =
                                         currentPage == snapshot ? 1.0 : 1.0;
                                     return TweenAnimationBuilder(
-                                      duration: Duration(milliseconds: 350),
-                                      tween: Tween(begin: _scale, end: _scale),
+                                      duration:
+                                          const Duration(milliseconds: 350),
+                                      tween: Tween(begin: scale, end: scale),
                                       curve: Curves.ease,
                                       builder: (BuildContext context,
                                           double value, Widget? child) {
@@ -106,8 +105,8 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
+                      const Padding(
+                        padding: EdgeInsets.only(
                             left: 16, right: 16, bottom: 16, top: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,27 +136,27 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                                   alignment: Alignment.bottomLeft,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(
+                                      margin: const EdgeInsets.only(
                                           left: 24,
                                           right: 24,
                                           top: 8,
                                           bottom: 8),
-                                      padding: EdgeInsets.only(
+                                      padding: const EdgeInsets.only(
                                           left: 108,
                                           top: 10,
                                           bottom: 10,
                                           right: 16),
                                       width: double.maxFinite,
                                       decoration: BoxDecoration(
-                                          color:
-                                              Color.fromRGBO(231, 148, 184, 1),
+                                          color: const Color.fromRGBO(
+                                              231, 148, 184, 1),
                                           borderRadius:
                                               BorderRadius.circular(12)),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
+                                          const Text(
                                             "Nombre Asesor",
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -166,7 +165,7 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w700),
                                           ),
-                                          Row(
+                                          const Row(
                                             children: [
                                               Expanded(
                                                 child: Text(
@@ -193,9 +192,9 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                                             ],
                                           ),
                                           Container(
-                                            margin: EdgeInsets.only(
+                                            margin: const EdgeInsets.only(
                                                 left: 0, right: 0, top: 10),
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 8, top: 16, bottom: 16),
                                             width: double.maxFinite,
                                             alignment: Alignment.centerLeft,
@@ -203,7 +202,7 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                                                 color: ColorStyle.lightGrey,
                                                 borderRadius:
                                                     BorderRadius.circular(5)),
-                                            child: Text(
+                                            child: const Text(
                                               "¿Cómo te puedo ayudar?",
                                               style: TextStyle(
                                                   color: ColorStyle.textGrey,
@@ -214,17 +213,17 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                                       ),
                                     ),
                                     Padding(
-                                      padding:
-                                          EdgeInsets.only(left: 24, bottom: 8),
+                                      padding: const EdgeInsets.only(
+                                          left: 24, bottom: 8),
                                       child: Image.asset(
                                           'assets/images/ilustrations/abogado.png'),
                                     )
                                   ],
                                 )
                               : Container(
-                                  margin: EdgeInsets.only(
+                                  margin: const EdgeInsets.only(
                                       left: 24, right: 24, top: 24, bottom: 8),
-                                  padding: EdgeInsets.only(
+                                  padding: const EdgeInsets.only(
                                       left: 16, top: 10, bottom: 10, right: 16),
                                   width: double.maxFinite,
                                   decoration: BoxDecoration(
@@ -239,7 +238,7 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            const Text(
                                               "¿Quieres ofrecer tu ayuda?",
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -249,7 +248,7 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w700),
                                             ),
-                                            Text(
+                                            const Text(
                                               "Sigamos rompiendo barreras.",
                                               maxLines: 2,
                                               style: TextStyle(
@@ -259,19 +258,20 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                                                   fontSize: 10),
                                             ),
                                             Container(
-                                              margin: EdgeInsets.only(top: 10),
-                                              padding: EdgeInsets.only(
+                                              margin: const EdgeInsets.only(
+                                                  top: 10),
+                                              padding: const EdgeInsets.only(
                                                 top: 8,
                                                 bottom: 8,
                                               ),
                                               width: 108,
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
-                                                  color: Color.fromRGBO(
+                                                  color: const Color.fromRGBO(
                                                       170, 50, 155, 1),
                                                   borderRadius:
                                                       BorderRadius.circular(5)),
-                                              child: Text(
+                                              child: const Text(
                                                 "¡Me interesa!",
                                                 style: TextStyle(
                                                     color: Colors.white,
@@ -293,11 +293,11 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(bottom: 32),
+                margin: const EdgeInsets.only(bottom: 32),
                 height: 56,
                 width: double.maxFinite,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(color: Colors.white),
+                decoration: const BoxDecoration(color: Colors.white),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -305,7 +305,7 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                       onTap: () {
                         Navigator.of(context).pop();
                       },
-                      child: Align(
+                      child: const Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
                           padding: EdgeInsets.only(left: 16, right: 8),
@@ -313,7 +313,7 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
                         ),
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Asesores",
                       style: TextStyle(
                           fontFamily: 'Montserrat',

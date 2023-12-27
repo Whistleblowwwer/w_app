@@ -1,13 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/chat/inbox_screen.dart';
-import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class UserChatCard extends StatelessWidget {
   final String name;
@@ -17,8 +12,9 @@ class UserChatCard extends StatelessWidget {
   final String initials;
   final String username;
 
-  UserChatCard(
-      {required this.name,
+  const UserChatCard(
+      {super.key,
+      required this.name,
       required this.lastName,
       required this.receiver,
       required this.photoUrl,
@@ -35,7 +31,7 @@ class UserChatCard extends StatelessWidget {
         if (tk != null) {
           //Sacar el token largo, el; corto ya esta
           Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-              settings: RouteSettings(),
+              settings: const RouteSettings(),
               builder: (context) => InboxScreen(
                   receiver: receiver,
                   receiverName: name + " " + lastName,
@@ -45,7 +41,8 @@ class UserChatCard extends StatelessWidget {
         }
       },
       child: Container(
-        padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
+        padding:
+            const EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
         width: sizeW * 100,
         color: Colors.white,
         child: Row(
@@ -53,12 +50,12 @@ class UserChatCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircularAvatarW(
-                  externalRadius: Offset(56, 56),
-                  internalRadius: Offset(48, 48),
+                  externalRadius: const Offset(56, 56),
+                  internalRadius: const Offset(48, 48),
                   sizeText: 24,
                   nameAvatar: name.substring(0, 1) + lastName.substring(0, 1),
                   isCompany: false),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +64,7 @@ class UserChatCard extends StatelessWidget {
                       '$name $lastName',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontFamily: 'Montserrat',
                       ),
@@ -76,7 +73,7 @@ class UserChatCard extends StatelessWidget {
                       "@$username",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         fontFamily: 'Montserrat',
                       ),

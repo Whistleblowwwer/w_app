@@ -9,17 +9,15 @@ class ImageCarousel extends StatefulWidget {
       {super.key, required this.images, required this.initialPage});
 
   @override
-  _ImageCarouselState createState() => _ImageCarouselState();
+  ImageCarouselState createState() => ImageCarouselState();
 }
 
-class _ImageCarouselState extends State<ImageCarousel> {
+class ImageCarouselState extends State<ImageCarousel> {
   late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    print("-=----");
-    print(widget.images[widget.initialPage]);
     _pageController = PageController(initialPage: widget.initialPage);
   }
 
@@ -66,11 +64,11 @@ class _ImageCarouselState extends State<ImageCarousel> {
                 Navigator.of(context).pop();
               },
               child: Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.black.withOpacity(0.5)),
-                child: Icon(
+                child: const Icon(
                   FeatherIcons.x,
                   color: Colors.white,
                   size: 20,

@@ -53,25 +53,26 @@ class _CountriesListScreenState extends State<CountriesListScreen> {
           Container(
             height: 40,
             width: double.maxFinite,
-            margin: EdgeInsets.only(left: 16, right: 16, bottom: 0, top: 8),
+            margin:
+                const EdgeInsets.only(left: 16, right: 16, bottom: 0, top: 8),
             clipBehavior: Clip.antiAliasWithSaveLayer,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
             child: TextField(
               maxLines: 1,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Buscar',
                 hintStyle: TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: ColorStyle.textGrey),
-                contentPadding: const EdgeInsets.only(),
-                border: const OutlineInputBorder(
+                contentPadding: EdgeInsets.only(),
+                border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
@@ -96,11 +97,11 @@ class _CountriesListScreenState extends State<CountriesListScreen> {
           Expanded(
             child: ListView.builder(
               itemCount: filteredlistDrop.length,
-              padding: EdgeInsets.only(bottom: 128),
+              padding: const EdgeInsets.only(bottom: 128),
               itemBuilder: (context, index) {
                 return ListTile(
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
                   leading: widget.showIcon ?? false
                       ? Text(filteredlistDrop[index]["emoji"])
                       : null,
@@ -108,11 +109,10 @@ class _CountriesListScreenState extends State<CountriesListScreen> {
                   minVerticalPadding: 0,
                   title: Text(
                     filteredlistDrop[index]["name"],
-                    style: TextStyle(fontFamily: 'Montserrat'),
+                    style: const TextStyle(fontFamily: 'Montserrat'),
                   ),
                   onTap: () {
                     // Aquí puedes retornar el mapa del país seleccionado
-                    print(filteredlistDrop[index]);
 
                     Navigator.of(context).pop(filteredlistDrop[index]);
                   },

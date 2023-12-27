@@ -41,10 +41,10 @@ class CommentBottomSheet extends StatefulWidget {
       required this.content,
       this.images});
   @override
-  _CommentBottomSheetState createState() => _CommentBottomSheetState();
+  CommentBottomSheetState createState() => CommentBottomSheetState();
 }
 
-class _CommentBottomSheetState extends State<CommentBottomSheet>
+class CommentBottomSheetState extends State<CommentBottomSheet>
     with SingleTickerProviderStateMixin {
   TextEditingController controllerReview = TextEditingController();
   FocusNode focusNodeReview = FocusNode();
@@ -90,7 +90,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
     });
     return Form(
       key: _formKeyReview,
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height -
             MediaQuery.of(context).viewInsets.bottom -
             72,
@@ -98,15 +98,15 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
           // mainAxisSize: MainAxisSize.min,
           children: [
             ListView(
-              padding: EdgeInsets.only(top: 56),
+              padding: const EdgeInsets.only(top: 56),
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
                   child: Row(
                     children: [
                       CircularAvatarW(
-                        externalRadius: Offset(42, 42),
-                        internalRadius: Offset(36, 36),
+                        externalRadius: const Offset(42, 42),
+                        internalRadius: const Offset(36, 36),
                         nameAvatar: widget.name.substring(0, 1),
                         isCompany: false,
                       ),
@@ -118,7 +118,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                           width: double.maxFinite,
                           child: Text(
                             "${widget.name} ${widget.lastName}",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'Montserrat',
                                 fontSize: 14),
@@ -134,7 +134,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                     children: [
                       Container(
                         width: 1.5,
-                        margin: EdgeInsets.only(left: 36, bottom: 4, top: 4),
+                        margin:
+                            const EdgeInsets.only(left: 36, bottom: 4, top: 4),
                         color: ColorStyle.borderGrey,
                       ),
                       Expanded(
@@ -142,11 +143,12 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(left: 30, bottom: 16),
+                              padding:
+                                  const EdgeInsets.only(left: 30, bottom: 16),
                               child: Text(
                                 widget.content,
                                 textAlign: TextAlign.start,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Montserrat',
                                   height: 1.42,
@@ -156,7 +158,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                             ),
                             if (widget.images?.isNotEmpty ?? false)
                               Container(
-                                margin: EdgeInsets.only(
+                                margin: const EdgeInsets.only(
                                     left: 16, right: 16, bottom: 16),
                                 height: 200,
                                 width: double.maxFinite,
@@ -178,8 +180,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                   child: Row(
                     children: [
                       CircularAvatarW(
-                        externalRadius: Offset(42, 42),
-                        internalRadius: Offset(36, 36),
+                        externalRadius: const Offset(42, 42),
+                        internalRadius: const Offset(36, 36),
                         nameAvatar: widget.user.name.substring(0, 1),
                         isCompany: false,
                       ),
@@ -191,7 +193,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                           width: double.maxFinite,
                           child: Text(
                             "${widget.user.name} ${widget.user.lastName}",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'Montserrat',
                                 fontSize: 14),
@@ -207,7 +209,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                     children: [
                       Container(
                         width: 1.5,
-                        margin: EdgeInsets.only(left: 36, bottom: 4, top: 4),
+                        margin:
+                            const EdgeInsets.only(left: 36, bottom: 4, top: 4),
                         color: Colors.transparent,
                       ),
                       Expanded(
@@ -230,8 +233,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                                 )),
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
-                              padding:
-                                  EdgeInsets.only(left: 24, bottom: 88, top: 8),
+                              padding: const EdgeInsets.only(
+                                  left: 24, bottom: 88, top: 8),
                               child: Row(
                                 children: List.generate(
                                   images.length + 1,
@@ -324,8 +327,9 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                                               child: Stack(
                                                 children: [
                                                   Container(
-                                                    constraints: BoxConstraints(
-                                                        minWidth: 144),
+                                                    constraints:
+                                                        const BoxConstraints(
+                                                            minWidth: 144),
                                                     child: Image.file(
                                                       images[index - 1],
                                                       fit: BoxFit.cover,
@@ -343,12 +347,13 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                                                         });
                                                       },
                                                       child: Container(
-                                                        margin: EdgeInsets
+                                                        margin: const EdgeInsets
                                                             .symmetric(
-                                                                horizontal: 8,
-                                                                vertical: 8),
+                                                            horizontal: 8,
+                                                            vertical: 8),
                                                         padding:
-                                                            EdgeInsets.all(2),
+                                                            const EdgeInsets
+                                                                .all(2),
                                                         decoration:
                                                             const BoxDecoration(
                                                           shape:
@@ -356,7 +361,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                                                           color: Color.fromRGBO(
                                                               0, 0, 0, 0.5),
                                                         ),
-                                                        child: Icon(
+                                                        child: const Icon(
                                                           Icons.close_rounded,
                                                           color: Colors.white,
                                                         ),
@@ -393,7 +398,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: Row(
                         children: [
                           Text(
@@ -409,19 +414,22 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                     ),
                     PressTransform(
                       onPressed: () async {
+                        List<String> filePaths =
+                            images.map((file) => file.path).toList();
                         if (_formKeyReview.currentState!.validate()) {
                           Navigator.of(context).pop({
                             'content': controllerReview.text,
+                            'images': filePaths
                           });
                         }
                       },
                       child: Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
                           decoration: BoxDecoration(
                               color: ColorStyle.lightGrey,
                               borderRadius: BorderRadius.circular(16)),
-                          child: Text(
+                          child: const Text(
                             "Publicar",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
@@ -471,7 +479,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet>
                         ],
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       height: 0,
                     ),
                   ],
@@ -499,14 +507,14 @@ class CustomInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
                 fontFamily: "Montserrat",
                 color: ColorStyle.textGrey,
                 fontSize: 14,
@@ -515,8 +523,8 @@ class CustomInput extends StatelessWidget {
           Container(
             width: double.maxFinite,
             height: 48,
-            margin: EdgeInsets.only(top: 2),
-            padding: EdgeInsets.only(left: 12),
+            margin: const EdgeInsets.only(top: 2),
+            padding: const EdgeInsets.only(left: 12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
               border: Border.all(
@@ -529,8 +537,8 @@ class CustomInput extends StatelessWidget {
             child: TextField(
               controller: controller,
               focusNode: focusNode,
-              style: TextStyle(fontFamily: "Montserrat", fontSize: 14),
-              decoration: InputDecoration(
+              style: const TextStyle(fontFamily: "Montserrat", fontSize: 14),
+              decoration: const InputDecoration(
                 border: InputBorder.none,
 
                 hintText: 'Input*', // Cambia el texto de marcador de posición

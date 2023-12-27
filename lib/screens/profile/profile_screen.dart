@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -92,7 +93,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                 Container(
                   width: sizeW * 100,
                   height: 102,
-                  padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+                  padding:
+                      const EdgeInsets.only(bottom: 16, left: 16, right: 16),
                   color: Colors.white,
                   alignment: Alignment.bottomCenter,
                   child: Row(
@@ -102,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         '${_user.name} ${_user.lastName}',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
                             fontFamily: 'Montserrat'),
@@ -126,12 +128,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 });
                           },
                           child: Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 8),
                               decoration: BoxDecoration(
                                   color: ColorStyle.darkPurple,
                                   borderRadius: BorderRadius.circular(8)),
-                              child: Text(
+                              child: const Text(
                                 "Log out",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -161,14 +163,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                             collapsedHeight: 184,
                             backgroundColor: Colors.white,
                             flexibleSpace: FlexibleSpaceBar(
-                              background: Container(
+                              background: SizedBox(
                                 height: 184,
                                 child: Stack(
                                   children: [
                                     Container(
                                       height: 112,
                                       width: double.maxFinite,
-                                      padding: EdgeInsets.only(
+                                      padding: const EdgeInsets.only(
                                           left: 16, right: 16, bottom: 16),
                                       decoration: const BoxDecoration(
                                           gradient: LinearGradient(
@@ -209,11 +211,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 text: _user
                                                                     .followings
                                                                     .toString(),
-                                                                style: TextStyle(
+                                                                style: const TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold)),
-                                                            TextSpan(
+                                                            const TextSpan(
                                                               text:
                                                                   ' Seguidos  ',
                                                             ),
@@ -222,11 +224,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     .user
                                                                     .followers
                                                                     .toString(),
-                                                                style: TextStyle(
+                                                                style: const TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold)),
-                                                            TextSpan(
+                                                            const TextSpan(
                                                               text:
                                                                   ' Seguidores',
                                                             ),
@@ -236,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             .ellipsis,
                                                         textAlign:
                                                             TextAlign.left,
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                           fontFamily:
                                                               'Montserrat',
                                                           fontSize: 14,
@@ -261,12 +263,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 PressTransform(
                                                   onPressed: () {},
                                                   child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 16),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 16,
-                                                            vertical: 10),
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 16),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 10),
                                                     decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
@@ -274,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         border: Border.all(
                                                             color: ColorStyle
                                                                 .borderGrey)),
-                                                    child: Row(
+                                                    child: const Row(
                                                       children: [
                                                         Text(
                                                           "Editar Perfil",
@@ -294,12 +297,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ),
                                             Row(
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   FeatherIcons.calendar,
                                                   size: 18,
                                                   color: ColorStyle.textGrey,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 4,
                                                 ),
                                                 Text(
@@ -308,7 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       fontSize: 14,
@@ -326,11 +329,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       top: 56,
                                       left: 16,
                                       child: CircularAvatarW(
-                                        externalRadius: Offset(88, 88),
-                                        internalRadius: Offset(82, 82),
+                                        externalRadius: const Offset(88, 88),
+                                        internalRadius: const Offset(82, 82),
                                         nameAvatar: _user.name.substring(0, 1),
                                         isCompany: false,
                                         sizeText: 40,
+                                        urlImage: _user.profilePictureUrl,
                                       ),
                                     )
                                   ],
@@ -346,16 +350,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   controller: _tabController,
                                   labelColor: Colors.black,
                                   isScrollable: true,
-                                  physics: BouncingScrollPhysics(),
-                                  padding: EdgeInsets.only(left: 24),
+                                  physics: const BouncingScrollPhysics(),
+                                  padding: const EdgeInsets.only(left: 24),
                                   unselectedLabelColor: Colors.grey,
                                   indicator: _customUnderlineIndicator(),
                                   indicatorColor: ColorStyle.darkPurple,
                                   indicatorWeight: 0,
-                                  labelStyle: TextStyle(
+                                  labelStyle: const TextStyle(
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.w600),
-                                  tabs: [
+                                  tabs: const [
                                     Tab(text: 'Reseñas'),
                                     Tab(text: 'Comentarios'),
                                     Tab(text: 'Mis me gusta'),
@@ -375,13 +379,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                           controller: _tabController,
                           children: [
                             RefreshIndicator.adaptive(
+                              color: ColorStyle.darkPurple,
+                              backgroundColor: ColorStyle.grey,
                               onRefresh: () async {
                                 userBloc.add(LoadUserProfile());
                                 await loadReviews();
-                                Future.delayed(Duration(milliseconds: 1000));
+                                Future.delayed(
+                                    const Duration(milliseconds: 1000));
                               },
                               child: CustomScrollView(
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 slivers: [
                                   isLoading
                                       ? const SliverToBoxAdapter(
@@ -389,7 +396,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             padding: EdgeInsets.only(top: 96),
                                             child: Center(
                                                 child: CircularProgressIndicator
-                                                    .adaptive()),
+                                                    .adaptive(
+                                              backgroundColor: ColorStyle
+                                                  .grey, // Fondo del indicador
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      ColorStyle.darkPurple),
+                                            )),
                                           ),
                                         )
                                       : reviews.isEmpty
@@ -399,7 +412,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       EdgeInsets.only(top: 96),
                                                   child: Center(
                                                     child: Text(
-                                                      'Parece que no hay data',
+                                                      'Aún no has publicado reseñas',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -535,7 +548,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           if (response !=
                                                               null) {
                                                             try {
-                                                              final commentResponse = await ApiService().commentReview(
+                                                              final responseComment = await ApiService().commentReview(
                                                                   content: response[
                                                                       'content'],
                                                                   idReview: reviews[
@@ -543,19 +556,72 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       .idReview);
 
                                                               addCommentToReview(
-                                                                reviews[index]
-                                                                    .idReview,
-                                                              );
+                                                                  reviews[index]
+                                                                      .idReview);
 
-                                                              feedBloc.add(AddComment(
-                                                                  comment:
-                                                                      commentResponse,
-                                                                  reviewId: reviews[
-                                                                          index]
-                                                                      .idReview));
+                                                              if (mounted) {
+                                                                showSuccessSnackBar(
+                                                                    context);
+                                                              }
+
+                                                              try {
+                                                                if (response[
+                                                                        'images'] !=
+                                                                    null) {
+                                                                  final imagesResponse =
+                                                                      await ApiService()
+                                                                          .uploadCommentImages(
+                                                                    responseComment
+                                                                        .idComment,
+                                                                    response[
+                                                                        'images'],
+                                                                  );
+
+                                                                  if (imagesResponse
+                                                                              .statusCode ==
+                                                                          201 ||
+                                                                      imagesResponse
+                                                                              .statusCode ==
+                                                                          200) {
+                                                                    final jsonImageResponse =
+                                                                        json.decode(
+                                                                            imagesResponse.body);
+
+                                                                    print(
+                                                                        jsonImageResponse);
+
+                                                                    // Convierte cada elemento de la lista a una cadena (String)
+                                                                    List<String> dynamicList = List<
+                                                                        String>.from(jsonImageResponse[
+                                                                            'Images']
+                                                                        .map((e) =>
+                                                                            e.toString()));
+
+                                                                    // newReview = newReview.copyWith(
+                                                                    //     images: stringList);
+                                                                  }
+                                                                }
+                                                              } catch (e) {
+                                                                if (mounted) {
+                                                                  showErrorSnackBar(
+                                                                      context,
+                                                                      "No se logró subir imagenes");
+                                                                }
+                                                              }
+
+                                                              // _feedBloc.add(AddComment(
+                                                              //     comment:
+                                                              //         responseComment,
+                                                              //     reviewId: state
+                                                              //         .reviews[
+                                                              //             index]
+                                                              //         .idReview));
+
                                                               return 200;
                                                             } catch (e) {
                                                               if (mounted) {
+                                                                print("a--a");
+                                                                print(e);
                                                                 showErrorSnackBar(
                                                                     context,
                                                                     'No se pudo agregar el comentario');
@@ -573,13 +639,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ),
                             ),
                             RefreshIndicator.adaptive(
+                              color: ColorStyle.darkPurple,
+                              backgroundColor: ColorStyle.grey,
                               onRefresh: () async {
                                 userBloc.add(LoadUserProfile());
                                 await loadCommentsByUser();
-                                Future.delayed(Duration(milliseconds: 1000));
+                                Future.delayed(
+                                    const Duration(milliseconds: 1000));
                               },
                               child: CustomScrollView(
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 slivers: [
                                   isLoading
                                       ? const SliverToBoxAdapter(
@@ -587,7 +656,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             padding: EdgeInsets.only(top: 96),
                                             child: Center(
                                                 child: CircularProgressIndicator
-                                                    .adaptive()),
+                                                    .adaptive(
+                                              backgroundColor: ColorStyle
+                                                  .grey, // Fondo del indicador
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      ColorStyle.darkPurple),
+                                            )),
                                           ),
                                         )
                                       : reviews.isEmpty
@@ -597,7 +672,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       EdgeInsets.only(top: 96),
                                                   child: Center(
                                                     child: Text(
-                                                      'Parece que no hay data',
+                                                      'Aún no has hecho comentarios',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -610,8 +685,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   )),
                                             )
                                           : SliverPadding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 128),
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 128),
                                               sliver: SliverList.builder(
                                                 itemCount: comments.length,
                                                 itemBuilder: (context, index) {
@@ -751,11 +826,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ),
                             ),
                             RefreshIndicator.adaptive(
+                              color: ColorStyle.darkPurple,
+                              backgroundColor: ColorStyle.grey,
                               onRefresh: () async {
                                 await loadReviews();
-                                Future.delayed(Duration(milliseconds: 1000));
+                                Future.delayed(
+                                    const Duration(milliseconds: 1000));
                               },
-                              child: CustomScrollView(
+                              child: const CustomScrollView(
                                 physics: BouncingScrollPhysics(),
                                 slivers: [],
                               ),
@@ -816,8 +894,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       }
     } catch (e) {
       // Handle the error or set state to show an error message
-      showErrorSnackBar(context, e.toString());
       if (mounted) {
+        showErrorSnackBar(context, e.toString());
         setState(() {
           isLoading = false;
         });
@@ -837,8 +915,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       }
     } catch (e) {
       // Handle the error or set state to show an error message
-      showErrorSnackBar(context, e.toString());
       if (mounted) {
+        showErrorSnackBar(context, e.toString());
         setState(() {
           isLoading = false;
         });
@@ -859,34 +937,6 @@ class _ProfileScreenState extends State<ProfileScreen>
     });
     // Call the API to update the 'like' status
     feedBloc.add(LikeReview(review));
-  }
-
-  void _followUser(UserData userData) {
-    setState(() {
-      // Actualizar el estado de 'followed' del usuario en la reseña si corresponde
-
-      reviews = reviews.map((review) {
-        if (review.user.idUser == userData.idUser) {
-          return review.copyWith(
-              user: review.user.copyWith(followed: !review.user.followed));
-        }
-        return review;
-      }).toList();
-
-      // Actualizar el estado de 'followed' del usuario en los comentarios
-      comments = comments.map((comment) {
-        if (comment.user.idUser == userData.idUser) {
-          return comment.copyWith(
-              user: comment.user.copyWith(followed: !comment.user.followed));
-        }
-        return comment;
-      }).toList();
-    });
-
-    // Llamar a la función de callback para seguir al usuario
-
-    // Call the API to update the 'like' status
-    feedBloc.add(FollowUser(userData.idUser));
   }
 
   void _followBusiness(Review review) {
@@ -943,10 +993,10 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   UnderlineTabIndicator _customUnderlineIndicator() {
     return UnderlineTabIndicator(
-      borderSide: BorderSide(
+      borderSide: const BorderSide(
           width: 3.0, color: Colors.purple), // Grosor y color del indicador
       borderRadius: BorderRadius.circular(2),
-      insets: EdgeInsets.fromLTRB(8.0, 0.0, 8.0,
+      insets: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0,
           0.0), // Ajusta el espacio a los lados y debajo del texto
     );
   }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -21,7 +20,7 @@ import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/dotters.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
-import 'package:w_app/widgets/showLoadingModal.dart';
+import 'package:w_app/widgets/showLoadingModal_widget.dart';
 import 'package:w_app/widgets/snackbar.dart';
 import 'package:intl/intl.dart';
 
@@ -31,10 +30,10 @@ class CombinedBottomSheet extends StatefulWidget {
 
   const CombinedBottomSheet({super.key, required this.user, this.business});
   @override
-  _CombinedBottomSheetState createState() => _CombinedBottomSheetState();
+  CombinedBottomSheetState createState() => CombinedBottomSheetState();
 }
 
-class _CombinedBottomSheetState extends State<CombinedBottomSheet>
+class CombinedBottomSheetState extends State<CombinedBottomSheet>
     with SingleTickerProviderStateMixin {
   TextEditingController controllerReview = TextEditingController();
   TextEditingController controllerSearch = TextEditingController();
@@ -139,7 +138,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
         child: Stack(
           children: [
             SingleChildScrollView(
-              padding: EdgeInsets.only(top: 64, bottom: 8),
+              padding: const EdgeInsets.only(top: 64, bottom: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -148,11 +147,13 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                     padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Row(
                       children: [
-                        const CircularAvatarW(
+                        CircularAvatarW(
                           externalRadius: Offset(42, 42),
                           internalRadius: Offset(36, 36),
-                          nameAvatar: "J",
+                          nameAvatar: widget.user.nameFirstLetter,
+                          sizeText: 18,
                           isCompany: false,
+                          urlImage: widget.user.profilePictureUrl,
                         ),
                         const SizedBox(
                           width: 16,
@@ -165,7 +166,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                               children: [
                                 Text(
                                   '${widget.user.name} ${widget.user.lastName}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontFamily: 'Montserrat',
                                       fontSize: 14),
@@ -175,7 +176,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                 ),
                                 Text(
                                   printFormattedDate(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: ColorStyle.grey,
                                       fontFamily: 'Montserrat',
@@ -296,7 +297,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                     child: Stack(
                                       children: [
                                         Container(
-                                          constraints: BoxConstraints(
+                                          constraints: const BoxConstraints(
                                             minWidth: 90,
                                           ),
                                           child: Image.file(
@@ -315,15 +316,17 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                               });
                                             },
                                             child: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 8, vertical: 8),
-                                              padding: EdgeInsets.all(2),
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 8),
+                                              padding: const EdgeInsets.all(2),
                                               decoration: const BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 color: Color.fromRGBO(
                                                     0, 0, 0, 0.5),
                                               ),
-                                              child: Icon(
+                                              child: const Icon(
                                                 Icons.close_rounded,
                                                 size: 20,
                                                 color: Colors.white,
@@ -357,7 +360,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                       allowHalfRating: true,
                       itemCount: 5,
                       itemPadding: const EdgeInsets.symmetric(horizontal: 0.5),
-                      itemBuilder: (context, _) => Icon(
+                      itemBuilder: (context, _) => const Icon(
                         Icons.star,
                         color: ColorStyle.solidBlue,
                       ),
@@ -370,7 +373,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                   ),
                   Visibility(
                     visible: ratingError,
-                    child: Padding(
+                    child: const Padding(
                       padding: EdgeInsets.only(left: 16, top: 4),
                       child: Text('Agrega un rating al review',
                           style: TextStyle(
@@ -401,8 +404,8 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                           CrossAxisAlignment.center,
                                       children: [
                                         CircularAvatarW(
-                                          externalRadius: Offset(42, 42),
-                                          internalRadius: Offset(36, 36),
+                                          externalRadius: const Offset(42, 42),
+                                          internalRadius: const Offset(36, 36),
                                           nameAvatar: selectedCompany!.name
                                               .substring(0, 1),
                                           isCompany: false,
@@ -420,7 +423,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                               children: [
                                                 Text(
                                                   selectedCompany!.name,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w600,
                                                       fontSize: 14,
@@ -430,14 +433,14 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 12,
                                         ),
                                         SizedBox(
                                           width: 56,
                                           child: Stack(
                                             children: [
-                                              Positioned(
+                                              const Positioned(
                                                 right: 8,
                                                 child: CircularAvatarW(
                                                   externalRadius:
@@ -453,10 +456,12 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                                 child: Container(
                                                   width: 32,
                                                   height: 32,
-                                                  decoration: BoxDecoration(
-                                                      color:
-                                                          ColorStyle.lightGrey,
-                                                      shape: BoxShape.circle),
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                          color: ColorStyle
+                                                              .lightGrey,
+                                                          shape:
+                                                              BoxShape.circle),
                                                   child: DottedCircularBorder(
                                                     color:
                                                         ColorStyle.borderGrey,
@@ -467,7 +472,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                                           const BoxDecoration(
                                                               shape: BoxShape
                                                                   .circle),
-                                                      child: Icon(
+                                                      child: const Icon(
                                                         Icons.cached,
                                                         color: ColorStyle
                                                             .solidBlue,
@@ -491,7 +496,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                           icon: Container(
                                             decoration: const BoxDecoration(
                                                 shape: BoxShape.circle),
-                                            child: Icon(
+                                            child: const Icon(
                                               FeatherIcons.plus,
                                               color: ColorStyle.borderGrey,
                                               size: 24,
@@ -501,7 +506,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                         const SizedBox(
                                           width: 16,
                                         ),
-                                        Flexible(
+                                        const Flexible(
                                           child: Text(
                                             "Selecciona una proyecto / empresa",
                                             maxLines: 1,
@@ -557,12 +562,12 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                         .map((file) => file.path)
                                         .toList();
                                     try {
-                                      final imagesResponse = await ApiService()
-                                          .uploadUserImages(
-                                              newReview
-                                                  .idReview, // userState.user.idUser,
-                                              filePaths,
-                                              'reviews_img');
+                                      final imagesResponse =
+                                          await ApiService().uploadUserImages(
+                                        newReview
+                                            .idReview, // userState.user.idUser,
+                                        filePaths,
+                                      );
 
                                       if (imagesResponse.statusCode == 201 ||
                                           imagesResponse.statusCode == 200) {
@@ -580,8 +585,6 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                             images: stringList);
                                       }
                                     } catch (e) {
-                                      print('=---');
-                                      print(e);
                                       if (mounted) {
                                         showErrorSnackBar(context,
                                             "No se logró subir imagenes");
@@ -626,7 +629,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
               left: 0,
               right: 0,
               child: ClipRRect(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20.0),
                   topRight: Radius.circular(20.0),
                 ),
@@ -636,7 +639,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Stack(
                           children: [
                             InkWell(
@@ -669,7 +672,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                       Container(
                         width: double.maxFinite,
                         height: 0.8,
-                        margin: EdgeInsets.only(top: 12),
+                        margin: const EdgeInsets.only(top: 12),
                         color: ColorStyle.lightGrey,
                       )
                     ],
@@ -695,12 +698,12 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: EdgeInsets.only(top: 16),
+            padding: const EdgeInsets.only(top: 16),
             width: double.maxFinite,
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Stack(
                     alignment: AlignmentDirectional.centerStart,
                     children: [
@@ -727,7 +730,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 Container(
@@ -744,7 +747,8 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
                     child: PressTransform(
                       onPressed: () async {
                         setState(() {
@@ -758,7 +762,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                         final businessResponse = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AddBusinessScreen()),
+                              builder: (context) => const AddBusinessScreen()),
                         );
 
                         if (mounted) {
@@ -782,7 +786,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                             width: double.maxFinite,
                             height: double.maxFinite,
                             color: Colors.white,
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(FeatherIcons.plusCircle,
@@ -835,7 +839,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                         width: double.maxFinite,
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 16, horizontal: 16),
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           border: Border(
                                             bottom: BorderSide(
                                               color: ColorStyle
@@ -869,7 +873,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                                     Text(
                                                       snapshot
                                                           .data![index].name,
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontSize: 14,
@@ -879,7 +883,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                                     Text(
                                                       snapshot
                                                           .data![index].city,
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color:
@@ -895,7 +899,7 @@ class _CombinedBottomSheetState extends State<CombinedBottomSheet>
                                             Container(
                                               padding: const EdgeInsets.all(8),
                                               alignment: Alignment.center,
-                                              decoration: BoxDecoration(
+                                              decoration: const BoxDecoration(
                                                   shape: BoxShape.circle,
                                                   color: ColorStyle.lightGrey),
                                               child: SvgPicture.asset(
@@ -1199,7 +1203,11 @@ Widget _buildInitialState() {
 Widget _buildLoadingState() {
   return const Padding(
     padding: EdgeInsets.only(top: 32),
-    child: Center(child: CircularProgressIndicator.adaptive()),
+    child: Center(
+        child: CircularProgressIndicator.adaptive(
+      backgroundColor: ColorStyle.grey, // Fondo del indicador
+      valueColor: AlwaysStoppedAnimation<Color>(ColorStyle.darkPurple),
+    )),
   );
 }
 
@@ -1248,7 +1256,7 @@ class CustomInput extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
 
-  CustomInput(
+  const CustomInput(
       {super.key,
       required this.title,
       required this.controller,
@@ -1257,54 +1265,55 @@ class CustomInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
                 fontFamily: "Montserrat",
                 color: ColorStyle.textGrey,
                 fontSize: 14,
                 fontWeight: FontWeight.w400),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
           TextFormField(
             controller: controller,
             focusNode: focusNode,
-            style: TextStyle(fontFamily: "Montserrat", fontSize: 14),
+            style: const TextStyle(fontFamily: "Montserrat", fontSize: 14),
             validator: (value) {
               if (value!.isEmpty) {
                 return "Por favor rellena los campos";
               }
+              return null;
             },
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white, // Color de fondo
               hintText: 'Input*', // Texto de marcador de posición
               contentPadding:
-                  EdgeInsets.only(left: 12, top: 2, bottom: 2), // Relleno
+                  const EdgeInsets.only(left: 12, top: 2, bottom: 2), // Relleno
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: ColorStyle.borderGrey,
                   width: 1.0,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: ColorStyle.borderGrey,
                   width: 1.0,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: ColorStyle.borderGrey,
                   width: 1.0,
                 ),

@@ -1,5 +1,4 @@
 import 'package:socket_io_client/socket_io_client.dart';
-import 'package:w_app/bloc/socket_bloc/socket_event.dart';
 
 abstract class SocketState {}
 

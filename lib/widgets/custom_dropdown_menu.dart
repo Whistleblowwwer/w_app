@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+
 import 'package:w_app/data/countries_data.dart';
 import 'package:w_app/styles/color_style.dart';
 
@@ -14,8 +14,9 @@ class CustomDropdown extends StatefulWidget {
   final bool? showIcon;
   final TextStyle? style;
 
-  CustomDropdown(
-      {required this.list,
+  const CustomDropdown(
+      {super.key,
+      required this.list,
       required this.onSelected,
       required this.title,
       required this.hintText,
@@ -68,12 +69,12 @@ class _CustomDropdownState extends State<CustomDropdown> {
                           fontSize: 14,
                           fontWeight: FontWeight.w400),
                 )
-              : SizedBox(),
+              : const SizedBox(),
           Container(
             width: double.maxFinite,
             height: 48,
-            margin: EdgeInsets.only(top: 2),
-            padding: EdgeInsets.only(left: 12, right: 12),
+            margin: const EdgeInsets.only(top: 2),
+            padding: const EdgeInsets.only(left: 12, right: 12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
               border: Border.all(
@@ -86,10 +87,11 @@ class _CustomDropdownState extends State<CustomDropdown> {
               child: DropdownButton<String>(
                 isExpanded: true,
                 value: _selected.isEmpty ? null : _selected,
-                style: TextStyle(fontFamily: "Montserrat", color: Colors.black),
+                style: const TextStyle(
+                    fontFamily: "Montserrat", color: Colors.black),
                 hint: Text(
                   widget.hintText,
-                  style: TextStyle(color: Colors.grey),
+                  style: const TextStyle(color: Colors.grey),
                 ),
                 onChanged: (String? newValue) {
                   setState(() {
@@ -110,11 +112,11 @@ class _CustomDropdownState extends State<CustomDropdown> {
                                   .toString())
                               : null,
                           minLeadingWidth: 0,
-                          contentPadding: EdgeInsets.only(),
+                          contentPadding: const EdgeInsets.only(),
                           dense: true,
                           title: Text(
                             value,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontFamily: "Montserrat", color: Colors.black),
                           )));
                 }).toList(),

@@ -26,15 +26,15 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
             SizedBox(
               width: sizeW * 100,
               child: SingleChildScrollView(
-                padding: EdgeInsets.only(top: 56),
+                padding: const EdgeInsets.only(top: 56),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       height: 256,
                       width: sizeW * 100,
-                      padding: EdgeInsets.only(bottom: 8),
-                      decoration: BoxDecoration(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      decoration: const BoxDecoration(
                           // gradient: GradientStyle().grayGradient,
                           ),
                       child: Hero(
@@ -50,14 +50,14 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
                           horizontal: 24, vertical: 16),
                       child: Text(
                         widget.article.title,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'Montserrat',
                             fontWeight: FontWeight.w600,
                             fontSize: 24),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Padding(
@@ -65,23 +65,23 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
                           horizontal: 24, vertical: 0),
                       child: Text(
                         widget.article.content,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontFamily: 'Montserrat',
                             fontSize: 14,
                             fontWeight: FontWeight.w400),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
-                        padding: EdgeInsets.only(right: 24, top: 16),
+                        padding: const EdgeInsets.only(right: 24, top: 16),
                         child: Text(
                           widget.article.formatDate(),
                           textAlign: TextAlign.right,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: ColorStyle.textGrey,
                               fontFamily: 'Montserrat',
                               fontSize: 12,
@@ -103,12 +103,12 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
                     onTap: () {
                       Navigator.of(context).pop();
                     },
-                    child: Padding(
+                    child: const Padding(
                       padding: EdgeInsets.only(left: 16, right: 8),
                       child: Icon(FeatherIcons.arrowLeft),
                     ),
                   ),
-                  Text(
+                  const Text(
                     "Noticias",
                     style: TextStyle(
                         color: Colors.black,

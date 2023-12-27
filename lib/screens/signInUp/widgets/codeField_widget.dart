@@ -75,7 +75,7 @@ class _CodeFieldState extends State<CodeField> {
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
               showCursor: false,
-              cursorColor: ColorStyle.accentGreen,
+              cursorColor: ColorStyle.darkPurple,
               style: const TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
@@ -90,14 +90,14 @@ class _CodeFieldState extends State<CodeField> {
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: widget.controllers[i].text.isNotEmpty
-                        ? ColorStyle.accentGreen
+                        ? ColorStyle.darkPurple
                         : Colors.grey, // Color por defecto
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      color: ColorStyle.accentGreen,
+                  borderSide: const BorderSide(
+                      color: ColorStyle.darkPurple,
                       width: 2 // Color por defecto
                       ),
                   borderRadius: BorderRadius.circular(10),
