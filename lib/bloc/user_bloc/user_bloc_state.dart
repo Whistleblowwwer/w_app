@@ -11,11 +11,12 @@ class UserLoading extends UserState {
 
 class UserLoaded extends UserState {
   final User user;
+  final String message;
 
-  UserLoaded(this.user);
+  UserLoaded(this.user, this.message);
 
   @override
-  List<Object> get props => [user];
+  List<Object?> get props => [user, message];
 }
 
 class UserError extends UserState {

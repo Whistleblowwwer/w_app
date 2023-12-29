@@ -20,6 +20,7 @@ import 'package:w_app/screens/profile/profile_screen.dart';
 import 'package:w_app/screens/search/search_screen.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
+import 'package:w_app/widgets/snackbar.dart';
 
 class StartPage extends StatefulWidget {
   final UserRepository userRepository;
@@ -82,6 +83,11 @@ class StartPageState extends State<StartPage> {
           _authBloc.add(LogOutUser());
         } else if (state is UserLoaded) {
           // showSuccessSnackBar(context);
+        } else if (state is UserLoaded) {
+          final message = state.message;
+          if (message != '') {
+            showErrorSnackBar(context, message);
+          }
         }
       },
       child: Scaffold(

@@ -12,6 +12,7 @@ class UserBloc extends Bloc<UserBlocEvent, UserState> {
   UserBloc(UserState initialState, this.apiService) : super(initialState) {
     on<FetchUserProfile>(_onFetchUserProfile);
     on<LoadUserProfile>(_onLoadUserProfile);
+    on<UpdateUserProfile>(_onUpdateUserProfile);
   }
 
   FutureOr<void> _onFetchUserProfile(
@@ -22,13 +23,29 @@ class UserBloc extends Bloc<UserBlocEvent, UserState> {
       final response = await apiService.getUserProfile();
       User user = User.fromJson(response['user']);
 
-      emit(UserLoaded(user));
+      emit(UserLoaded(user, ""));
     } catch (e) {
       if (e.toString().contains('Token is invalid or expired')) {
         emit(UserTokenError(e.toString()));
       } else {
         emit(UserError(e.toString()));
       }
+    }
+  }
+
+  FutureOr<void> _onUpdateUserProfile(
+      UpdateUserProfile event, Emitter<UserState> emit) async {
+    try {
+      final response = await apiService.editUser(
+          email: event.email,
+          userName: event.userName,
+          name: event.name,
+          lastName: event.lastName,
+          phone: event.phone);
+      User updateUser = User.fromJson(response['user']);
+      emit(UserLoaded(updateUser, ""));
+    } catch (e) {
+      emit(UserLoaded(event.user, "No se guardaron cambios"));
     }
   }
 
@@ -39,7 +56,7 @@ class UserBloc extends Bloc<UserBlocEvent, UserState> {
       final response = await apiService.getUserProfile();
       User user = User.fromJson(response['user']);
 
-      emit(UserLoaded(user));
+      emit(UserLoaded(user, ""));
     } catch (e) {
       if (e.toString().contains('Token is invalid or expired')) {
         emit(UserTokenError(e.toString()));

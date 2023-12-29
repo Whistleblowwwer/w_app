@@ -11,6 +11,7 @@ import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
+import 'package:w_app/screens/actions/review_bottom_sheet.dart';
 import 'package:w_app/screens/chat/chat_screen.dart';
 import 'package:w_app/screens/chat/inbox_screen.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
@@ -176,7 +177,6 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                         fontFamily: 'Montserrat'),
                   ),
                 ),
-
                 Visibility(
                   visible: !(userMain.idUser == currentUser.idUser),
                   child: PressTransform(
@@ -224,7 +224,77 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                       ),
                     ),
                   ),
-                )
+                ),
+
+                Visibility(
+                  visible: !(userMain.idUser == currentUser.idUser),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: GestureDetector(
+                        onTap: () async {
+                          await showModalBottomSheet(
+                            context: context,
+                            useRootNavigator: true,
+                            isScrollControlled:
+                                true, // Permite que el contenido sea desplazable si es necesario
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20.0),
+                                topRight: Radius.circular(20.0),
+                              ),
+                            ),
+                            builder: (BuildContext otrocontext) {
+                              return ReviewBottomSheet(
+                                user: userMain,
+                                onReport: () async {},
+                                actions: [
+                                  ReviewAction(
+                                    color: ColorStyle.accentRed,
+                                    text: currentUser.isBlocked ?? false
+                                        ? "Desbloquear a ${currentUser.name}"
+                                        : "Bloquear a ${currentUser.name}",
+                                    onPressed: () async {
+                                      if (currentUser.isBlocked ?? false) {
+                                        final responseBlock = await ApiService()
+                                            .unBlockUser(currentUser.idUser);
+                                        if (mounted) {
+                                          if (responseBlock) {
+                                            showSuccessSnackBar(context,
+                                                message:
+                                                    'El usuario ha sido desbloqueado');
+                                          } else {
+                                            showErrorSnackBar(context,
+                                                'No se logro desbloquear el usuario');
+                                          }
+                                        }
+                                      } else {
+                                        final responseBlock = await ApiService()
+                                            .blockUser(currentUser.idUser);
+                                        if (mounted) {
+                                          if (responseBlock) {
+                                            showSuccessSnackBar(context,
+                                                message:
+                                                    'El usuario ha sido bloqueado');
+                                          } else {
+                                            showErrorSnackBar(context,
+                                                'No se logro bloquear el usuario');
+                                          }
+                                        }
+                                      }
+                                      feedBloc.add(FetchFeedReviews());
+                                      if (mounted) {
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Icon(FeatherIcons.moreHorizontal)),
+                  ),
+                ),
 
                 // Padding(
                 //   padding: EdgeInsets.only(left: 8, right: 16),

@@ -17,6 +17,7 @@ class User extends Equatable {
   final int followers;
   final String? userName;
   final bool? isFollowed;
+  final bool? isBlocked;
 
   const User(
       {required this.idUser,
@@ -34,7 +35,8 @@ class User extends Equatable {
       required this.followers,
       required this.followings,
       this.userName,
-      this.isFollowed});
+      this.isFollowed,
+      this.isBlocked});
 
   String getFormattedCreationDate() {
     if (createdAt == null) {
@@ -91,7 +93,8 @@ class User extends Equatable {
         followers: json['followers'] ?? 0,
         followings: json['followings'] ?? 0,
         userName: json['nick_name'] ?? '',
-        isFollowed: json['is_followed'] ?? false);
+        isFollowed: json['is_followed'] ?? false,
+        isBlocked: json['is_blocked'] ?? false);
   }
 
   Map<String, dynamic> toJson() {

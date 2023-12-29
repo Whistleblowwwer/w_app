@@ -20,6 +20,8 @@ import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/home/widgets/comment_card.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
+import 'package:w_app/screens/settings/edit_user_screen.dart';
+import 'package:w_app/screens/settings/settings_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
@@ -76,7 +78,9 @@ class _ProfileScreenState extends State<ProfileScreen>
     return BlocListener<UserBloc, UserState>(
       listener: (BuildContext context, state) {
         if (state is UserLoaded) {
-          _user = state.user;
+          setState(() {
+            _user = state.user;
+          });
         }
       },
       child: BlocListener<FeedBloc, FeedState>(
@@ -109,39 +113,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                             fontSize: 16,
                             fontFamily: 'Montserrat'),
                       ),
-                      PressTransform(
-                          onPressed: () {
-                            showAdaptiveDialogIos(
-                                context: context,
-                                title: 'Advertencia',
-                                content: '¿Seguro deseas cerrar sesión?',
-                                onTapCancel: () {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
-                                },
-                                onTapOk: () async {
-                                  authBloc.add(LogOutUser());
-                                  socketBloc.add(Disconnect());
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
-                                  // Navigator.of(context);
-                                });
+
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: false).push(
+                                MaterialPageRoute(
+                                    settings: const RouteSettings(),
+                                    builder: (context) => SettingsScreen()));
                           },
-                          child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(
-                                  color: ColorStyle.darkPurple,
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: const Text(
-                                "Log out",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  fontFamily: 'Montserrat',
-                                ),
-                              )))
+                          child: Icon(FeatherIcons.settings)),
                       // Padding(
                       //   padding: EdgeInsets.only(left: 8, right: 16),
                       //   child: Icon(FeatherIcons.moreHorizontal),
@@ -261,7 +241,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   ),
                                                 ),
                                                 PressTransform(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    Navigator.of(context,
+                                                            rootNavigator:
+                                                                false)
+                                                        .push(MaterialPageRoute(
+                                                            settings:
+                                                                const RouteSettings(),
+                                                            builder: (context) =>
+                                                                EditUserScreen(
+                                                                  user: _user,
+                                                                )));
+                                                  },
                                                   child: Container(
                                                     margin:
                                                         const EdgeInsets.only(

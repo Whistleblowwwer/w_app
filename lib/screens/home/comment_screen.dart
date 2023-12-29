@@ -41,7 +41,6 @@ class _CommentPageState extends State<CommentPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _userBloc = BlocProvider.of<UserBloc>(context);
     comment = widget.comment;
@@ -55,11 +54,13 @@ class _CommentPageState extends State<CommentPage> {
       setState(() {
         comments = commentsList;
         isLoading = false;
-        addCommentToComment(commentsList.length);
       });
     } catch (e) {
       // Handle the error or set state to show an error message
-      showErrorSnackBar(context, e.toString());
+
+      if (mounted) {
+        showErrorSnackBar(context, e.toString());
+      }
       setState(() {
         isLoading = false;
       });

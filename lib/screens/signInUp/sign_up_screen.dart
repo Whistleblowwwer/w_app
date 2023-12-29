@@ -1,11 +1,8 @@
-import 'dart:io';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
@@ -31,6 +28,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool isChecked = false;
   final controllerPage = PageController(initialPage: 0);
 
   final controllerUserName = TextEditingController();
@@ -448,82 +446,110 @@ class _SignUpPageState extends State<SignUpPage> {
                                 //     ),
                                 //   ],
                                 // ),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: isChecked,
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          isChecked = value!;
+                                        });
+                                      },
+                                      checkColor: Colors.white,
+                                      activeColor: ColorStyle.darkPurple,
+                                    ),
+                                    Expanded(
+                                      child: Text.rich(TextSpan(
+                                          children: [
+                                            const TextSpan(
+                                                text:
+                                                    "Al registrarte, aceptas los "),
+                                            TextSpan(
+                                                text: "Términos de servicio",
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () async {
+                                                        // Navigator.push(
+                                                        //   context,
+                                                        //   MaterialPageRoute(
+                                                        //       builder: (context) =>
+                                                        //           PDFScreen()),
+                                                        // );
 
-                                Text.rich(TextSpan(
-                                    children: [
-                                      const TextSpan(
-                                          text: "Al registrarte, aceptas los"),
-                                      TextSpan(
-                                          text: "Términos de servicio",
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () async {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        PDFScreen()),
-                                              );
-
-                                              // final Uri url = Uri.parse(
-                                              //     'https://www.whistleblowwer.com/admin');
-                                              // if (!await launchUrl(url)) {
-                                              //   print('Could not launch $url');
-                                              // }
-                                            },
+                                                        final Uri url = Uri.parse(
+                                                            'https://whistleblowwer.com/t&c');
+                                                        if (!await launchUrl(
+                                                            url)) {
+                                                          print(
+                                                              'Could not launch $url');
+                                                        }
+                                                      },
+                                                style: const TextStyle(
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            const TextSpan(text: " y la "),
+                                            TextSpan(
+                                                text: "Política de privacidad",
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () async {
+                                                        // showModalBottomSheet(
+                                                        //   context: context,
+                                                        //   builder: (BuildContext
+                                                        //           context) =>
+                                                        //       const RoundedBottomSheet(),
+                                                        //   backgroundColor:
+                                                        //       Colors
+                                                        //           .transparent,
+                                                        //   isScrollControlled:
+                                                        //       true,
+                                                        // );
+                                                        final Uri url = Uri.parse(
+                                                            'https://whistleblowwer.com/aviso-privacidad');
+                                                        if (!await launchUrl(
+                                                            url)) {
+                                                          print(
+                                                              'Could not launch $url');
+                                                        }
+                                                      },
+                                                style: const TextStyle(
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            const TextSpan(
+                                                text:
+                                                    ", incluida la política de "),
+                                            TextSpan(
+                                                text: "Uso de Cookies.",
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () async {
+                                                        showModalBottomSheet(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              const RoundedBottomSheet(),
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          isScrollControlled:
+                                                              true,
+                                                        );
+                                                        // final Uri url = Uri.parse(
+                                                        //     'https://www.whistleblowwer.com');
+                                                        // if (!await launchUrl(url)) {
+                                                        //   print('Could not launch $url');
+                                                        // }
+                                                      },
+                                                style: const TextStyle(
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                          ],
                                           style: const TextStyle(
-                                              decoration:
-                                                  TextDecoration.underline)),
-                                      const TextSpan(text: " y la "),
-                                      TextSpan(
-                                          text: "Política de privacidad",
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () async {
-                                              showModalBottomSheet(
-                                                context: context,
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    const RoundedBottomSheet(),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                isScrollControlled: true,
-                                              );
-                                              // final Uri url = Uri.parse(
-                                              //     'https://www.whistleblowwer.com/admin');
-                                              // if (!await launchUrl(url)) {
-                                              //   print('Could not launch $url');
-                                              // }
-                                            },
-                                          style: const TextStyle(
-                                              decoration:
-                                                  TextDecoration.underline)),
-                                      const TextSpan(
-                                          text: ", incluida la política de "),
-                                      TextSpan(
-                                          text: "Uso de Cookies.",
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () async {
-                                              showModalBottomSheet(
-                                                context: context,
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    const RoundedBottomSheet(),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                isScrollControlled: true,
-                                              );
-                                              // final Uri url = Uri.parse(
-                                              //     'https://www.whistleblowwer.com');
-                                              // if (!await launchUrl(url)) {
-                                              //   print('Could not launch $url');
-                                              // }
-                                            },
-                                          style: const TextStyle(
-                                              decoration:
-                                                  TextDecoration.underline)),
-                                    ],
-                                    style: const TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 13))),
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 13))),
+                                    ),
+                                  ],
+                                ),
                                 const SizedBox(
                                   height: 24,
                                 ),
@@ -544,6 +570,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                           controllerConfirmPassword.text) {
                                         showErrorSnackBar(context,
                                             "Las contraseñas no son iguales");
+                                        return;
+                                      }
+
+                                      if (!isChecked) {
+                                        showErrorSnackBar(
+                                            context, "Debes estar de acuerdo");
                                         return;
                                       }
 

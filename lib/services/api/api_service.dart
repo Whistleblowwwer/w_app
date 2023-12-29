@@ -166,6 +166,40 @@ class ApiService {
     return json.decode(response.body);
   }
 
+  Future<Map<String, dynamic>> editUser({
+    String? userName,
+    String? name,
+    String? lastName,
+    String? phone,
+    String? email,
+  }) async {
+    // Construir el cuerpo del POST request condicionalmente
+    var body = {};
+
+    if (name != null && name.isNotEmpty) {
+      body["name"] = name;
+    }
+    if (lastName != null && lastName.isNotEmpty) {
+      body["last_name"] = lastName;
+    }
+    if (email != null && email.isNotEmpty) {
+      body["email"] = email;
+    }
+
+    if (userName != null && userName.isNotEmpty) {
+      body["nick_name"] = userName;
+    }
+    if (phone != null && phone.isNotEmpty) {
+      body["phone_number"] = phone;
+    }
+
+    // Realizar la petición POST al endpoint para registrar usuarios
+    var response = await _utils.put('users', body);
+
+    // Devolver la respuesta procesada
+    return json.decode(response.body);
+  }
+
   Future<Map<String, dynamic>> getUserProfile() async {
     var response = await _utils.get('users/');
     return _utils.handleResponse(response);
@@ -450,6 +484,34 @@ class ApiService {
     return response;
   }
 
+  Future<bool> deleteUser() async {
+    final response = await _utils.delete('users/delete/all');
+    return response.statusCode == 200 || response.statusCode == 201;
+  }
+
+  Future<bool> blockUser(String idUser) async {
+    try {
+      final response =
+          await _utils.get('users/block?_id_user_to_block=$idUser');
+      print(response.body);
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> unBlockUser(String idUser) async {
+    try {
+      final response =
+          await _utils.get('users/unblock?_id_user_to_unblock=$idUser');
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   // Future<User> getArticles(String idUser) async {
   //   try {
   //     var response = await _utils.get('articles/');
@@ -494,6 +556,15 @@ class ApiServerUtils {
   Future<http.Response> get(String endpoint) async {
     final headers = await _getDefaultHeaders();
     return await http.get(Uri.parse('$baseUrl/$endpoint'), headers: headers);
+  }
+
+  Future<http.Response> put(String endpoint, Map body) async {
+    final headers = await _getDefaultHeaders();
+    return await http.put(
+      Uri.parse('$baseUrl/$endpoint'),
+      headers: headers,
+      body: jsonEncode(body),
+    );
   }
 
   Future<http.Response> patch(String endpoint, Map body) async {
