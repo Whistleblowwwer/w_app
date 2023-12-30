@@ -576,7 +576,26 @@ class ReviewCard extends StatelessWidget {
                                                 fontFamily: 'Montserrat'),
                                           ),
                                           PressTransform(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              if (isActive) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ReviewPage(
+                                                            review: review,
+                                                            onLike: onLike,
+                                                            onComment:
+                                                                onComment,
+                                                            onFollowUser:
+                                                                onFollowUser,
+                                                            onFollowBusiness:
+                                                                onFollowBusinnes,
+                                                            onDelete: onDelete,
+                                                          )),
+                                                );
+                                              }
+                                            },
                                             child: Text(
                                               "${review.comments} respuestas",
                                               style: const TextStyle(

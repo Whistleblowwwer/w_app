@@ -29,9 +29,9 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>The app needs access to library in order to publish user-generated content to Whistleblowwer's network.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>The app needs access to the library to select images and files.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>We use your data to provide a personalized experience, and to help improve our services. Your data will be used strictly in accordance with our privacy policy.</string>
+	<string>Whistleblower needs access to your photos to allow you to upload images when sharing your experiences about a company.</string>
+	<!-- <key>NSUserTrackingUsageDescription</key>
+	<string>We use your data to provide a personalized experience, and to help improve our services. Your data will be used strictly in accordance with our privacy policy.</string> -->
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

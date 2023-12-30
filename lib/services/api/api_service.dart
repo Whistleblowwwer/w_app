@@ -65,6 +65,7 @@ class ApiService {
       "city": city,
       "category": category
     };
+    print(body);
 
     // Realizar la petición POST al endpoint para registrar usuarios
     var response = await _utils.post('business', body);

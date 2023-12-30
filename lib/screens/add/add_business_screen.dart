@@ -519,9 +519,14 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                                 context, "No se logró crear la empresa");
                           }
                         } catch (e) {
+                          print(e);
+
                           if (!mounted) return;
                           showErrorSnackBar(context, "Ocurrió un error: $e");
                         }
+                        setState(() {
+                          isProcessing = false;
+                        });
                       },
                       child: Container(
                         width: double.maxFinite,

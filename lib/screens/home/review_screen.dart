@@ -310,44 +310,14 @@ class _ReviewPageState extends State<ReviewPage> {
                       bottom: 16, top: 16, left: 16, right: 16),
                   child: PressTransform(
                     onPressed: () async {
-                      final userState = _userBloc.state;
-                      if (userState is UserLoaded) {
-                        await showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            barrierColor: const Color.fromRGBO(0, 0, 0, 0.1),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20.0),
-                                topRight: Radius.circular(20.0),
-                              ),
-                            ),
-                            builder: (context) => BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-                                child: CombinedBottomSheet(
-                                  user: userState.user,
-                                  business: Business(
-                                      idBusiness:
-                                          widget.review.business!.idBusiness,
-                                      name: widget.review.business!.name,
-                                      entity:
-                                          widget.review.business?.entity ?? '',
-                                      address: '',
-                                      state: '',
-                                      city: '',
-                                      country: '',
-                                      isValid: true,
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                      averageRating:
-                                          widget.review.business!.rating,
-                                      followers: 2,
-                                      isFollowed:
-                                          widget.review.business!.followed),
-                                )));
+                      await widget.onComment().then((value) async {
+                        if (value == 200) {
+                          addCommentToReview();
+                        }
+                      });
+                      await _loadComments();
 
-                        await _loadComments();
-                      }
+                      setState(() {});
                     },
                     child: Container(
                       width: double.maxFinite,
@@ -361,7 +331,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         children: [
                           Expanded(
                             child: Text(
-                              'Agregar una reseña a ${widget.review.business?.name ?? ''}',
+                              'Responder a ${widget.review.user.name} ${widget.review.user.lastName}',
                               maxLines: 1,
                               style: const TextStyle(
                                   fontWeight: FontWeight.w400,
@@ -373,9 +343,9 @@ class _ReviewPageState extends State<ReviewPage> {
                             width: 4,
                           ),
                           SvgPicture.asset(
-                            'assets/images/icons/Whistle.svg',
-                            width: 32,
-                            height: 32,
+                            'assets/images/icons/commentReview.svg',
+                            width: 24,
+                            height: 24,
                             colorFilter: const ColorFilter.mode(
                                 ColorStyle.darkPurple, BlendMode.srcIn),
                           ),
