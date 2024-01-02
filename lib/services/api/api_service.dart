@@ -138,7 +138,6 @@ class ApiService {
     required String birthdate,
     required String password,
     String? gender,
-    required String role,
   }) async {
     // Construir el cuerpo del POST request condicionalmente
     var body = {
@@ -147,7 +146,6 @@ class ApiService {
       "email": email,
       "birth_date": birthdate,
       "password": password,
-      "role": role,
     };
 
     if (userName != null && userName.isNotEmpty) {

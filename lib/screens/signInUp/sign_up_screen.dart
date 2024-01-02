@@ -320,49 +320,50 @@ class _SignUpPageState extends State<SignUpPage> {
                                                 fontSize: 22,
                                                 fontWeight: FontWeight.w600,
                                                 fontFamily: "Montserrat")))),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: CustomDropdown(
-                                        title: '',
-                                        hintText: '52',
-                                        initialValue: preffix,
-                                        type: "phone_code",
-                                        // showIcon: true,
-                                        list: countries
-                                            .map((country) =>
-                                                country["phone_code"]
-                                                    .toString())
-                                            .toList()
-                                          ..sort((a, b) => a.compareTo(b)),
-                                        padding: const EdgeInsets.only(
-                                            bottom: 16, right: 8),
-                                        onSelected: (selected) {
-                                          setState(() {
-                                            preffix = selected;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: CustomTextFormField(
-                                        labelText: 'Teléfono',
-                                        controller: controllerPhone,
-                                        onFieldSubmitted: (_) {},
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please enter your phone number';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.center,
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   children: [
+                                //     Expanded(
+                                //       flex: 1,
+                                //       child: CustomDropdown(
+                                //         title: '',
+                                //         hintText: '52',
+                                //         initialValue: preffix,
+                                //         type: "phone_code",
+                                //         // showIcon: true,
+                                //         list: countries
+                                //             .map((country) =>
+                                //                 country["phone_code"]
+                                //                     .toString())
+                                //             .toList()
+                                //           ..sort((a, b) => a.compareTo(b)),
+                                //         padding: const EdgeInsets.only(
+                                //             bottom: 16, right: 8),
+                                //         onSelected: (selected) {
+                                //           setState(() {
+                                //             preffix = selected;
+                                //           });
+                                //         },
+                                //       ),
+                                //     ),
+                                //     Expanded(
+                                //       flex: 3,
+                                //       child: CustomTextFormField(
+                                //         labelText: 'Teléfono',
+                                //         controller: controllerPhone,
+                                //         onFieldSubmitted: (_) {},
+                                //         validator: (value) {
+                                //           if (value == null || value.isEmpty) {
+                                //             return 'Please enter your phone number';
+                                //           }
+                                //           return null;
+                                //         },
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+
                                 CustomDropdown(
                                   title: 'Género',
                                   style: const TextStyle(
@@ -599,7 +600,6 @@ class _SignUpPageState extends State<SignUpPage> {
                                         birthdate: birthdate!,
                                         password:
                                             controllerConfirmPassword.text,
-                                        role: "admin",
                                         gender:
                                             gender == 'Masculino' ? 'M' : 'F',
                                       ));

@@ -32,7 +32,6 @@ class CreateUser extends AuthBlocEvent {
   final String password;
   final DateTime birthdate;
   final String gender;
-  final String role;
 
   // ... (otros parámetros necesarios para crear un usuario)
 
@@ -45,7 +44,6 @@ class CreateUser extends AuthBlocEvent {
     required this.password,
     required this.birthdate,
     required this.gender,
-    required this.role,
   });
 
   @override
@@ -58,6 +56,5 @@ class CreateUser extends AuthBlocEvent {
         password,
         birthdate,
         gender,
-        role,
       ];
 }

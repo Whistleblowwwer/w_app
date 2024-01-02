@@ -81,7 +81,6 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
         password: event.password,
         birthdate: event.birthdate.toString(),
         gender: event.gender,
-        role: event.role,
       );
 
       if (response.containsKey('token')) {
