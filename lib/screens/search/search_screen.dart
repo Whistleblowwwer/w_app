@@ -1,17 +1,22 @@
+import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:w_app/bloc/search_bloc/search_bloc.dart';
 import 'package:w_app/bloc/search_bloc/search_event.dart';
 import 'package:w_app/bloc/search_bloc/search_state.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
+import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/article_model.dart';
 import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/add/add_business_screen.dart';
+import 'package:w_app/screens/add/add_review.dart';
 import 'package:w_app/screens/business_screen.dart';
 import 'package:w_app/screens/profile/foreign_profile_screen.dart';
 import 'package:w_app/screens/search/notice_detail_screen.dart';
@@ -19,6 +24,7 @@ import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/styles/gradient_style.dart';
 import 'package:w_app/styles/shadow_style.dart';
+import 'package:w_app/widgets/business_card.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/dotters.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
@@ -42,6 +48,35 @@ class SearchScreenState extends State<SearchScreen>
   FocusNode focusNodeSearch = FocusNode();
   late Future<List<Business>> futureSearch;
 
+  List<Business> businesses = [];
+  bool isLoading = true;
+  List<Article> articles = [];
+  bool isLoadingArticles = true;
+//Notices
+  int currentPage = 0;
+
+  final PageController _boardController =
+      PageController(initialPage: 0, viewportFraction: 1);
+  AnimatedContainer doIndicator(index) {
+    return AnimatedContainer(
+      margin: const EdgeInsets.only(right: 4, left: 4),
+      duration: const Duration(milliseconds: 300),
+      height: 2,
+      width: currentPage == index ? 12 : 10,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: currentPage == index
+            ? ColorStyle.darkPurple.withOpacity(0.8)
+            : Colors.grey.withOpacity(0.5),
+      ),
+    );
+  }
+
+  List noticeImages = [
+    'assets/images/ilustrations/banner_startup1.jpg',
+    'assets/images/ilustrations/banner_startup2.jpg',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -58,8 +93,54 @@ class SearchScreenState extends State<SearchScreen>
         });
       });
 
+      loadBusiness();
+      loadArticles();
       // _fetchUserProfile();
     });
+  }
+
+  Future<void> loadBusiness() async {
+    try {
+      final businessList = await ApiService().getAllBusiness();
+      print(businessList);
+      print("ssaaa");
+
+      if (mounted) {
+        setState(() {
+          businesses = businessList;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      // Handle the error or set state to show an error message
+      if (mounted) {
+        showErrorSnackBar(context, e.toString());
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> loadArticles() async {
+    try {
+      final articleList = await ApiService().getArticles();
+
+      if (mounted) {
+        setState(() {
+          articles = articleList;
+          isLoadingArticles = false;
+        });
+      }
+    } catch (e) {
+      // Handle the error or set state to show an error message
+      if (mounted) {
+        showErrorSnackBar(context, e.toString());
+        setState(() {
+          isLoadingArticles = false;
+        });
+      }
+    }
   }
 
   UnderlineTabIndicator _customUnderlineIndicator() {
@@ -84,11 +165,353 @@ class SearchScreenState extends State<SearchScreen>
               if (state is SearchEmpty) {
                 return TabBarView(
                   controller: _tabController,
-                  children: const [
+                  children: [
                     ForYouScreen(),
-                    Center(child: Text('Contenido de Tendencias')),
-                    NoticeScreen(),
-                    Center(child: Text('Contenido de Empresas')),
+
+                    //Empresas
+                    RefreshIndicator.adaptive(
+                        displacement: 48,
+                        edgeOffset: 176,
+                        color: ColorStyle.darkPurple,
+                        backgroundColor: ColorStyle.grey,
+                        onRefresh: () async {
+                          await loadBusiness();
+                          Future.delayed(const Duration(milliseconds: 1000));
+                          print("trunca");
+                        },
+                        child: CustomScrollView(
+                            physics: BouncingScrollPhysics(),
+                            slivers: [
+                              isLoading
+                                  ? SliverToBoxAdapter(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 296),
+                                        child: Center(
+                                            child: CircularProgressIndicator
+                                                .adaptive(
+                                          backgroundColor: ColorStyle
+                                              .grey, // Fondo del indicador
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  ColorStyle.darkPurple),
+                                        )),
+                                      ),
+                                    )
+                                  : businesses.isEmpty
+                                      ? SliverToBoxAdapter(
+                                          child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(top: 296),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Sigue proyectos',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            "Montserrat",
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                ],
+                                              )),
+                                        )
+                                      : SliverPadding(
+                                          padding: const EdgeInsets.only(
+                                              top: 168, bottom: 80),
+                                          sliver: SliverList(
+                                              delegate: SliverChildBuilderDelegate(
+                                                  childCount: businesses
+                                                      .length, // número de items en la lista
+                                                  (BuildContext context,
+                                                      int index) {
+                                            return BusinessWidget(
+                                              business: businesses[index],
+                                              onAddReview: () async {
+                                                final userBloc =
+                                                    BlocProvider.of<UserBloc>(
+                                                        context);
+
+                                                final userState =
+                                                    userBloc.state;
+                                                if (userState is UserLoaded) {
+                                                  await showModalBottomSheet(
+                                                      context: context,
+                                                      isScrollControlled: true,
+                                                      barrierColor:
+                                                          const Color.fromRGBO(
+                                                              0, 0, 0, 0.1),
+                                                      shape:
+                                                          const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  20.0),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  20.0),
+                                                        ),
+                                                      ),
+                                                      builder: (context) =>
+                                                          BackdropFilter(
+                                                              filter: ImageFilter
+                                                                  .blur(
+                                                                      sigmaX: 6,
+                                                                      sigmaY:
+                                                                          6),
+                                                              child:
+                                                                  CombinedBottomSheet(
+                                                                user: userState
+                                                                    .user,
+                                                                business:
+                                                                    businesses[
+                                                                        index],
+                                                              )));
+                                                }
+                                              },
+                                            );
+                                          })))
+                            ])),
+                    //Noticias
+                    RefreshIndicator.adaptive(
+                        displacement: 48,
+                        edgeOffset: 176,
+                        color: ColorStyle.darkPurple,
+                        backgroundColor: ColorStyle.grey,
+                        onRefresh: () async {
+                          await loadArticles();
+                          Future.delayed(const Duration(milliseconds: 1000));
+                        },
+                        child: CustomScrollView(
+                            physics: BouncingScrollPhysics(),
+                            slivers: [
+                              SliverToBoxAdapter(
+                                  child: Column(
+                                children: [
+                                  Container(
+                                    height: 256,
+                                    margin: EdgeInsets.only(top: 162),
+                                    width: double.maxFinite,
+                                    child: PageView.builder(
+                                        physics: ClampingScrollPhysics(),
+                                        onPageChanged: (value) {
+                                          setState(() {
+                                            currentPage = value;
+                                          });
+                                        },
+                                        controller: _boardController,
+                                        itemCount: noticeImages.length,
+                                        itemBuilder: (context, snapshot) {
+                                          var scale = currentPage == snapshot
+                                              ? 1.0
+                                              : 1.0;
+                                          return TweenAnimationBuilder(
+                                            duration: const Duration(
+                                                milliseconds: 350),
+                                            tween:
+                                                Tween(begin: scale, end: scale),
+                                            curve: Curves.ease,
+                                            builder: (BuildContext context,
+                                                double value, Widget? child) {
+                                              return Transform.scale(
+                                                scale: value,
+                                                child: child,
+                                              );
+                                            },
+                                            child: Image.asset(
+                                              noticeImages[snapshot],
+                                              fit: BoxFit.fitWidth,
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: List.generate(noticeImages.length,
+                                        (index) => doIndicator(index)),
+                                  ),
+                                ],
+                              )),
+                              isLoadingArticles
+                                  ? SliverToBoxAdapter(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 296),
+                                        child: Center(
+                                            child: CircularProgressIndicator
+                                                .adaptive(
+                                          backgroundColor: ColorStyle
+                                              .grey, // Fondo del indicador
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  ColorStyle.darkPurple),
+                                        )),
+                                      ),
+                                    )
+                                  : articles.isEmpty
+                                      ? SliverToBoxAdapter(
+                                          child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(top: 296),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'No hay articulos',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            "Montserrat",
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                ],
+                                              )),
+                                        )
+                                      : SliverPadding(
+                                          padding: const EdgeInsets.only(
+                                              top: 24, bottom: 96),
+                                          sliver: SliverList(
+                                              delegate: SliverChildBuilderDelegate(
+                                                  childCount: articles
+                                                      .length, // número de items en la lista
+                                                  (BuildContext context,
+                                                      int index) {
+                                            final article = articles[index];
+                                            return PressTransform(
+                                                onPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          NoticeDetailScreen(
+                                                        article: article,
+                                                        index: index,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  margin: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 24,
+                                                      vertical: 8),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 10),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        width: double.maxFinite,
+                                                        margin: const EdgeInsets
+                                                            .only(bottom: 10),
+                                                        clipBehavior: Clip
+                                                            .antiAliasWithSaveLayer,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8)),
+                                                        child: Hero(
+                                                            tag: index,
+                                                            child:
+                                                                article.imageUrl !=
+                                                                        null
+                                                                    ? Image
+                                                                        .memory(
+                                                                        article
+                                                                            .imageUrl!,
+                                                                        width: double
+                                                                            .maxFinite,
+                                                                        fit: BoxFit
+                                                                            .fitWidth,
+                                                                      )
+                                                                    : Image
+                                                                        .asset(
+                                                                        'assets/images/logos/Whistle.png',
+                                                                        width: double
+                                                                            .maxFinite,
+                                                                      )),
+                                                      ),
+                                                      Text(
+                                                        article.title,
+                                                        style: const TextStyle(
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 14),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 4,
+                                                      ),
+                                                      // Markdown(
+                                                      //     shrinkWrap: true,
+                                                      //     physics:
+                                                      //         NeverScrollableScrollPhysics(),
+                                                      //     data:
+                                                      //         article.content),
+
+                                                      Text(
+                                                        article.subtitle,
+                                                        maxLines: 5,
+                                                        style: const TextStyle(
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 4,
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: Text(
+                                                          article.formatDate(),
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style: const TextStyle(
+                                                              color: ColorStyle
+                                                                  .textGrey,
+                                                              fontFamily:
+                                                                  'Montserrat',
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ));
+                                          })))
+                            ])),
+
+                    TrendingScreen()
                   ],
                 );
               } else if (state is Searching) {
@@ -897,9 +1320,9 @@ class SearchScreenState extends State<SearchScreen>
                                 fontWeight: FontWeight.w600),
                             tabs: const [
                               Tab(text: 'Para ti'),
-                              Tab(text: 'Tendencias'),
-                              Tab(text: 'Noticias'),
                               Tab(text: 'Empresas'),
+                              Tab(text: 'Noticias'),
+                              Tab(text: 'Tendencias'),
                             ],
                           ),
                         ),
@@ -995,6 +1418,66 @@ class SearchScreenState extends State<SearchScreen>
   }
 }
 
+// class BusinessScreen extends StatelessWidget {
+//   const BusinessScreen({
+//     super.key,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return RefreshIndicator.adaptive(
+//         color: ColorStyle.darkPurple,
+//         backgroundColor: ColorStyle.grey,
+//         onRefresh: () async {
+//           await loadBusinessFollowed();
+//           Future.delayed(const Duration(milliseconds: 1000));
+//         },
+//         child:
+//             CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
+//           isLoading
+//               ? const SliverToBoxAdapter(
+//                   child: Padding(
+//                     padding: EdgeInsets.only(top: 96),
+//                     child: Center(
+//                         child: CircularProgressIndicator.adaptive(
+//                       backgroundColor: ColorStyle.grey, // Fondo del indicador
+//                       valueColor:
+//                           AlwaysStoppedAnimation<Color>(ColorStyle.darkPurple),
+//                     )),
+//                   ),
+//                 )
+//               : businesses.isEmpty
+//                   ? SliverToBoxAdapter(
+//                       child: Padding(
+//                           padding: EdgeInsets.only(top: 96),
+//                           child: Row(
+//                             mainAxisAlignment: MainAxisAlignment.center,
+//                             crossAxisAlignment: CrossAxisAlignment.start,
+//                             children: [
+//                               Text(
+//                                 'Sigue proyectos',
+//                                 textAlign: TextAlign.center,
+//                                 style: TextStyle(
+//                                     fontFamily: "Montserrat",
+//                                     fontSize: 18,
+//                                     fontWeight: FontWeight.w400),
+//                               ),
+//                             ],
+//                           )),
+//                     )
+//                   : SliverPadding(
+//                       padding: const EdgeInsets.only(bottom: 128),
+//                       sliver: SliverList(
+//                           delegate: SliverChildBuilderDelegate(
+//                               childCount: businesses
+//                                   .length, // número de items en la lista
+//                               (BuildContext context, int index) {
+//                         return BusinessWidget(business: businesses[index]);
+//                       })))
+//         ]));
+//   }
+// }
+
 class NoticeScreen extends StatelessWidget {
   const NoticeScreen({
     super.key,
@@ -1002,162 +1485,192 @@ class NoticeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Article> articles = [
-      Article(
-          id: '',
-          title: 'HOLA SOMOS WHISTLEBLOWER',
-          content: """Hola! Somos Whistleblowwer. 
-Nosotros al igual que tu, fuimos víctimas de un incumplimiento de una desarrolladora inmobiliaria. 
-Durante años estuvimos puntualmente pagando. Con esfuerzo logramos reunir un enganche y privándonos de vacaciones, salidas al cine, etc. estuvímos pagando nuestras mensualidades para que al final no nos cumplieran. 
-Esta inversión era nuestro patrimonio, la universidad de nuestros hijos, nuestra primera casa, nuestro retiro, en fin… nuestros sueños y nuestro futuro. 
-Hoy comprar una casa es imposible, te tienes que privar de casi todos los lujos para lograrlo. Para que al final llegue un charlatán y te quite tus ahorros, tu casa, tus sueños, tu futuro!  No se vale!!
-Intentamos una y mil veces a hablar con alguien y siempre eran excusas y pretextos. Buscamos a otros inversionistas para unir fuerzas pero era como buscar una aguja en un pajar! Pero ahora con Whistleblowwer, podemos encontrarnos y juntos, los desarrolladores inmobiliarios VAN A TEMBLAR porque van a tener afuera de sus proyectos y sus oficinas a 50 o mas clientes inconformes exigiendo justicia. Y si no nos cumplen, que al menos TODOS se enteren y no vuelvan a vender un solo metro cuadrado mas!
-SOMOS UNA PEQUEÑA STARTUP. PORFAVOR COMPARTE EN TUS REDES SOCIALES PARA LLEGAR A MAS GENTE Y TENER MAS PODER EN CONTRA DE LAS GRANDES DESARROLLADORAS INMOBILIARIAS!""",
-          publishedAt: DateTime(2023, 12, 24),
-          isPublished: true,
-          idCategory: '',
-          imageUrl: 'assets/images/logos/Whistle.png'),
-    ];
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.only(top: 170, bottom: 160),
-      child: Column(
-        children: [
-          Container(
-            height: 256,
-            width: double.maxFinite,
-            padding: const EdgeInsets.only(left: 24, bottom: 4),
-            decoration: BoxDecoration(
-                gradient: GradientStyle().grayGradient,
-                image: const DecorationImage(
-                    image: AssetImage('assets/images/ilustrations/169.jpg'))),
-            child: Stack(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // Text("Encabezado",
-                    //     style: TextStyle(
-                    //         color: Colors.white,
-                    //         fontFamily: 'Montserrat',
-                    //         fontSize: 14,
-                    //         fontWeight: FontWeight.w500)),
-                    // SizedBox(
-                    //   height: 4,
-                    // ),
-                    Text(
-                      "Publicidad",
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontFamily: 'Montserrat',
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                )
-              ],
+//     List<Article> articles = [
+//       Article(
+//           id: '',
+//           title: 'HOLA SOMOS WHISTLEBLOWER',
+//           content: """Hola! Somos Whistleblowwer.
+// Nosotros al igual que tu, fuimos víctimas de un incumplimiento de una desarrolladora inmobiliaria.
+// Durante años estuvimos puntualmente pagando. Con esfuerzo logramos reunir un enganche y privándonos de vacaciones, salidas al cine, etc. estuvímos pagando nuestras mensualidades para que al final no nos cumplieran.
+// Esta inversión era nuestro patrimonio, la universidad de nuestros hijos, nuestra primera casa, nuestro retiro, en fin… nuestros sueños y nuestro futuro.
+// Hoy comprar una casa es imposible, te tienes que privar de casi todos los lujos para lograrlo. Para que al final llegue un charlatán y te quite tus ahorros, tu casa, tus sueños, tu futuro!  No se vale!!
+// Intentamos una y mil veces a hablar con alguien y siempre eran excusas y pretextos. Buscamos a otros inversionistas para unir fuerzas pero era como buscar una aguja en un pajar! Pero ahora con Whistleblowwer, podemos encontrarnos y juntos, los desarrolladores inmobiliarios VAN A TEMBLAR porque van a tener afuera de sus proyectos y sus oficinas a 50 o mas clientes inconformes exigiendo justicia. Y si no nos cumplen, que al menos TODOS se enteren y no vuelvan a vender un solo metro cuadrado mas!
+// SOMOS UNA PEQUEÑA STARTUP. PORFAVOR COMPARTE EN TUS REDES SOCIALES PARA LLEGAR A MAS GENTE Y TENER MAS PODER EN CONTRA DE LAS GRANDES DESARROLLADORAS INMOBILIARIAS!""",
+//           publishedAt: DateTime(2023, 12, 24),
+//           isPublished: true,
+//           idCategory: '',
+//           imageUrl: 'assets/images/logos/Whistle.png'),
+//     ];
+    return FutureBuilder<List<Article>>(
+      future: ApiService().getArticles(),
+      builder: (context, snapshot) {
+        // Verificar si hay errores
+        if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              "Error: ${snapshot.error}",
+              style: TextStyle(fontFamily: 'Montserrat'),
             ),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          FutureBuilder(
-              future: Future.delayed(const Duration(milliseconds: 500)),
-              builder: (context, snapshot) {
-                return Column(
-                  children: List.generate(
-                      articles.length,
-                      (index) => PressTransform(
-                            onPressed: () {
-                              Navigator.of(context, rootNavigator: true)
-                                  .push(MaterialPageRoute(
-                                      builder: (context) => NoticeDetailScreen(
-                                            article: articles[index],
-                                            index: index,
-                                          )));
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 8),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: double.maxFinite,
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: Hero(
-                                      tag: index,
-                                      child: index == 0
-                                          ? Image.asset(
-                                              'assets/images/logos/Whistle.png',
-                                              width: double.maxFinite,
-                                            )
-                                          : Image.asset(
-                                              'assets/images/ilustrations/169.jpg',
-                                              width: double.maxFinite,
-                                            ),
+          );
+        }
+
+        // Esperando a que la Future se complete
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator.adaptive());
+        }
+
+        // Datos recibidos y sin errores
+        if (snapshot.connectionState == ConnectionState.done) {
+          // Verifica si la lista de artículos está vacía
+          if (snapshot.data?.isEmpty ?? true) {
+            return Center(
+              child: Text(
+                "No hay artículos disponibles.",
+                style: TextStyle(fontFamily: 'Montserrat'),
+              ),
+            );
+          }
+
+          // Datos existen y no están vacíos
+          return SingleChildScrollView(
+            child: Column(
+              children: List.generate(snapshot.data!.length, (index) {
+                final article = snapshot.data![index];
+                return PressTransform(
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(
+                          builder: (context) => NoticeDetailScreen(
+                            article: article,
+                            index: index,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: double.maxFinite,
+                            margin: const EdgeInsets.only(bottom: 10),
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Hero(
+                              tag: index,
+                              child: index == 0
+                                  ? Image.asset(
+                                      'assets/images/logos/Whistle.png',
+                                      width: double.maxFinite,
+                                    )
+                                  : Image.asset(
+                                      'assets/images/ilustrations/169.jpg',
+                                      width: double.maxFinite,
                                     ),
-                                  ),
-                                  Text(
-                                    articles[index].title,
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14),
-                                  ),
-                                  const SizedBox(
-                                    height: 4,
-                                  ),
-                                  Text(
-                                    articles[index].content,
-                                    maxLines: 4,
-                                    style: const TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  const SizedBox(
-                                    height: 4,
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      articles[index].formatDate(),
-                                      textAlign: TextAlign.right,
-                                      style: const TextStyle(
-                                          color: ColorStyle.textGrey,
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              ),
                             ),
-                          )),
-                );
+                          ),
+                          Text(
+                            snapshot.data![index].title,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14),
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Markdown(
+                              shrinkWrap: true,
+                              data: snapshot.data![index].content),
+                          // Text(
+                          //   snapshot.data![index].content,
+                          //   maxLines: 4,
+                          //   style: const TextStyle(
+                          //       fontFamily: 'Montserrat',
+                          //       fontSize: 14,
+                          //       fontWeight: FontWeight.w400),
+                          // ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              snapshot.data![index].formatDate(),
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(
+                                  color: ColorStyle.textGrey,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ));
               }),
-        ],
-      ),
+            ),
+          );
+        }
+
+        // Si el Future aún no se ha iniciado o no hay otros estados definidos
+        return Center(
+          child: Text(
+            "Algo salió mal.",
+            style: TextStyle(fontFamily: 'Montserrat'),
+          ),
+        );
+      },
     );
   }
 }
 
-class ForYouScreen extends StatelessWidget {
+class ForYouScreen extends StatefulWidget {
   const ForYouScreen({
     super.key,
   });
+
+  @override
+  State<ForYouScreen> createState() => _ForYouScreenState();
+}
+
+class _ForYouScreenState extends State<ForYouScreen> {
+  int currentPage = 0;
+
+  final PageController _boardController =
+      PageController(initialPage: 0, viewportFraction: 1);
+  AnimatedContainer doIndicator(index) {
+    return AnimatedContainer(
+      margin: const EdgeInsets.only(right: 4, left: 4),
+      duration: const Duration(milliseconds: 300),
+      height: 2,
+      width: currentPage == index ? 12 : 10,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: currentPage == index
+            ? ColorStyle.darkPurple.withOpacity(0.8)
+            : Colors.grey.withOpacity(0.5),
+      ),
+    );
+  }
+
+  List images = [
+    'assets/images/ilustrations/banner_how1.jpg',
+    'assets/images/ilustrations/banner_how2.jpg',
+    'assets/images/ilustrations/banner_how3.jpg',
+    'assets/images/ilustrations/banner_how4.jpg',
+    'assets/images/ilustrations/banner_how5.jpg',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -1170,43 +1683,83 @@ class ForYouScreen extends StatelessWidget {
             height: 256,
             margin: EdgeInsets.only(top: 162),
             width: double.maxFinite,
-            padding: const EdgeInsets.only(left: 24, bottom: 16),
-            decoration: const BoxDecoration(
-                // gradient: GradientStyle().grayGradient,
-                image: DecorationImage(
-                    image: AssetImage(
-                        'assets/images/ilustrations/Banner 1 - W.jpg'))),
-            child: Stack(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // Text("Encabezado",
-                    //     style: TextStyle(
-                    //         color: Colors.white,
-                    //         fontFamily: 'Montserrat',
-                    //         fontSize: 14,
-                    //         fontWeight: FontWeight.w500)),
-                    const SizedBox(
-                      height: 4,
+            child: PageView.builder(
+                onPageChanged: (value) {
+                  setState(() {
+                    currentPage = value;
+                  });
+                },
+                controller: _boardController,
+                physics: ClampingScrollPhysics(),
+                itemCount: images.length,
+                itemBuilder: (context, snapshot) {
+                  var scale = currentPage == snapshot ? 1.0 : 1.0;
+                  return TweenAnimationBuilder(
+                    duration: const Duration(milliseconds: 350),
+                    tween: Tween(begin: scale, end: scale),
+                    curve: Curves.ease,
+                    builder:
+                        (BuildContext context, double value, Widget? child) {
+                      return Transform.scale(
+                        scale: value,
+                        child: child,
+                      );
+                    },
+                    child: Image.asset(
+                      images[snapshot],
+                      fit: BoxFit.fitWidth,
                     ),
-                    Text(
-                      "Publicidad",
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontFamily: 'Montserrat',
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                )
-              ],
-            ),
+                  );
+                }),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children:
+                List.generate(images.length, (index) => doIndicator(index)),
+          ),
+
+          // Container(
+          //   height: 256,
+          //   margin: EdgeInsets.only(top: 162),
+          //   width: double.maxFinite,
+          //   padding: const EdgeInsets.only(left: 24, bottom: 16),
+          //   decoration: const BoxDecoration(
+          //       // gradient: GradientStyle().grayGradient,
+          //       image: DecorationImage(
+          //           image: AssetImage(
+          //               'assets/images/ilustrations/Banner 1 - W.jpg'))),
+          //   child: Stack(
+          //     children: [
+          //       Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         mainAxisAlignment: MainAxisAlignment.end,
+          //         children: [
+          //           // Text("Encabezado",
+          //           //     style: TextStyle(
+          //           //         color: Colors.white,
+          //           //         fontFamily: 'Montserrat',
+          //           //         fontSize: 14,
+          //           //         fontWeight: FontWeight.w500)),
+          //           const SizedBox(
+          //             height: 4,
+          //           ),
+          //           Text(
+          //             "Publicidad",
+          //             style: TextStyle(
+          //                 color: Colors.white.withOpacity(0.5),
+          //                 fontFamily: 'Montserrat',
+          //                 fontSize: 24,
+          //                 fontWeight: FontWeight.bold),
+          //           ),
+          //         ],
+          //       )
+          //     ],
+          //   ),
+          // ),
+
           Column(
             children: List.generate(
-                1,
+                0,
                 (index) => Container(
                       margin: const EdgeInsets.symmetric(horizontal: 24),
                       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1246,9 +1799,202 @@ class ForYouScreen extends StatelessWidget {
                       ),
                     )),
           ),
-          const Divider(
-            color: ColorStyle.midToneGrey,
+          // const Divider(
+          //   color: ColorStyle.midToneGrey,
+          // ),
+          // ReviewCardDefault(
+          //     review: Review(
+          //         idReview: '',
+          //         content:
+          //             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
+          //         likes: 2,
+          //         rating: 2.5,
+          //         isLiked: true,
+          //         isValid: true,
+          //         createdAt: null,
+          //         updatedAt: null,
+          //         comments: 4,
+          //         business: BusinessData(
+          //             idBusiness: '',
+          //             name: 'Starbucks',
+          //             entity: 'Alsea',
+          //             rating: 4,
+          //             followed: true),
+          //         user: UserData(
+          //             idUser: '',
+          //             name: 'Harold',
+          //             lastName: 'Lancheros',
+          //             followed: true)))
+        ],
+      ),
+    );
+  }
+}
+
+class TrendingScreen extends StatefulWidget {
+  const TrendingScreen({
+    super.key,
+  });
+
+  @override
+  State<TrendingScreen> createState() => _TrendingScreenState();
+}
+
+class _TrendingScreenState extends State<TrendingScreen> {
+  int currentPage = 0;
+
+  final PageController _boardController =
+      PageController(initialPage: 0, viewportFraction: 1);
+  AnimatedContainer doIndicator(index) {
+    return AnimatedContainer(
+      margin: const EdgeInsets.only(right: 4, left: 4),
+      duration: const Duration(milliseconds: 300),
+      height: 2,
+      width: currentPage == index ? 12 : 10,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: currentPage == index
+            ? ColorStyle.darkPurple.withOpacity(0.8)
+            : Colors.grey.withOpacity(0.5),
+      ),
+    );
+  }
+
+  List images = [
+    'assets/images/ilustrations/banner_defraudados.jpg',
+    'assets/images/ilustrations/banner_defraudados2.jpg',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.only(bottom: 160),
+      child: Column(
+        children: [
+          Container(
+            height: 256,
+            margin: EdgeInsets.only(top: 162),
+            width: double.maxFinite,
+            child: PageView.builder(
+                physics: ClampingScrollPhysics(),
+                onPageChanged: (value) {
+                  setState(() {
+                    currentPage = value;
+                  });
+                },
+                controller: _boardController,
+                itemCount: images.length,
+                itemBuilder: (context, snapshot) {
+                  var scale = currentPage == snapshot ? 1.0 : 1.0;
+                  return TweenAnimationBuilder(
+                    duration: const Duration(milliseconds: 350),
+                    tween: Tween(begin: scale, end: scale),
+                    curve: Curves.ease,
+                    builder:
+                        (BuildContext context, double value, Widget? child) {
+                      return Transform.scale(
+                        scale: value,
+                        child: child,
+                      );
+                    },
+                    child: Image.asset(
+                      images[snapshot],
+                      fit: BoxFit.fitWidth,
+                    ),
+                  );
+                }),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children:
+                List.generate(images.length, (index) => doIndicator(index)),
+          ),
+
+          // Container(
+          //   height: 256,
+          //   margin: EdgeInsets.only(top: 162),
+          //   width: double.maxFinite,
+          //   padding: const EdgeInsets.only(left: 24, bottom: 16),
+          //   decoration: const BoxDecoration(
+          //       // gradient: GradientStyle().grayGradient,
+          //       image: DecorationImage(
+          //           image: AssetImage(
+          //               'assets/images/ilustrations/Banner 1 - W.jpg'))),
+          //   child: Stack(
+          //     children: [
+          //       Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         mainAxisAlignment: MainAxisAlignment.end,
+          //         children: [
+          //           // Text("Encabezado",
+          //           //     style: TextStyle(
+          //           //         color: Colors.white,
+          //           //         fontFamily: 'Montserrat',
+          //           //         fontSize: 14,
+          //           //         fontWeight: FontWeight.w500)),
+          //           const SizedBox(
+          //             height: 4,
+          //           ),
+          //           Text(
+          //             "Publicidad",
+          //             style: TextStyle(
+          //                 color: Colors.white.withOpacity(0.5),
+          //                 fontFamily: 'Montserrat',
+          //                 fontSize: 24,
+          //                 fontWeight: FontWeight.bold),
+          //           ),
+          //         ],
+          //       )
+          //     ],
+          //   ),
+          // ),
+
+          Column(
+            children: List.generate(
+                0,
+                (index) => Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Tendencia en Mexico",
+                            style: TextStyle(
+                                color: ColorStyle.textGrey,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(
+                            height: 6,
+                          ),
+                          Text(
+                            "Estafadores!!! No cumplen sus políticas, son unos corruptos.",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            "24 Me gusta • 6 comentarios",
+                            style: TextStyle(
+                                color: ColorStyle.textGrey,
+                                fontFamily: 'Montserrat',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    )),
+          ),
+          // const Divider(
+          //   color: ColorStyle.midToneGrey,
+          // ),
           // ReviewCardDefault(
           //     review: Review(
           //         idReview: '',

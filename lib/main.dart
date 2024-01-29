@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,15 +11,20 @@ import 'package:w_app/bloc/search_bloc/search_bloc.dart';
 import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
+import 'package:w_app/firebase_options.dart';
 import 'package:w_app/screens/signInUp/sign_in_screen.dart';
 import 'package:w_app/screens/start_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:w_app/services/firebase/firebase_api.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/snackbar.dart';
 import 'repository/user_repository.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotifications();
   await dotenv.load(fileName: ".env");
   final apiService = ApiService();
   final userRepository = UserRepository();

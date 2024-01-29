@@ -317,7 +317,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                           MaterialPageRoute(
                               builder: (context) => CountriesListScreen(
                                     listDrop: cities ?? [],
-                                    title: 'Lista de Estados',
+                                    title: 'Lista de Ciudades',
                                   )),
                         );
                       },
@@ -511,10 +511,8 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                                     jsonDecode(response.body)['business']));
                           } else if (response.statusCode == 400) {
                             showErrorSnackBar(
-                                context, "Hay algo malo con la información");
+                                context, jsonDecode(response.body)["message"]);
                           } else {
-                            print(response.statusCode);
-                            print(response.body);
                             showErrorSnackBar(
                                 context, "No se logró crear la empresa");
                           }
@@ -522,7 +520,7 @@ class _AddBusinessScreenState extends State<AddBusinessScreen> {
                           print(e);
 
                           if (!mounted) return;
-                          showErrorSnackBar(context, "Ocurrió un error: $e");
+                          showErrorSnackBar(context, e.toString());
                         }
                         setState(() {
                           isProcessing = false;

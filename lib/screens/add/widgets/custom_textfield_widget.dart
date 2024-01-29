@@ -42,6 +42,7 @@ class CustomTextFieldState extends State<CustomTextField> {
         focusNode: widget.focusNode,
         maxLines: 8,
         minLines: 1,
+        textCapitalization: TextCapitalization.sentences,
         validator: widget.validator,
         style: const TextStyle(
             fontWeight: FontWeight.w400,

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Business {
   String idBusiness;
   String name;
@@ -10,53 +12,65 @@ class Business {
   bool isValid;
   DateTime createdAt;
   DateTime updatedAt;
+  DateTime? joinedAt;
   double averageRating;
   int followers;
   bool isFollowed;
   UserInfo? user;
   Category? category;
+  int reviewsCount;
 
-  Business({
-    required this.idBusiness,
-    required this.name,
-    required this.entity,
-    required this.address,
-    required this.state,
-    required this.city,
-    this.profilePictureUrl,
-    required this.country,
-    required this.isValid,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.averageRating,
-    required this.followers,
-    required this.isFollowed,
-    this.user,
-    this.category,
-  });
+  Business(
+      {required this.idBusiness,
+      required this.name,
+      required this.entity,
+      required this.address,
+      required this.state,
+      required this.city,
+      this.profilePictureUrl,
+      required this.country,
+      required this.isValid,
+      required this.createdAt,
+      required this.updatedAt,
+      this.joinedAt,
+      required this.averageRating,
+      required this.followers,
+      required this.isFollowed,
+      this.user,
+      this.category,
+      required this.reviewsCount});
+
+  String get joinedDateFormatted {
+    final DateFormat formatter = DateFormat("MMMM 'de' yyyy", 'es_ES');
+    return "Te uniste en ${formatter.format(joinedAt!)}";
+  }
 
   factory Business.fromJson(Map<String, dynamic> json) {
     print(json);
     return Business(
-      idBusiness: json['_id_business'],
-      name: json['name'],
-      entity: json['entity'] ?? '',
-      address: json['address'] ?? '',
-      state: json['state'],
-      city: json['city'],
-      profilePictureUrl: json['profile_picture_url'],
-      country: json['country'],
-      isValid: json['is_valid'] ?? false,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      averageRating:
-          double.tryParse(json['average_rating']?.toString() ?? '0') ?? 0,
-      followers: json['followers'] ?? 0,
-      isFollowed: json['is_followed'] ?? false,
-      user: json['User'] != null ? UserInfo.fromJson(json['User']) : null,
-      category:
-          json['Category'] != null ? Category.fromJson(json['Category']) : null,
-    );
+        idBusiness: json['_id_business'],
+        name: json['name'],
+        entity: json['entity'] ?? '',
+        address: json['address'] ?? '',
+        state: json['state'],
+        city: json['city'],
+        profilePictureUrl: json['profile_picture_url'],
+        country: json['country'],
+        isValid: json['is_valid'] ?? false,
+        createdAt: DateTime.parse(json['createdAt']),
+        updatedAt: DateTime.parse(json['updatedAt']),
+        averageRating:
+            double.tryParse(json['average_rating']?.toString() ?? '0') ?? 0,
+        followers: json['followers'] ?? 0,
+        isFollowed: json['is_followed'] ?? false,
+        user: json['User'] != null ? UserInfo.fromJson(json['User']) : null,
+        category: json['Category'] != null
+            ? Category.fromJson(json['Category'])
+            : null,
+        reviewsCount:
+            int.tryParse(json['reviewsCount']?.toString() ?? '0') ?? 0,
+        joinedAt:
+            json['joinedAt'] != null ? DateTime.parse(json['joinedAt']) : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -77,6 +91,8 @@ class Business {
       'is_followed': isFollowed,
       'User': user?.toJson(),
       'Category': category?.toJson(),
+      'reviewsCount': reviewsCount,
+      'joinedAt': joinedAt
     };
   }
 }

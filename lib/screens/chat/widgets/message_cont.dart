@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:w_app/bloc/socket_bloc/socket_event.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/styles/gradient_style.dart';
@@ -76,7 +78,17 @@ class MessageContainer extends StatelessWidget {
                   child: RichText(
                     text: TextSpan(
                       children: [
-                        TextSpan(
+                        LinkifySpan(
+                          onOpen: (link) async {
+                            if (await canLaunchUrlString(link.url)) {
+                              await launchUrlString(link.url);
+                            } else {
+                              throw 'Could not launch $link';
+                            }
+                          },
+                          linkStyle: TextStyle(
+                            color: isMine ? Colors.white : ColorStyle.mainBlue,
+                          ),
                           text: message.content,
                           style: TextStyle(
                             fontSize: 16.0,
@@ -84,6 +96,14 @@ class MessageContainer extends StatelessWidget {
                             color: isMine ? Colors.white : Colors.black,
                           ),
                         ),
+                        // TextSpan(
+                        //   text: message.content,
+                        //   style: TextStyle(
+                        //     fontSize: 16.0,
+                        //     fontFamily: 'Montserrat',
+                        //     color: isMine ? Colors.white : Colors.black,
+                        //   ),
+                        // ),
                         TextSpan(
                           text: '\u00A0' * 15, // 10 espacios no rompibles
                           style: const TextStyle(

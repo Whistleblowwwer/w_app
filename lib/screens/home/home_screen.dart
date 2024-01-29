@@ -63,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
-        floatHeaderSlivers: true,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
@@ -155,26 +154,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                     size: 26,
                                   ),
                                 ),
-                                Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  child: Container(
-                                      width: 14,
-                                      height: 12,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: ColorStyle.darkPurple,
-                                      ),
-                                      child: const Text(
-                                        "1",
-                                        style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600),
-                                      )),
-                                ),
+                                // Positioned(
+                                //   top: 0,
+                                //   right: 0,
+                                //   child: Container(
+                                //       width: 14,
+                                //       height: 12,
+                                //       alignment: Alignment.center,
+                                //       decoration: BoxDecoration(
+                                //         borderRadius: BorderRadius.circular(20),
+                                //         color: ColorStyle.darkPurple,
+                                //       ),
+                                //       child: const Text(
+                                //         "1",
+                                //         style: TextStyle(
+                                //             fontFamily: 'Montserrat',
+                                //             fontSize: 10,
+                                //             color: Colors.white,
+                                //             fontWeight: FontWeight.w600),
+                                //       )),
+                                // ),
                               ],
                             ),
                           ),

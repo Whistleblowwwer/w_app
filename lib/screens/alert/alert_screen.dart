@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/styles/color_style.dart';
+import 'package:w_app/widgets/circularAvatar.dart';
 
 class AlertScreen extends StatefulWidget {
   final UserRepository userRepository;
@@ -70,83 +72,134 @@ class _AlertScreenState extends State<AlertScreen> {
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(top: 24),
-                itemCount: 1,
+                itemCount: 2,
                 itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      ListTile(
-                        leading: CircleAvatar(
-                          maxRadius: 30,
-                          backgroundColor: ColorStyle.lightGrey,
-                          child: true
-                              ? Image.asset(
-                                  'assets/images/logos/imagew.png',
-                                  width: 32,
-                                )
-                              : const Text(
-                                  "W",
-                                  style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                        ),
-                        trailing: const Padding(
-                          padding: EdgeInsets.only(top: 12),
-                          child: Icon(
-                            Icons.more_horiz,
-                            size: 28,
-                          ),
-                        ),
-                        title: const Text(
-                          "Whistleblowwer",
-                          style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w500),
-                        ),
-                        subtitle: const Column(
+                  return Container(
+                    width: double.maxFinite,
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Conoce todo lo que la aplicacion de Whistleblowwer te puede ofrecer",
-                              style: TextStyle(fontFamily: 'Montserrat'),
+                            Stack(
+                              children: [
+                                SizedBox(
+                                  width: 44,
+                                ),
+                                CircularAvatarW(
+                                    externalRadius: Offset(40, 40),
+                                    internalRadius: Offset(36, 36),
+                                    nameAvatar: "WA",
+                                    sizeText: 17,
+                                    isCompany: false),
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: index == 0
+                                            ? Colors.indigoAccent
+                                            : Colors.redAccent,
+                                        border: Border.all(
+                                            color: Colors.white, width: 2)),
+                                    child: Icon(
+                                      index == 0
+                                          ? Icons.person
+                                          : Icons.favorite,
+                                      color: Colors.white,
+                                      size: 10,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                             SizedBox(
-                              height: 5,
+                              width: 8,
                             ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 4),
-                                  child: Icon(
-                                    Icons.date_range,
-                                    size: 13,
-                                    color: Colors.grey,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          index == 0
+                                              ? "Whistleblowwer"
+                                              : "Jorge Ancer",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                      Text(
+                                        "  22 min",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Montserrat',
+                                            color: ColorStyle.textGrey),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Text(
-                                  "22 min",
-                                  style: TextStyle(
-                                      fontSize: 12, fontFamily: 'Montserrat'),
-                                ),
-                              ],
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    index == 0
+                                        ? "Publico su primer hilo"
+                                        : "Conoce todo lo que la aplicacion de Whistleblowwer te puede ofrecer",
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: ColorStyle.textGrey),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Visibility(
+                                    visible: index == 0,
+                                    child: Text(
+                                      "Conoce todo lo que la aplicacion de Whistleblowwer te puede ofrecer",
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  // Row(
+                                  //   children: [
+                                  //     Padding(
+                                  //       padding: EdgeInsets.only(right: 4),
+                                  //       child: Icon(
+                                  //         Icons.date_range,
+                                  //         size: 13,
+                                  //         color: Colors.grey,
+                                  //       ),
+                                  //     ),
+
+                                  //   ],
+                                  // )
+                                ],
+                              ),
                             )
                           ],
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 12),
-                        child: Divider(
-                          height: 0,
-                          color: ColorStyle.borderGrey,
-                          thickness: 0.4,
-                          // indent: 16,
-                          // endIndent: 16,
-                        ),
+                      Container(
+                        width: double.maxFinite,
+                        height: 1,
+                        margin: EdgeInsets.only(top: 16, bottom: 16),
+                        color: ColorStyle.borderGrey,
                       )
-                    ],
+                    ]),
                   );
                 },
               ),

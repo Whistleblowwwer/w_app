@@ -314,7 +314,7 @@ class CommentWidget extends StatelessWidget {
                                 PressTransform(
                                   onPressed: () {},
                                   child: Text(
-                                    "${comment.comments} respuestas",
+                                    "${comment.getComments}",
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w300,
                                         fontFamily: 'Montserrat'),

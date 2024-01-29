@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "71133385658",
+    "project_id": "whistleblowwer-notificaciones",
+    "storage_bucket": "whistleblowwer-notificaciones.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71133385658:android:04a8e2120468766f5d8383",
+        "android_client_info": {
+          "package_name": "com.whistleblowwer.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDg-PDRoVVBUV8ygcDNdybRv02d19Ke-hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

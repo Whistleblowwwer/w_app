@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDsM2nh_VLSM0f853dPJGbtdpqwwDS8tkA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>71133385658</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.whistleblowwer.app</string>
+	<key>PROJECT_ID</key>
+	<string>whistleblowwer-notificaciones</string>
+	<key>STORAGE_BUCKET</key>
+	<string>whistleblowwer-notificaciones.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:71133385658:ios:08b5af148dd0874a5d8383</string>
+</dict>
+</plist>

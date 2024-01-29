@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:w_app/models/article_model.dart';
 import 'package:w_app/styles/color_style.dart';
 
@@ -31,20 +32,24 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 256,
-                      width: sizeW * 100,
-                      padding: const EdgeInsets.only(bottom: 8),
-                      decoration: const BoxDecoration(
-                          // gradient: GradientStyle().grayGradient,
-                          ),
-                      child: Hero(
-                          tag: widget.index,
-                          child: Image.asset(
-                            widget.article.imageUrl,
-                            fit: BoxFit.cover,
-                            width: sizeW * 100,
-                          )),
-                    ),
+                        height: 256,
+                        width: sizeW * 100,
+                        padding: const EdgeInsets.only(bottom: 8),
+                        decoration: const BoxDecoration(
+                            // gradient: GradientStyle().grayGradient,
+                            ),
+                        child: Hero(
+                            tag: widget.index,
+                            child: widget.article.imageUrl != null
+                                ? Image.memory(
+                                    widget.article.imageUrl!,
+                                    width: double.maxFinite,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    'assets/images/logos/Whistle.png',
+                                    width: double.maxFinite,
+                                  ))),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 16),
@@ -57,34 +62,39 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
                             fontSize: 24),
                       ),
                     ),
-                    const SizedBox(
-                      height: 4,
-                    ),
+
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 0),
-                      child: Text(
-                        widget.article.content,
-                        style: const TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
+                          horizontal: 8, vertical: 4),
+                      child: Markdown(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          data: widget.article.content),
                     ),
-                    const SizedBox(
-                      height: 4,
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(
+                    //       horizontal: 24, vertical: 0),
+                    //   child: Text(
+                    //     widget.article.content,
+                    //     style: const TextStyle(
+                    //         fontFamily: 'Montserrat',
+                    //         fontSize: 14,
+                    //         fontWeight: FontWeight.w400),
+                    //   ),
+                    // ),
+
                     Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 24, top: 16),
+                        padding: const EdgeInsets.only(
+                            right: 24, top: 16, bottom: 16),
                         child: Text(
                           widget.article.formatDate(),
                           textAlign: TextAlign.right,
                           style: const TextStyle(
                               color: ColorStyle.textGrey,
                               fontFamily: 'Montserrat',
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w500),
                         ),
                       ),

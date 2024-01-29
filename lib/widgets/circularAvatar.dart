@@ -49,6 +49,7 @@ class CircularAvatarW extends StatelessWidget {
             : urlImage != null
                 ? Image.network(
                     urlImage!,
+                    width: internalRadius.dx,
                     fit: BoxFit.cover,
                   )
                 : Text(

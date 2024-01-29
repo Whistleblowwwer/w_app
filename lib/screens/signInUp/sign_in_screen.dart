@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
+import 'package:w_app/screens/signInUp/reset_password_screen.dart';
 import 'package:w_app/screens/signInUp/sign_up_screen.dart';
 import 'package:w_app/screens/signInUp/widgets/custom_textfield_widget.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
@@ -109,16 +110,25 @@ class _SignInScreenState extends State<SignInScreen> {
                     // _onSignInButtonPressed();
                   },
                 ),
-                const Align(
+                Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: EdgeInsets.only(top: 8, bottom: 16),
-                    child: Text(
-                      "¿Olvidaste tu contraseña?",
-                      style: TextStyle(
-                          color: Color.fromRGBO(100, 31, 137, 1),
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w600),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ResetPasswordScreen()));
+                      },
+                      child: const Text(
+                        "¿Olvidaste tu contraseña?",
+                        style: TextStyle(
+                            color: Color.fromRGBO(100, 31, 137, 1),
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
                 ),

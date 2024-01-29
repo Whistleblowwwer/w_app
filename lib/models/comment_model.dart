@@ -59,7 +59,11 @@ class Comment extends Equatable {
   }
 
   String get getLikes {
-    return likes == 1 ? '$likes Me gusta' : '$likes Me gustas';
+    return likes == 1 ? '$likes me gusta' : '$likes me gusta';
+  }
+
+  String get getComments {
+    return comments == 1 ? '$comments respuesta' : '$comments respuestas';
   }
 
   String get timeAgo {

@@ -209,7 +209,9 @@ class _InboxScreenState extends State<InboxScreen> {
                             child: TextField(
                               controller: _textFieldController,
                               focusNode: focusNodeTextField,
+                              textCapitalization: TextCapitalization.sentences,
                               onChanged: (content) => msg = content,
+                              style: const TextStyle(fontFamily: 'Montserrat'),
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Type a message...',

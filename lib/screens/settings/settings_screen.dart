@@ -1,11 +1,14 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
 import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
 import 'package:w_app/bloc/socket_bloc/socket_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
+import 'package:w_app/screens/signInUp/widgets/roundedBottomSheet.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
@@ -177,6 +180,61 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 fontFamily: 'Montserrat',
                               ),
                             ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16, right: 16, bottom: 8, top: 24),
+                            child: Text.rich(TextSpan(
+                                children: [
+                                  const TextSpan(
+                                      text:
+                                          "D.R.© ANCER 2023, S.A.P.I. DE C.V., México 2023. Utilización del sitio únicamente bajo "),
+                                  TextSpan(
+                                      text: "Términos legales",
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () async {
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           PDFScreen()),
+                                          // );
+
+                                          final Uri url = Uri.parse(
+                                              'https://whistleblowwer.com/t&c');
+                                          if (!await launchUrl(url)) {
+                                            print('Could not launch $url');
+                                          }
+                                        },
+                                      style: const TextStyle(
+                                          decoration:
+                                              TextDecoration.underline)),
+                                  const TextSpan(
+                                      text:
+                                          ". Pedro Infante # 1000, Colonia Cumbres Oro Regency, Monterrey, Nuevo León. México. 64347. "),
+                                  TextSpan(
+                                      text: "Aviso de Privacidad",
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () async {
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           PDFScreen()),
+                                          // );
+
+                                          final Uri url = Uri.parse(
+                                              'https://whistleblowwer.com/aviso-privacidad');
+                                          if (!await launchUrl(url)) {
+                                            print('Could not launch $url');
+                                          }
+                                        },
+                                      style: const TextStyle(
+                                          decoration:
+                                              TextDecoration.underline)),
+                                ],
+                                style: const TextStyle(
+                                    fontFamily: 'Montserrat', fontSize: 13))),
                           ),
                         ],
                       ),

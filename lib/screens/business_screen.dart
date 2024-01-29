@@ -48,97 +48,6 @@ class _BusinessScreenState extends State<BusinessScreen> {
     _loadReviews();
   }
 
-  Future<void> _loadReviews() async {
-    try {
-      var reviewsList =
-          await ApiService().getBusinessReviews(widget.business.idBusiness);
-      setState(() {
-        reviews = reviewsList;
-        isLoading = false;
-      });
-    } catch (e) {
-      // Handle the error or set state to show an error message
-      if (mounted) {
-        showErrorSnackBar(context, e.toString());
-      }
-
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void _likeReview(Review review) {
-    // Update the review with the new 'like' status
-    setState(() {
-      reviews = reviews
-          .map((r) => r.idReview == review.idReview
-              ? r.copyWith(
-                  isLiked: !r.isLiked,
-                  likes: r.isLiked ? r.likes - 1 : r.likes + 1)
-              : r)
-          .toList();
-    });
-  }
-
-  void _followUser(Review review) {
-    // Update the review with the new 'like' status
-    setState(() {
-      reviews = reviews
-          .map((r) => r.idReview == review.idReview
-              ? r.copyWith(
-                  user: r.user.copyWith(followed: !r.user.followed),
-                )
-              : r)
-          .toList();
-    });
-  }
-
-  void _followBusiness() {
-    // Update the review with the new 'like' status
-    setState(() {
-      widget.business.isFollowed = !widget.business.isFollowed;
-      // Actualizar el estado de 'followed' del usuario en los comentarios
-      reviews = reviews.map((reviewItem) {
-        return reviewItem.copyWith(
-            business: reviewItem.business!
-                .copyWith(followed: !reviewItem.business!.followed));
-      }).toList();
-    });
-  }
-
-  void _updateReviewsIfChanged(List<Review> updatedReviews) {
-    bool needsUpdate = false;
-
-    // Comprobar si alguna de las reseñas en el perfil ha sido actualizada en el feed
-    for (var updatedReview in updatedReviews) {
-      int index =
-          reviews.indexWhere((r) => r.idReview == updatedReview.idReview);
-      if (index != -1 && reviews[index] != updatedReview) {
-        reviews[index] = updatedReview;
-        needsUpdate = true;
-      }
-    }
-
-    // Si es necesario, actualizar la UI
-    if (needsUpdate) {
-      setState(() {});
-    }
-  }
-
-  void addCommentToReview(String reviewId) {
-    setState(() {
-      reviews = reviews.map((review) {
-        if (review.idReview == reviewId) {
-          return review.copyWith(
-            comments: review.comments + 1,
-          );
-        }
-        return review;
-      }).toList();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final sizeW = MediaQuery.of(context).size.width / 100;
@@ -154,7 +63,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
         child: Stack(
           children: [
             Positioned.fill(
-              top: 86,
+              top: 96,
               child: RefreshIndicator.adaptive(
                 color: ColorStyle.darkPurple,
                 onRefresh: () async {
@@ -341,6 +250,37 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                           _feedBloc
                                               .add(LikeReview(reviews[index]));
                                           _likeReview(reviews[index]);
+                                        },
+                                        onDelete: () async {
+                                          try {
+                                            final response = await ApiService()
+                                                .deleteReview(
+                                                    reviews[index].idReview);
+
+                                            if (response == 200) {
+                                              setState(() {
+                                                deleteReview(
+                                                    reviews[index].idReview);
+                                              });
+                                              _feedBloc.add(DeleteReview(
+                                                  reviews[index].idReview));
+                                              if (mounted) {
+                                                showSuccessSnackBar(context,
+                                                    message:
+                                                        "Se elimino la reseña exitosamente");
+                                              }
+                                            } else {
+                                              if (mounted) {
+                                                showErrorSnackBar(context,
+                                                    "No se pudo eliminar la reseña");
+                                              }
+                                            }
+                                          } catch (e) {
+                                            if (mounted) {
+                                              showErrorSnackBar(context,
+                                                  "No se pudo eliminar la reseña");
+                                            }
+                                          }
                                         },
                                         onComment: () async {
                                           final userBloc =
@@ -557,7 +497,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
               top: 0,
               child: Container(
                 width: sizeW * 100,
-                height: Platform.isIOS ? 102 : 56,
+                height: 102,
                 padding: const EdgeInsets.only(bottom: 16),
                 color: Colors.white,
                 alignment: Alignment.bottomCenter,
@@ -603,5 +543,101 @@ class _BusinessScreenState extends State<BusinessScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _loadReviews() async {
+    try {
+      var reviewsList =
+          await ApiService().getBusinessReviews(widget.business.idBusiness);
+      setState(() {
+        reviews = reviewsList;
+        isLoading = false;
+      });
+    } catch (e) {
+      // Handle the error or set state to show an error message
+      if (mounted) {
+        showErrorSnackBar(context, e.toString());
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void _likeReview(Review review) {
+    // Update the review with the new 'like' status
+    setState(() {
+      reviews = reviews
+          .map((r) => r.idReview == review.idReview
+              ? r.copyWith(
+                  isLiked: !r.isLiked,
+                  likes: r.isLiked ? r.likes - 1 : r.likes + 1)
+              : r)
+          .toList();
+    });
+  }
+
+  void _followUser(Review review) {
+    // Update the review with the new 'like' status
+    setState(() {
+      reviews = reviews
+          .map((r) => r.idReview == review.idReview
+              ? r.copyWith(
+                  user: r.user.copyWith(followed: !r.user.followed),
+                )
+              : r)
+          .toList();
+    });
+  }
+
+  void deleteReview(String reviewId) {
+    // Filtramos las reseñas para excluir la que queremos eliminar
+    reviews = reviews.where((review) => review.idReview != reviewId).toList();
+  }
+
+  void _followBusiness() {
+    // Update the review with the new 'like' status
+    setState(() {
+      widget.business.isFollowed = !widget.business.isFollowed;
+      // Actualizar el estado de 'followed' del usuario en los comentarios
+      reviews = reviews.map((reviewItem) {
+        return reviewItem.copyWith(
+            business: reviewItem.business!
+                .copyWith(followed: !reviewItem.business!.followed));
+      }).toList();
+    });
+  }
+
+  void _updateReviewsIfChanged(List<Review> updatedReviews) {
+    bool needsUpdate = false;
+
+    // Comprobar si alguna de las reseñas en el perfil ha sido actualizada en el feed
+    for (var updatedReview in updatedReviews) {
+      int index =
+          reviews.indexWhere((r) => r.idReview == updatedReview.idReview);
+      if (index != -1 && reviews[index] != updatedReview) {
+        reviews[index] = updatedReview;
+        needsUpdate = true;
+      }
+    }
+
+    // Si es necesario, actualizar la UI
+    if (needsUpdate) {
+      setState(() {});
+    }
+  }
+
+  void addCommentToReview(String reviewId) {
+    setState(() {
+      reviews = reviews.map((review) {
+        if (review.idReview == reviewId) {
+          return review.copyWith(
+            comments: review.comments + 1,
+          );
+        }
+        return review;
+      }).toList();
+    });
   }
 }

@@ -63,6 +63,10 @@ class Review extends Equatable {
     return likes == 1 ? '$likes me gusta' : '$likes me gusta';
   }
 
+  String get getComments {
+    return comments == 1 ? '$comments respuesta' : '$comments respuestas';
+  }
+
   String get timeAgo {
     if (createdAt == null) return 'Fecha desconocida';
 

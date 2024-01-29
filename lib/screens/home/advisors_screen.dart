@@ -6,10 +6,10 @@ class AdvisorScreen extends StatefulWidget {
   const AdvisorScreen({super.key});
 
   @override
-  _AdvisorScreenState createState() => _AdvisorScreenState();
+  AdvisorScreenState createState() => AdvisorScreenState();
 }
 
-class _AdvisorScreenState extends State<AdvisorScreen> {
+class AdvisorScreenState extends State<AdvisorScreen> {
   int currentPage = 0;
   int itemCountBoard = 2;
   final PageController _boardController =
@@ -37,8 +37,8 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
   }
 
   List images = [
-    'assets/images/ilustrations/brokersImages.png',
-    'assets/images/ilustrations/brokerInfo.png'
+    'assets/images/ilustrations/banner_broker1.jpg',
+    'assets/images/ilustrations/banner_broker2.jpg'
   ];
 
   @override

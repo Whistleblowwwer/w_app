@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/image_expanded.dart';
@@ -18,69 +19,35 @@ Widget buildAspectRatioWidget(
       );
     },
     child: images.length == 1
-        ? Image.network(
-            images[index],
+        ? CachedNetworkImage(
+            imageUrl: images[index],
             fit: images.length == 1 ? BoxFit.fitWidth : BoxFit.cover,
-            // Manejador de carga
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child; // Imagen cargada
-              return SizedBox(
-                height: 200,
-                child: Center(
-                  child: CircularProgressIndicator.adaptive(
-                    backgroundColor: ColorStyle.grey, // Fondo del indicador
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                        ColorStyle.darkPurple),
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
+            placeholder: (context, url) => SizedBox(
+                  height: 200,
+                  child: Center(
+                    child: CircularProgressIndicator.adaptive(
+                      backgroundColor: ColorStyle.grey, // Fondo del indicador
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                          ColorStyle.darkPurple),
+                    ),
                   ),
                 ),
-              );
-            },
-            // Manejador de errores
-            errorBuilder:
-                (BuildContext context, Object error, StackTrace? stackTrace) {
-              // Aquí puedes agregar lógica adicional si necesitas manejar diferentes tipos de errores de manera diferente
-              return const SizedBox(
-                height: 200,
-                child: Center(
-                  child: Icon(Icons.error_outline_outlined),
-                ),
-              );
-            },
-          )
+            errorWidget: (context, url, error) => Icon(Icons.error))
         : AspectRatio(
             aspectRatio: aspectRatio,
-            child: Image.network(
-              images[index],
+            child: CachedNetworkImage(
+              imageUrl: images[index],
               fit: images.length == 1 ? BoxFit.fitWidth : BoxFit.cover,
-              // Manejador de carga
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child; // Imagen cargada
-                return Center(
-                  child: CircularProgressIndicator.adaptive(
-                    backgroundColor: ColorStyle.grey, // Fondo del indicador
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                        ColorStyle.darkPurple),
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-              // Manejador de errores
-              errorBuilder:
-                  (BuildContext context, Object error, StackTrace? stackTrace) {
-                // Aquí puedes agregar lógica adicional si necesitas manejar diferentes tipos de errores de manera diferente
-                return const Center(
-                  child: Icon(Icons.error_outline_outlined),
-                );
-              },
+              placeholder: (context, url) => Center(
+                child: CircularProgressIndicator.adaptive(
+                  backgroundColor: ColorStyle.grey, // Fondo del indicador
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                      ColorStyle.darkPurple),
+                ),
+              ),
+              errorWidget: (context, url, error) => const Center(
+                child: Icon(Icons.error_outline_outlined),
+              ),
             ),
           ),
   );

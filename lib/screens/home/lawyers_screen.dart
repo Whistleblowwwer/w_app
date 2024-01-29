@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:w_app/styles/color_style.dart';
@@ -16,13 +14,6 @@ class LawyersScreenState extends State<LawyersScreen> {
   int itemCountBoard = 2;
   final PageController _boardController =
       PageController(initialPage: 0, viewportFraction: 1);
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {});
-  }
-
   AnimatedContainer doIndicator(index) {
     return AnimatedContainer(
       margin: const EdgeInsets.only(right: 4, left: 4),
@@ -38,9 +29,15 @@ class LawyersScreenState extends State<LawyersScreen> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {});
+  }
+
   List images = [
-    'assets/images/ilustrations/Legalmages.png',
-    'assets/images/ilustrations/LegalInfo.png'
+    'assets/images/ilustrations/banner_abogado1.jpg',
+    'assets/images/ilustrations/banner_abogado2.jpg',
   ];
 
   @override

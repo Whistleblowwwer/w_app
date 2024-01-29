@@ -23,7 +23,8 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
     emit(AuthUnauthenticated());
     await userRepository.deleteToken();
     try {
-      final response = await apiService.signIn(event.username, event.password);
+      final response =
+          await apiService.signIn(event.username.toLowerCase(), event.password);
       print(response);
 
       if (response.containsKey('token')) {
@@ -77,7 +78,7 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
         name: event.name,
         lastName: event.lastName,
         phone: event.phone,
-        email: event.email,
+        email: event.email.toLowerCase(),
         password: event.password,
         birthdate: event.birthdate.toString(),
         gender: event.gender,
