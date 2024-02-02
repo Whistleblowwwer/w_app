@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -32,7 +34,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>The app needs access to library in order to publish user-generated content to Whistleblowwer's network.</string>
+	<string>The app needs access to library in order to publish user-generated content to Whistleblowwer&apos;s network.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Whistleblower needs access to your photos to allow you to upload images when sharing your experiences about a company.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

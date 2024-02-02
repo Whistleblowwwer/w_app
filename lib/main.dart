@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'package:uni_links/uni_links.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +27,7 @@ import 'repository/user_repository.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseApi().initNotifications();
+
   await dotenv.load(fileName: ".env");
   final apiService = ApiService();
   final userRepository = UserRepository();
@@ -56,6 +59,8 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
+  StreamSubscription? _sub;
+
   Route<dynamic> generateRoute(RouteSettings settings) {
     return MaterialPageRoute(
         settings: settings,
@@ -78,6 +83,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addObserver(this); // Agrega el observer
+    initUniLinks();
     widget.authBloc.add(AppResumed());
   }
 
@@ -88,6 +94,24 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
       // widget.authBloc.add(AppResumed());
       // widget.appLifecycleBloc.add(AppLifecycleEvent.resumed);
     }
+  }
+
+  Future<void> initUniLinks() async {
+    // Escucha los enlaces entrantes
+    _sub = linkStream.listen((String? link) {
+      print("obvio --- ${link}");
+      if (link != null) {
+        // Maneja el enlace (por ejemplo, extrae el ID del post)
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => PostScreen(postId: extractPostId(link)),
+        //   ),
+        // );
+      }
+    }, onError: (err) {
+      // Maneja el error
+    });
   }
 
   @override

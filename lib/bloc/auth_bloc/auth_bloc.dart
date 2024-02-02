@@ -4,6 +4,7 @@ import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_state.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/services/api/api_service.dart';
+import 'package:w_app/services/firebase/firebase_api.dart';
 
 class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
   final ApiService apiService;
@@ -29,6 +30,7 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
 
       if (response.containsKey('token')) {
         await userRepository.saveToken(response['token']);
+        await FirebaseApi().initNotifications();
 
         emit(AuthAuthenticated());
       } else {

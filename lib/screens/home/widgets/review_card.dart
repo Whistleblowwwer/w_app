@@ -472,7 +472,7 @@ class ReviewCard extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 16, right: 18, bottom: 16),
-                                    child: SelectableLinkify(
+                                    child: Linkify(
                                       onOpen: (link) async {
                                         if (await canLaunchUrlString(
                                             link.url)) {

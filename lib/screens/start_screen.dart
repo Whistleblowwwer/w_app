@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,6 +58,22 @@ class StartPageState extends State<StartPage> {
         _fetchUserProfile();
         _socketBloc = BlocProvider.of<SocketBloc>(context);
         _socketBloc.add(Connect());
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("sapa");
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AlertScreen(widget.userRepository),
+          ));
+      print(message.data);
+      print(message.notification?.title);
+      if (message.data.containsKey('type')) {
+        String type = message.data['type'];
+
+        // Navegar a la pantalla correspondiente basada en 'type'
       }
     });
   }

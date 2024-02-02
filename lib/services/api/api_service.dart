@@ -27,6 +27,21 @@ class ApiService {
     _utils = ApiServerUtils(baseUrl, userRepository);
   }
 
+  Future<bool> sendTokenToServer(String fcmToken) async {
+    try {
+      var body = {"topic": "default", "FCM": fcmToken};
+
+      // Suponiendo que tienes un endpoint 'register-token' para manejar los tokens FCM
+      var response = await _utils.post('users/notifications/subscribe', body);
+      print(response.statusCode);
+      print(response.body);
+
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<http.Response> createReview({
     required String content,
     required String idBusiness,
@@ -671,6 +686,7 @@ class ApiServerUtils {
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
+      'User-Agent': Platform.isIOS ? 'IOS' : 'Android',
     };
 
     if (token != null) {
