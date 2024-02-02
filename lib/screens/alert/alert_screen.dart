@@ -72,7 +72,7 @@ class _AlertScreenState extends State<AlertScreen> {
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(top: 24),
-                itemCount: 2,
+                itemCount: 1,
                 itemBuilder: (context, index) {
                   return Container(
                     width: double.maxFinite,
