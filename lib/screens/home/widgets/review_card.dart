@@ -6,6 +6,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
@@ -545,7 +546,6 @@ class ReviewCard extends StatelessWidget {
                                                 const SizedBox(
                                                   width: 16,
                                                 ),
-
                                                 PressTransform(
                                                   onPressed: () async {
                                                     HapticFeedback
@@ -558,22 +558,25 @@ class ReviewCard extends StatelessWidget {
                                                     height: 20,
                                                   ),
                                                 ),
-                                                //                                             Flexible(
-
                                                 const SizedBox(
                                                   width: 16,
                                                 ),
-                                                // PressTransform(
-                                                //   onPressed: () {
-                                                //     HapticFeedback
-                                                //         .lightImpact();
-                                                //   },
-                                                //   child: SvgPicture.asset(
-                                                //     'assets/images/icons/send.svg',
-                                                //     width: 20,
-                                                //     height: 20,
-                                                //   ),
-                                                // ),
+                                                PressTransform(
+                                                  onPressed: () {
+                                                    HapticFeedback
+                                                        .lightImpact();
+                                                    // Construye la URL del review para compartir
+                                                    final String reviewUrl =
+                                                        'https://www.whistleblowwer.com/review/${review.idReview}';
+
+                                                    Share.share(reviewUrl);
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    'assets/images/icons/send.svg',
+                                                    width: 20,
+                                                    height: 20,
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                             RatingBar.builder(

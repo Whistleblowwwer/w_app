@@ -24,6 +24,7 @@ class ReviewPage extends StatefulWidget {
   final VoidCallback onFollowUser;
   final VoidCallback onFollowBusiness;
   final VoidCallback? onDelete;
+  final bool? isUniqueRoute;
   const ReviewPage(
       {super.key,
       required this.review,
@@ -31,7 +32,8 @@ class ReviewPage extends StatefulWidget {
       required this.onComment,
       required this.onFollowUser,
       this.onDelete,
-      required this.onFollowBusiness});
+      required this.onFollowBusiness,
+      this.isUniqueRoute});
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
@@ -298,7 +300,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     : const SizedBox(),
               ),
               Positioned(
-                bottom: 80,
+                bottom: widget.isUniqueRoute ?? false ? 0 : 80,
                 child: Container(
                   width: sizeW * 100,
                   decoration: const BoxDecoration(

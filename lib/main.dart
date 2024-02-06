@@ -83,7 +83,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addObserver(this); // Agrega el observer
-    initUniLinks();
+
     widget.authBloc.add(AppResumed());
   }
 
@@ -94,24 +94,6 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
       // widget.authBloc.add(AppResumed());
       // widget.appLifecycleBloc.add(AppLifecycleEvent.resumed);
     }
-  }
-
-  Future<void> initUniLinks() async {
-    // Escucha los enlaces entrantes
-    _sub = linkStream.listen((String? link) {
-      print("obvio --- ${link}");
-      if (link != null) {
-        // Maneja el enlace (por ejemplo, extrae el ID del post)
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => PostScreen(postId: extractPostId(link)),
-        //   ),
-        // );
-      }
-    }, onError: (err) {
-      // Maneja el error
-    });
   }
 
   @override

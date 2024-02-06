@@ -320,6 +320,17 @@ class ApiService {
     }
   }
 
+  Future<Review> getReview(String idReview) async {
+    var response = await _utils.get('reviews/info/?_id_review=$idReview');
+    final hanldeResponse = _utils.handleResponse(response);
+
+    // if (hanldeResponse.containsKey('reviews')) {
+    //   companyData = ['reviews'];
+    // }
+
+    return Review.fromJson(hanldeResponse);
+  }
+
   Future<List<Review>> getReviews() async {
     List<dynamic> companyData = [];
     try {

@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:uni_links/uni_links.dart';
 import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
 import 'package:w_app/bloc/feed_bloc/feed_event.dart';
 import 'package:w_app/bloc/feed_bloc/feed_state.dart';
@@ -15,6 +17,7 @@ import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/home/advisors_screen.dart';
 import 'package:w_app/screens/home/lawyers_screen.dart';
 import 'package:w_app/screens/chat/chat_screen.dart';
+import 'package:w_app/screens/home/review_screen.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
@@ -35,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late FeedBloc _feedBloc;
   late Future<List<Review>> futureReview;
   final ScrollController _scrollController = ScrollController();
+  StreamSubscription? _sub;
 
   @override
   void initState() {
@@ -51,6 +55,157 @@ class _HomeScreenState extends State<HomeScreen> {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {}
     });
+
+    initUniLinks();
+  }
+
+  Future<void> initUniLinks() async {
+    // Escucha los enlaces entrantes
+    _sub = linkStream.listen((String? link) async {
+      print("Enlace recibido: $link");
+      if (link != null) {
+        // Primero, verifica si es un enlace de review
+        if (isReviewLink(link)) {
+          // Extrae el ID del review del enlace
+          final String? reviewId = extractReviewId(link);
+          if (reviewId != null) {
+            // Si es un enlace de review, navega a la pantalla de Review
+            try {
+              final review = await ApiService().getReview(reviewId);
+              if (mounted) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  settings: const RouteSettings(),
+                  builder: (context) => ReviewPage(
+                      review: review,
+                      isUniqueRoute: true,
+                      onLike: () {
+                        _feedBloc.add(LikeReview(review));
+                      },
+                      onComment: () async {
+                        final userState = _userBloc.state;
+                        if (userState is UserLoaded) {
+                          Map<String, dynamic>? response =
+                              await showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  useRootNavigator: true,
+                                  barrierColor:
+                                      const Color.fromRGBO(0, 0, 0, 0.1),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20.0),
+                                      topRight: Radius.circular(20.0),
+                                    ),
+                                  ),
+                                  builder: (context) => CommentBottomSheet(
+                                        user: userState.user,
+                                        name: review.user.name,
+                                        lastName: review.user.lastName,
+                                        content: review.content,
+                                        images: review.images,
+                                      ));
+
+                          if (response != null) {
+                            try {
+                              final responseComment = await ApiService()
+                                  .commentReview(
+                                      content: response['content'],
+                                      idReview: review.idReview);
+
+                              if (mounted) {
+                                showSuccessSnackBar(context);
+                              }
+
+                              try {
+                                if (response['images'] != null) {
+                                  final imagesResponse =
+                                      await ApiService().uploadCommentImages(
+                                    responseComment.idComment,
+                                    response['images'],
+                                  );
+
+                                  print(imagesResponse.statusCode);
+
+                                  if (imagesResponse.statusCode == 201 ||
+                                      imagesResponse.statusCode == 200) {
+                                    print(imagesResponse.body);
+                                    final jsonImageResponse =
+                                        json.decode(imagesResponse.body);
+
+                                    print(jsonImageResponse);
+
+                                    // Convierte cada elemento de la lista a una cadena (String)
+                                    List<String> dynamicList =
+                                        List<String>.from(
+                                            jsonImageResponse['Images']
+                                                .map((e) => e.toString()));
+
+                                    // newReview = newReview.copyWith(
+                                    //     images: stringList);
+                                  }
+                                }
+                              } catch (e) {
+                                if (mounted) {
+                                  showErrorSnackBar(
+                                      context, "No se logró subir imagenes");
+                                }
+                              }
+
+                              _feedBloc.add(AddComment(
+                                  comment: responseComment,
+                                  reviewId: review.idReview));
+
+                              return 200;
+                            } catch (e) {
+                              if (mounted) {
+                                print("a--a");
+                                print(e);
+                                showErrorSnackBar(context,
+                                    'No se pudo agregar el comentario');
+                              }
+                            }
+                          }
+                        }
+                      },
+                      onFollowUser: () {
+                        _feedBloc.add(FollowUser(review.user.idUser));
+                      },
+                      onFollowBusiness: () {
+                        _feedBloc.add(
+                            FollowBusiness(review.business?.idBusiness ?? ''));
+                      }),
+                ));
+              }
+            } catch (e) {}
+          }
+        } else {
+          // Aquí puedes manejar otros tipos de enlaces
+          print("El enlace no es de un review.");
+        }
+      }
+    }, onError: (err) {
+      // Maneja el error
+    });
+  }
+
+  // Mejora de la función para verificar si es un enlace de review
+  bool isReviewLink(String link) {
+    final Uri? uri = Uri.tryParse(link);
+    // Verifica si el URI es válido y si el enlace corresponde a un review
+    return uri != null &&
+        uri.host == 'www.whistleblowwer.com' &&
+        uri.pathSegments.isNotEmpty &&
+        uri.pathSegments.first == 'review';
+  }
+
+// Función para extraer el ID del review de un enlace
+  String? extractReviewId(String link) {
+    if (isReviewLink(link)) {
+      final Uri uri = Uri.parse(link);
+      // Suponiendo que el ID siempre sigue después del segmento 'review'
+      return uri.pathSegments.length > 1 ? uri.pathSegments[1] : null;
+    }
+    return null;
   }
 
   @override

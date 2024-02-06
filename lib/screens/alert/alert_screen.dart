@@ -90,7 +90,7 @@ class _AlertScreenState extends State<AlertScreen> {
                                 CircularAvatarW(
                                     externalRadius: Offset(40, 40),
                                     internalRadius: Offset(36, 36),
-                                    nameAvatar: "WA",
+                                    nameAvatar: "W",
                                     sizeText: 17,
                                     isCompany: false),
                                 Positioned(
@@ -138,14 +138,14 @@ class _AlertScreenState extends State<AlertScreen> {
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),
-                                      Text(
-                                        "  22 min",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: 'Montserrat',
-                                            color: ColorStyle.textGrey),
-                                      ),
+                                      // Text(
+                                      //   "  22 min",
+                                      //   style: TextStyle(
+                                      //       fontSize: 14,
+                                      //       fontWeight: FontWeight.w500,
+                                      //       fontFamily: 'Montserrat',
+                                      //       color: ColorStyle.textGrey),
+                                      // ),
                                     ],
                                   ),
                                   SizedBox(
