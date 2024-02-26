@@ -7,22 +7,23 @@ class Assistant {
   final String email;
   final String type;
   final bool isValid;
+  final String? imgUrl;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String? profilePictureUrl;
 
-  Assistant(
-      {required this.idBroker,
-      required this.name,
-      required this.lastName,
-      required this.ine,
-      required this.phoneNumber,
-      required this.email,
-      required this.type,
-      required this.isValid,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.profilePictureUrl});
+  Assistant({
+    required this.idBroker,
+    required this.name,
+    required this.lastName,
+    required this.ine,
+    required this.phoneNumber,
+    required this.email,
+    required this.type,
+    required this.isValid,
+    this.imgUrl,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
   factory Assistant.fromJson(Map<String, dynamic> json) {
     return Assistant(
@@ -34,9 +35,9 @@ class Assistant {
       email: json['email'],
       type: json['type'],
       isValid: json['is_valid'],
+      imgUrl: json['img_url'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      profilePictureUrl: json['profile_picture_url'],
     );
   }
 
@@ -52,7 +53,6 @@ class Assistant {
       'is_valid': isValid,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
-      'profile_picture_url': profilePictureUrl
     };
   }
 }

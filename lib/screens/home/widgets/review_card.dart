@@ -17,9 +17,11 @@ import 'package:w_app/screens/business_screen.dart';
 import 'package:w_app/screens/home/review_screen.dart';
 import 'package:w_app/screens/home/widgets/images_dimension_widget.dart';
 import 'package:w_app/screens/profile/foreign_profile_screen.dart';
+import 'package:w_app/screens/profile/widgets/follow_bottom_sheet_widget.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
+import 'package:w_app/widgets/likes_bottom_sheet_widget.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
 import 'package:w_app/widgets/snackbar.dart';
 
@@ -193,9 +195,14 @@ class ReviewCard extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () async {
+                                      showLoadingDialog(context);
                                       await ApiService()
                                           .getProfileDetail(review.user.idUser)
                                           .then((value) {
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
+
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -203,6 +210,9 @@ class ReviewCard extends StatelessWidget {
                                                   ForeignProfileScreen(value)),
                                         );
                                       }, onError: (e) {
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
                                         showErrorSnackBar(
                                             context, e.toString());
                                       });
@@ -329,10 +339,15 @@ class ReviewCard extends StatelessWidget {
                                     ),
                                     GestureDetector(
                                       onTap: () async {
+                                        showLoadingDialog(context);
                                         await ApiService()
                                             .getProfileDetail(
                                                 review.user.idUser)
                                             .then((value) {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop();
+
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -341,6 +356,9 @@ class ReviewCard extends StatelessWidget {
                                                         value)),
                                           );
                                         }, onError: (e) {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop();
                                           showErrorSnackBar(
                                               context, e.toString());
                                         });
@@ -508,8 +526,11 @@ class ReviewCard extends StatelessWidget {
                                           : 256,
                                       width: double.maxFinite,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          border: Border.all(
+                                              color: ColorStyle.grey
+                                                  .withOpacity(0.3))),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(8),
                                         child: buildDynamicLayout(
@@ -618,7 +639,32 @@ class ReviewCard extends StatelessWidget {
                                       child: Row(
                                         children: [
                                           PressTransform(
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              await showModalBottomSheet(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  useRootNavigator: true,
+                                                  barrierColor:
+                                                      const Color.fromRGBO(
+                                                          0, 0, 0, 0.1),
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(20.0),
+                                                      topRight:
+                                                          Radius.circular(20.0),
+                                                    ),
+                                                  ),
+                                                  builder: (context) =>
+                                                      LikesBottomSheetWidget(
+                                                        reviewId:
+                                                            review.idReview,
+                                                        userMain: stateUser
+                                                            .user.idUser,
+                                                      ));
+                                            },
                                             child: Text(
                                               review.getLikes,
                                               style: const TextStyle(
@@ -685,4 +731,38 @@ class ReviewCard extends StatelessWidget {
           )
         : const SizedBox();
   }
+}
+
+void showLoadingDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // Impide que se cierre el diálogo al tocar fuera
+    builder: (BuildContext context) {
+      return Center(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          // decoration: BoxDecoration(
+          //   shape: BoxShape.rectangle,
+          //   borderRadius: BorderRadius.circular(10),
+          // ),
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator.adaptive(
+                backgroundColor: Colors.white,
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(ColorStyle.darkPurple),
+              ),
+              SizedBox(height: 15),
+              // Text("Cargando...",
+              //     style: TextStyle(
+              //         fontSize: 16,
+              //         fontFamily: 'Montserrat',
+              //         color: Colors.white)),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

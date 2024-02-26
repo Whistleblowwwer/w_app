@@ -41,7 +41,7 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
                         child: Hero(
                             tag: widget.index,
                             child: widget.article.imageUrl != null
-                                ? Image.memory(
+                                ? Image.network(
                                     widget.article.imageUrl!,
                                     width: double.maxFinite,
                                     fit: BoxFit.cover,

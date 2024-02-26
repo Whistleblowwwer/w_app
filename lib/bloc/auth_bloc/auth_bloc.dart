@@ -41,7 +41,12 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
         }
       }
     } catch (e) {
-      emit(AuthError(e.toString()));
+      if (e == 'Token is invalid or expired.') {
+        //Gestion del token
+        emit(AuthError(''));
+      } else {
+        emit(AuthError(e.toString()));
+      }
     }
   }
 
@@ -62,11 +67,17 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
         emit(AuthUnauthenticated());
       }
     } catch (e) {
-      emit(AuthError(e.toString()));
+      if (e.toString().contains('Token is invalid or expired.')) {
+        //Gestion del token
+        emit(AuthError(''));
+      } else {
+        emit(AuthError(e.toString()));
+      }
     }
   }
 
   FutureOr<void> _logOutUser(LogOutUser event, Emitter<AuthState> emit) async {
+    await apiService.logOut();
     await userRepository.deleteToken();
     emit(AuthUnauthenticated());
   }

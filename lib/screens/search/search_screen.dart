@@ -402,109 +402,137 @@ class SearchScreenState extends State<SearchScreen>
                                                   );
                                                 },
                                                 child: Container(
+                                                  height: 112,
                                                   margin: const EdgeInsets
                                                       .symmetric(
                                                       horizontal: 24,
                                                       vertical: 8),
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      vertical: 10,
-                                                      horizontal: 10),
                                                   decoration: BoxDecoration(
                                                       color: Colors.white,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              10)),
-                                                  child: Column(
+                                                              10),
+                                                      boxShadow: [
+                                                        ShadowStyle()
+                                                            .baseComponentShadow
+                                                      ]),
+                                                  child: Row(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
                                                       Container(
-                                                        width: double.maxFinite,
+                                                        width: 128,
+                                                        height: 112,
                                                         margin: const EdgeInsets
-                                                            .only(bottom: 10),
+                                                            .only(right: 16),
                                                         clipBehavior: Clip
                                                             .antiAliasWithSaveLayer,
                                                         decoration: BoxDecoration(
                                                             color: Colors.white,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
+                                                            borderRadius: BorderRadius
+                                                                .horizontal(
+                                                                    left: Radius
+                                                                        .circular(
+                                                                            8))),
                                                         child: Hero(
                                                             tag: index,
-                                                            child:
-                                                                article.imageUrl !=
-                                                                        null
-                                                                    ? Image
-                                                                        .memory(
-                                                                        article
-                                                                            .imageUrl!,
-                                                                        width: double
-                                                                            .maxFinite,
-                                                                        fit: BoxFit
-                                                                            .fitWidth,
-                                                                      )
-                                                                    : Image
-                                                                        .asset(
-                                                                        'assets/images/logos/Whistle.png',
-                                                                        width: double
-                                                                            .maxFinite,
-                                                                      )),
+                                                            child: article
+                                                                        .imageUrl !=
+                                                                    null
+                                                                ? Image.network(
+                                                                    article
+                                                                        .imageUrl!,
+                                                                    width: double
+                                                                        .maxFinite,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  )
+                                                                : Image.asset(
+                                                                    'assets/images/logos/Whistle.png',
+                                                                    width: double
+                                                                        .maxFinite,
+                                                                  )),
                                                       ),
-                                                      Text(
-                                                        article.title,
-                                                        style: const TextStyle(
-                                                            color: Colors.black,
-                                                            fontFamily:
-                                                                'Montserrat',
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: 14),
+                                                      Expanded(
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 8,
+                                                                  bottom: 8,
+                                                                  right: 8),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            children: [
+                                                              Text(
+                                                                article.title,
+                                                                maxLines: 2,
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontSize:
+                                                                        14),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 4,
+                                                              ),
+                                                              Text(
+                                                                article
+                                                                    .subtitle,
+                                                                maxLines: 2,
+                                                                style: const TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400),
+                                                              ),
+                                                              Expanded(
+                                                                child: Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .bottomLeft,
+                                                                  child: Text(
+                                                                    article
+                                                                        .formatDate(),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .right,
+                                                                    style: const TextStyle(
+                                                                        color: ColorStyle
+                                                                            .textGrey,
+                                                                        fontFamily:
+                                                                            'Montserrat',
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
                                                       ),
-                                                      const SizedBox(
-                                                        height: 4,
-                                                      ),
+
                                                       // Markdown(
                                                       //     shrinkWrap: true,
                                                       //     physics:
                                                       //         NeverScrollableScrollPhysics(),
                                                       //     data:
                                                       //         article.content),
-
-                                                      Text(
-                                                        article.subtitle,
-                                                        maxLines: 5,
-                                                        style: const TextStyle(
-                                                            fontFamily:
-                                                                'Montserrat',
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 4,
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .centerRight,
-                                                        child: Text(
-                                                          article.formatDate(),
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          style: const TextStyle(
-                                                              color: ColorStyle
-                                                                  .textGrey,
-                                                              fontFamily:
-                                                                  'Montserrat',
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                      ),
                                                     ],
                                                   ),
                                                 ));

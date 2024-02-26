@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -9,17 +10,21 @@ import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/comment_model.dart';
+import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/actions/review_bottom_sheet.dart';
+import 'package:w_app/screens/add/add_review.dart';
 import 'package:w_app/screens/chat/chat_screen.dart';
 import 'package:w_app/screens/chat/inbox_screen.dart';
 import 'package:w_app/screens/home/widgets/comment_card.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
+import 'package:w_app/screens/profile/widgets/follow_bottom_sheet_widget.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
+import 'package:w_app/widgets/business_card.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
 import 'package:w_app/widgets/snackbar.dart';
@@ -38,12 +43,15 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
   late Future<List<Review>> futureListReview;
   List<Review> reviews = [];
   List<Comment> comments = [];
+  List<Business> businesses = [];
   bool isLoading = true;
   late FeedBloc feedBloc;
   late UserBloc userBloc;
   late User userMain;
   late User currentUser;
   TabController? _tabController;
+  StreamController<List<Business>> businessStreamController =
+      StreamController();
 
   @override
   void initState() {
@@ -59,6 +67,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
     }
     _loadReviews();
     loadCommentsByUser();
+    // loadBusinessFollowed();
   }
 
   @override
@@ -278,53 +287,146 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
                                               children: [
-                                                Text.rich(
-                                                  TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                          text: currentUser
-                                                              .followings
-                                                              .toString(),
-                                                          style: const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                      const TextSpan(
-                                                        text: ' Seguidos   ',
+                                                Row(
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        await showModalBottomSheet(
+                                                            context: context,
+                                                            isScrollControlled:
+                                                                true,
+                                                            useRootNavigator:
+                                                                true,
+                                                            barrierColor:
+                                                                const Color
+                                                                    .fromRGBO(0,
+                                                                    0, 0, 0.1),
+                                                            shape:
+                                                                const RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        20.0),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        20.0),
+                                                              ),
+                                                            ),
+                                                            builder: (context) =>
+                                                                FollowBottomSheetWidget(
+                                                                  userId:
+                                                                      currentUser
+                                                                          .idUser,
+                                                                  userMainId:
+                                                                      userMain
+                                                                          .idUser,
+                                                                  initialIndex:
+                                                                      0,
+                                                                ));
+                                                      },
+                                                      child: Text.rich(
+                                                        TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                                text: currentUser
+                                                                    .followers
+                                                                    .toString(),
+                                                                style: const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold)),
+                                                            TextSpan(
+                                                              text: currentUser
+                                                                          .followers ==
+                                                                      1
+                                                                  ? ' Seguidor  '
+                                                                  : ' Seguidores  ',
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: const TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontSize: 14,
+                                                        ),
                                                       ),
-                                                      TextSpan(
-                                                          text: currentUser
-                                                              .followers
-                                                              .toString(),
-                                                          style: const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                      const TextSpan(
-                                                        text: ' Seguidores',
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        await showModalBottomSheet(
+                                                            context: context,
+                                                            isScrollControlled:
+                                                                true,
+                                                            useRootNavigator:
+                                                                true,
+                                                            barrierColor:
+                                                                const Color
+                                                                    .fromRGBO(0,
+                                                                    0, 0, 0.1),
+                                                            shape:
+                                                                const RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        20.0),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        20.0),
+                                                              ),
+                                                            ),
+                                                            builder: (context) =>
+                                                                FollowBottomSheetWidget(
+                                                                  userId:
+                                                                      currentUser
+                                                                          .idUser,
+                                                                  userMainId:
+                                                                      userMain
+                                                                          .idUser,
+                                                                  initialIndex:
+                                                                      1,
+                                                                ));
+                                                      },
+                                                      child: Text.rich(
+                                                        TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                                text: currentUser
+                                                                    .followings
+                                                                    .toString(),
+                                                                style: const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold)),
+                                                            TextSpan(
+                                                              text: currentUser
+                                                                          .followings ==
+                                                                      1
+                                                                  ? ' Seguido '
+                                                                  : ' Seguidos ',
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: const TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontSize: 14,
+                                                        ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.left,
-                                                  style: const TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 14,
-                                                  ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                // Text(
-                                                //   currentUser.email,
-                                                //   maxLines: 1,
-                                                //   overflow:
-                                                //       TextOverflow.ellipsis,
-                                                //   style: TextStyle(
-                                                //       fontWeight:
-                                                //           FontWeight.w400,
-                                                //       fontSize: 14,
-                                                //       color: Colors.black,
-                                                //       fontFamily: 'Montserrat'),
-                                                // ),
                                               ],
                                             ),
                                           ),
@@ -441,7 +543,7 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                             tabs: const [
                               Tab(text: 'Reseñas'),
                               Tab(text: 'Comentarios'),
-                              // Tab(text: 'Me gusta'),
+                              // Tab(text: 'Proyectos'),
                             ],
                           ),
                         )),
@@ -449,7 +551,11 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                 },
                 body: TabBarView(
                   controller: _tabController,
-                  children: [_buildProfileReviews(), _buildCommentsTabBar()],
+                  children: [
+                    _buildProfileReviews(),
+                    _buildCommentsTabBar(),
+                    // _buildBusinessFollowed()
+                  ],
                 ),
               ),
             ),
@@ -761,6 +867,110 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
         ],
       ),
     );
+  }
+
+  Future<void> loadBusinessFollowed() async {
+    try {
+      final businessList =
+          await ApiService().getBusinessFollowed(currentUser.idUser);
+      businessStreamController.add(businessList);
+
+      if (mounted) {
+        setState(() {
+          businesses = businessList;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      // Handle the error or set state to show an error message
+      if (mounted) {
+        showErrorSnackBar(context, e.toString());
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  Widget _buildBusinessFollowed() {
+    return RefreshIndicator.adaptive(
+        color: ColorStyle.darkPurple,
+        backgroundColor: ColorStyle.grey,
+        onRefresh: () async {
+          await loadBusinessFollowed();
+          Future.delayed(const Duration(milliseconds: 1000));
+        },
+        child:
+            CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
+          isLoading
+              ? const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 96),
+                    child: Center(
+                        child: CircularProgressIndicator.adaptive(
+                      backgroundColor: ColorStyle.grey, // Fondo del indicador
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(ColorStyle.darkPurple),
+                    )),
+                  ),
+                )
+              : businesses.isEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding:
+                              EdgeInsets.only(top: 96, left: 24, right: 24),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  'Aún no es miembro de proyectos',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ],
+                          )),
+                    )
+                  : SliverPadding(
+                      padding: const EdgeInsets.only(bottom: 128),
+                      sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                              childCount: businesses
+                                  .length, // número de items en la lista
+                              (BuildContext context, int index) {
+                        return BusinessWidget(
+                          business: businesses[index],
+                          onAddReview: () async {
+                            final userState = userBloc.state;
+                            if (userState is UserLoaded) {
+                              await showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  barrierColor:
+                                      const Color.fromRGBO(0, 0, 0, 0.1),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20.0),
+                                      topRight: Radius.circular(20.0),
+                                    ),
+                                  ),
+                                  builder: (context) => BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 6, sigmaY: 6),
+                                      child: CombinedBottomSheet(
+                                        user: userState.user,
+                                        business: businesses[index],
+                                      )));
+                            }
+                          },
+                        );
+                      })))
+        ]));
   }
 
   UnderlineTabIndicator _customUnderlineIndicator() {

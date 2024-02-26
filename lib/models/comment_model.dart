@@ -33,6 +33,7 @@ class Comment extends Equatable {
       this.images});
 
   factory Comment.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Comment(
       idComment: json['_id_comment'],
       content: json['content'],
@@ -72,15 +73,27 @@ class Comment extends Equatable {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
 
-    if (difference.inDays >= 1) {
-      // Si la diferencia es mayor a un día, devuelve la fecha en formato día/mes/año.
+    if (difference.inDays > 90) {
+      // Si la diferencia es mayor a 90 días (aproximadamente 3 meses), se muestra la fecha.
       return DateFormat('dd/MM/yy').format(createdAt);
+    } else if (difference.inDays >= 30) {
+      // Si ha pasado al menos un mes, pero menos de tres meses.
+      final months = difference.inDays ~/ 30;
+      return DateFormat('dd/MM/yy').format(createdAt);
+      //return '$months ${months == 1 ? 'mes' : 'meses'}';
+    } else if (difference.inDays >= 7) {
+      // Si ha pasado al menos una semana, pero menos de un mes.
+      final weeks = difference.inDays ~/ 7;
+      return '$weeks ${weeks == 1 ? 'semana' : 'semanas'}';
+    } else if (difference.inDays >= 1) {
+      // Si ha pasado al menos un día, pero menos de una semana.
+      return '${difference.inDays} ${difference.inDays == 1 ? 'día' : 'días'}';
     } else if (difference.inHours >= 1) {
       // Si ha pasado al menos una hora, pero menos de un día.
       return '${difference.inHours} ${difference.inHours == 1 ? 'hora' : 'horas'}';
     } else if (difference.inMinutes >= 1) {
       // Si ha pasado al menos un minuto, pero menos de una hora.
-      return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'minuto' : 'minutos'}';
+      return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'min' : 'min'}';
     } else {
       // Si ha pasado menos de un minuto.
       return 'Justo ahora';

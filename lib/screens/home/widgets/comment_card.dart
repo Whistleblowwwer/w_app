@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/screens/actions/review_bottom_sheet.dart';
 import 'package:w_app/screens/home/comment_screen.dart';
 import 'package:w_app/screens/home/widgets/images_dimension_widget.dart';
+import 'package:w_app/screens/home/widgets/review_card.dart';
+import 'package:w_app/screens/profile/foreign_profile_screen.dart';
+import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/widgets/circularAvatar.dart';
+import 'package:w_app/widgets/likes_bottom_sheet_widget.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
+import 'package:w_app/widgets/snackbar.dart';
 
 class CommentWidget extends StatelessWidget {
   final User userMain;
@@ -64,40 +73,60 @@ class CommentWidget extends StatelessWidget {
                   left: 16, right: 16, top: 16, bottom: 4),
               child: Row(
                 children: [
-                  SizedBox(
-                    width: 42,
-                    child: Stack(
-                      children: [
-                        CircularAvatarW(
-                          externalRadius: const Offset(38, 38),
-                          internalRadius: const Offset(34, 34),
-                          nameAvatar: comment.user.name.substring(0, 1),
-                          isCompany: false,
-                          sizeText: 22,
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Visibility(
-                            visible: userMain.idUser == comment.user.idUser
-                                ? false
-                                : !comment.user.followed,
-                            child: PressTransform(
-                              onPressed: onFollowUser,
-                              child: Container(
-                                  width: 18,
-                                  height: 18,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white),
-                                  child: const Icon(
-                                    Icons.add_circle_rounded,
-                                    size: 18,
-                                  )),
+                  GestureDetector(
+                    onTap: () async {
+                      showLoadingDialog(context);
+                      await ApiService()
+                          .getProfileDetail(comment.user.idUser)
+                          .then((value) {
+                        Navigator.of(context, rootNavigator: true).pop();
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ForeignProfileScreen(value)),
+                        );
+                      }, onError: (e) {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        showErrorSnackBar(context, e.toString());
+                      });
+                    },
+                    child: SizedBox(
+                      width: 42,
+                      child: Stack(
+                        children: [
+                          CircularAvatarW(
+                            externalRadius: const Offset(38, 38),
+                            internalRadius: const Offset(34, 34),
+                            nameAvatar: comment.user.name.substring(0, 1),
+                            isCompany: false,
+                            sizeText: 22,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Visibility(
+                              visible: userMain.idUser == comment.user.idUser
+                                  ? false
+                                  : !comment.user.followed,
+                              child: PressTransform(
+                                onPressed: onFollowUser,
+                                child: Container(
+                                    width: 18,
+                                    height: 18,
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white),
+                                    child: const Icon(
+                                      Icons.add_circle_rounded,
+                                      size: 18,
+                                    )),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -109,12 +138,34 @@ class CommentWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "${comment.user.name} ${comment.user.lastName}",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Montserrat',
-                                fontSize: 14),
+                          GestureDetector(
+                            onTap: () async {
+                              showLoadingDialog(context);
+                              await ApiService()
+                                  .getProfileDetail(comment.user.idUser)
+                                  .then((value) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ForeignProfileScreen(value)),
+                                );
+                              }, onError: (e) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                                showErrorSnackBar(context, e.toString());
+                              });
+                            },
+                            child: Text(
+                              "${comment.user.name} ${comment.user.lastName}",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 14),
+                            ),
                           ),
                           const SizedBox(
                             height: 1,
@@ -206,11 +257,32 @@ class CommentWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 24, right: 18, bottom: 12),
+                        //   child: Text(
+                        //     comment.content,
+                        //     textAlign: TextAlign.start,
+                        //     style: const TextStyle(
+                        //       fontWeight: FontWeight.w400,
+                        //       fontFamily: 'Montserrat',
+                        //       height: 1.42,
+                        //       letterSpacing: 0.36,
+                        //     ),
+                        //   ),
+                        // ),
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 24, right: 18, bottom: 12),
-                          child: Text(
-                            comment.content,
+                          child: Linkify(
+                            onOpen: (link) async {
+                              if (await canLaunchUrlString(link.url)) {
+                                await launchUrlString(link.url);
+                              } else {
+                                throw 'Could not launch $link';
+                              }
+                            },
+                            text: comment.content,
                             textAlign: TextAlign.start,
                             style: const TextStyle(
                               fontWeight: FontWeight.w400,
@@ -218,6 +290,7 @@ class CommentWidget extends StatelessWidget {
                               height: 1.42,
                               letterSpacing: 0.36,
                             ),
+                            linkStyle: TextStyle(color: ColorStyle.mainBlue),
                           ),
                         ),
                         if (comment.images?.isNotEmpty ?? false)
@@ -277,7 +350,18 @@ class CommentWidget extends StatelessWidget {
                                         width: 16,
                                       ),
                                       PressTransform(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          HapticFeedback.lightImpact();
+                                          // Construye la URL del review para compartir
+                                          final String reviewUrl =
+                                              'https://www.whistleblowwer.com/review/${comment.idReview}';
+
+                                          //identificar cuando recibo el detail que el back me devuelva si es review o comment
+                                          //un review puede llegar a tener el mismo id que un comment
+                                          //por ahora quedara con el id review del comment para que no se dañe
+
+                                          Share.share(reviewUrl);
+                                        },
                                         child: SvgPicture.asset(
                                           'assets/images/icons/send.svg',
                                           width: 18,
@@ -297,7 +381,25 @@ class CommentWidget extends StatelessWidget {
                             child: Row(
                               children: [
                                 PressTransform(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        useRootNavigator: true,
+                                        barrierColor:
+                                            const Color.fromRGBO(0, 0, 0, 0.1),
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20.0),
+                                            topRight: Radius.circular(20.0),
+                                          ),
+                                        ),
+                                        builder: (context) =>
+                                            LikesBottomSheetWidget(
+                                              reviewId: comment.idReview,
+                                              userMain: userMain.idUser,
+                                            ));
+                                  },
                                   child: Text(
                                     "${comment.likes} Me gustas",
                                     style: const TextStyle(

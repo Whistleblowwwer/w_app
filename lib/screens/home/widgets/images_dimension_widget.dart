@@ -35,19 +35,38 @@ Widget buildAspectRatioWidget(
             errorWidget: (context, url, error) => Icon(Icons.error))
         : AspectRatio(
             aspectRatio: aspectRatio,
-            child: CachedNetworkImage(
-              imageUrl: images[index],
-              fit: images.length == 1 ? BoxFit.fitWidth : BoxFit.cover,
-              placeholder: (context, url) => Center(
-                child: CircularProgressIndicator.adaptive(
-                  backgroundColor: ColorStyle.grey, // Fondo del indicador
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                      ColorStyle.darkPurple),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                CachedNetworkImage(
+                  imageUrl: images[index],
+                  fit: images.length == 1 ? BoxFit.fitWidth : BoxFit.cover,
+                  placeholder: (context, url) => Center(
+                    child: CircularProgressIndicator.adaptive(
+                      backgroundColor: ColorStyle.grey, // Fondo del indicador
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                          ColorStyle.darkPurple),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => const Center(
+                    child: Icon(Icons.error_outline_outlined),
+                  ),
                 ),
-              ),
-              errorWidget: (context, url, error) => const Center(
-                child: Icon(Icons.error_outline_outlined),
-              ),
+                Container(
+                    color: (index == 3 && images.length > 4)
+                        ? Colors.black.withOpacity(0.6)
+                        : null,
+                    child: Center(
+                        child: Text(
+                      (index == 3 && images.length > 4)
+                          ? "+${images.length - 1 - index}"
+                          : '',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 32),
+                    ))),
+              ],
             ),
           ),
   );
@@ -108,6 +127,42 @@ Widget buildDynamicLayout(List<String> images, BuildContext context) {
         //             buildAspectRatioWidget(16 / 9, index + 1, images, context)),
         //   ),
         // ),
+      ],
+    );
+  }
+  if (count >= 4) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            children: [
+              Expanded(
+                  child: buildAspectRatioWidget(16 / 9, 0, images, context)),
+              Container(
+                height: 2,
+              ),
+              Expanded(
+                  child: buildAspectRatioWidget(16 / 9, 1, images, context)),
+            ],
+          ),
+        ),
+        const SizedBox(
+          width: 2,
+          height: double.maxFinite,
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              Expanded(
+                  child: buildAspectRatioWidget(16 / 9, 2, images, context)),
+              Container(
+                height: 2,
+              ),
+              Expanded(
+                  child: buildAspectRatioWidget(16 / 9, 3, images, context)),
+            ],
+          ),
+        ),
       ],
     );
   }

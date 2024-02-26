@@ -4,9 +4,11 @@ import 'package:http/http.dart' as http;
 import 'package:w_app/models/article_model.dart';
 import 'package:w_app/models/assistant_model.dart';
 import 'package:w_app/models/attorney_model.dart';
+import 'package:w_app/models/borkers.dart';
 import 'dart:convert';
 import 'package:w_app/models/comment_model.dart';
 import 'package:w_app/models/company_model.dart';
+import 'package:w_app/models/notification_model.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
@@ -115,7 +117,7 @@ class ApiService {
     var body = {'client_email': email, 'client_password': password};
     var response = await _utils.post('users/login', body);
 
-    return json.decode(response.body);
+    return _utils.handleResponse(response);
   }
 
   Future<bool> validateAccesToken(String token) async {
@@ -279,6 +281,24 @@ class ApiService {
     }
   }
 
+  Future<List<UserNotification>> getNotificationHistory() async {
+    try {
+      var response = await _utils.get('users/notifications/');
+      print(response);
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['notifications'];
+
+      return companyData
+          .map((data) => UserNotification.fromJson(data))
+          .toList()
+          .reversed
+          .toList();
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<List<Business>> getSearch(String name) async {
     try {
       var response = await _utils.get('business/search?searchTerm=$name');
@@ -366,6 +386,17 @@ class ApiService {
     }
   }
 
+  Future<Comment> getComment(String idComment) async {
+    try {
+      var response =
+          await _utils.get('comments/children/?_id_comment=$idComment');
+      final companyData = _utils.handleResponse(response)['comment'];
+      return Comment.fromJson(companyData);
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<List<Review>> getUserReviews(String idUser) async {
     try {
       var response = await _utils.get('users/reviews?_id_user=$idUser');
@@ -374,6 +405,45 @@ class ApiService {
           _utils.handleResponse(response)['reviews'];
 
       return companyData.map((data) => Review.fromJson(data)).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<List<User>> getFollowersByUser(String idUser) async {
+    try {
+      var response = await _utils.get('users/$idUser/followers');
+      final List<dynamic>? companyData =
+          _utils.handleResponse(response)['followers'];
+
+      return companyData?.map((data) => User.fromJson(data)).toList() ?? [];
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<List<User>> getLikesByReview(String idReview) async {
+    try {
+      var response = await _utils.get('reviews/$idReview/likes');
+      final List<dynamic>? companyData =
+          _utils.handleResponse(response)['users'];
+
+      print(companyData);
+
+      return companyData?.map((data) => User.fromJson(data)).toList() ?? [];
+    } catch (e) {
+      print(e);
+      return Future.error(e);
+    }
+  }
+
+  Future<List<User>> getFollowedByUser(String idUser) async {
+    try {
+      var response = await _utils.get('users/$idUser/followed');
+      final List<dynamic>? companyData =
+          _utils.handleResponse(response)['followings'];
+
+      return companyData?.map((data) => User.fromJson(data)).toList() ?? [];
     } catch (e) {
       return Future.error(e);
     }
@@ -447,6 +517,72 @@ class ApiService {
     }
   }
 
+  Future<List<Broker>> getBrokers(String idReview) async {
+    try {
+      var response = await _utils.get('brokers/assistants');
+
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['assistants'];
+
+      print(companyData);
+
+      return companyData.map((data) => Broker.fromJson(data)).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<List<Assistant>> getAssistants() async {
+    try {
+      var response = await _utils.get('brokers/assistants');
+
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['assistants'];
+
+      print(companyData);
+
+      return companyData.map((data) => Assistant.fromJson(data)).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<List<Attorney>> getAttorneys() async {
+    try {
+      var response = await _utils.get('brokers/attorneys');
+
+      final List<dynamic> companyData =
+          _utils.handleResponse(response)['attorneys'];
+
+      print(companyData);
+
+      return companyData.map((data) => Attorney.fromJson(data)).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  // Future<List<Assistant>> getAssistants() async {
+  //   try {
+  //     var response = await _utils.get('brokers/assistants');
+  //     final handleResponse = _utils.handleResponse(response);
+
+  //     if (handleResponse.containsKey('assistants') &&
+  //         handleResponse['assistants'] is List) {
+  //       List<dynamic> companyData = handleResponse['assistants'];
+  //       return companyData
+  //           .map(
+  //               (data) => Assistant.fromJson(data.cast<Map<String, dynamic>>()))
+  //           .toList();
+  //     } else {
+  //       return <Assistant>[];
+  //     }
+  //   } catch (e) {
+  //     print('Error while loading assistants: $e');
+  //     return Future.error('Failed to load assistants');
+  //   }
+  // }
+
   Future<List<Comment>> getCommentChildren(String idComment) async {
     try {
       var response =
@@ -472,6 +608,7 @@ class ApiService {
       var response = await _utils.get('articles/');
 
       final List<dynamic> companyData = json.decode(response.body);
+      print(companyData);
 
       return companyData.map((data) => Article.fromJson(data)).toList();
     } catch (e) {
@@ -558,10 +695,24 @@ class ApiService {
       var response = await _utils.get('messages/users-list');
 
       final List<dynamic> newChats = json.decode(response.body);
+      print(newChats);
 
       return newChats;
     } catch (e) {
       return Future.error(e);
+    }
+  }
+
+  Future<List<dynamic>> getSearchUsersChat(String name) async {
+    try {
+      var response = await _utils.get('users/search?searchTerm=$name');
+
+      final List<dynamic> newChats = json.decode(response.body)['users'];
+      print(newChats);
+
+      return newChats;
+    } catch (e) {
+      return [];
     }
   }
 
@@ -633,6 +784,18 @@ class ApiService {
     }
   }
 
+  Future<bool> logOut() async {
+    try {
+      final response = await _utils.patch('users/logout', {});
+      print(response.statusCode);
+      print(response.body);
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   // Future<User> getArticles(String idUser) async {
   //   try {
   //     var response = await _utils.get('articles/');
@@ -643,47 +806,6 @@ class ApiService {
   //     return Future.error(e);
   //   }
   // }
-
-  Future<List<Attorney>> getAttorneys() async {
-    try {
-      var response = await _utils.get('brokers/attorneys');
-      final handleResponse = _utils.handleResponse(response);
-
-      if (handleResponse.containsKey('attorneys') &&
-          handleResponse['attorneys'] is List) {
-        List<dynamic> companyData = handleResponse['attorneys'];
-        return companyData
-            .map((data) => Attorney.fromJson(data.cast<Map<String, dynamic>>()))
-            .toList();
-      } else {
-        return <Attorney>[];
-      }
-    } catch (e) {
-      print('Error while loading attorneys: $e');
-      return Future.error('Failed to load attorneys');
-    }
-  }
-
-  Future<List<Assistant>> getAssistant() async {
-    try {
-      var response = await _utils.get('brokers/assistants');
-      final handleResponse = _utils.handleResponse(response);
-
-      if (handleResponse.containsKey('assistants') &&
-          handleResponse['assistants'] is List) {
-        List<dynamic> companyData = handleResponse['attorneys'];
-        return companyData
-            .map(
-                (data) => Assistant.fromJson(data.cast<Map<String, dynamic>>()))
-            .toList();
-      } else {
-        return <Assistant>[];
-      }
-    } catch (e) {
-      print('Error while loading assistants: $e');
-      return Future.error('Failed to load assistants');
-    }
-  }
 }
 
 class ApiServerUtils {

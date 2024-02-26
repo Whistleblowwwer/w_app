@@ -21,6 +21,7 @@ import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/add/add_review.dart';
 import 'package:w_app/screens/home/widgets/comment_card.dart';
 import 'package:w_app/screens/home/widgets/review_card.dart';
+import 'package:w_app/screens/profile/widgets/follow_bottom_sheet_widget.dart';
 import 'package:w_app/screens/settings/edit_user_screen.dart';
 import 'package:w_app/screens/settings/settings_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
@@ -196,59 +197,154 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.end,
                                                     children: [
-                                                      Text.rich(
-                                                        TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                                text: _user
-                                                                    .followings
-                                                                    .toString(),
-                                                                style: const TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold)),
-                                                            const TextSpan(
-                                                              text:
-                                                                  ' Seguidos  ',
+                                                      Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () async {
+                                                              await showModalBottomSheet(
+                                                                  context:
+                                                                      context,
+                                                                  isScrollControlled:
+                                                                      true,
+                                                                  useRootNavigator:
+                                                                      true,
+                                                                  barrierColor:
+                                                                      const Color
+                                                                          .fromRGBO(
+                                                                          0,
+                                                                          0,
+                                                                          0,
+                                                                          0.1),
+                                                                  shape:
+                                                                      const RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .only(
+                                                                      topLeft: Radius
+                                                                          .circular(
+                                                                              20.0),
+                                                                      topRight:
+                                                                          Radius.circular(
+                                                                              20.0),
+                                                                    ),
+                                                                  ),
+                                                                  builder:
+                                                                      (context) =>
+                                                                          FollowBottomSheetWidget(
+                                                                            userId:
+                                                                                widget.user.idUser,
+                                                                            userMainId:
+                                                                                widget.user.idUser,
+                                                                            initialIndex:
+                                                                                0,
+                                                                          ));
+                                                            },
+                                                            child: Text.rich(
+                                                              TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                      text: _user
+                                                                          .followers
+                                                                          .toString(),
+                                                                      style: const TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.bold)),
+                                                                  TextSpan(
+                                                                    text: widget.user.followers ==
+                                                                            1
+                                                                        ? ' Seguidor  '
+                                                                        : ' Seguidores  ',
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 14,
+                                                              ),
                                                             ),
-                                                            TextSpan(
-                                                                text: widget
-                                                                    .user
-                                                                    .followers
-                                                                    .toString(),
-                                                                style: const TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold)),
-                                                            const TextSpan(
-                                                              text:
-                                                                  ' Seguidores',
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () async {
+                                                              await showModalBottomSheet(
+                                                                  context:
+                                                                      context,
+                                                                  isScrollControlled:
+                                                                      true,
+                                                                  useRootNavigator:
+                                                                      true,
+                                                                  barrierColor:
+                                                                      const Color
+                                                                          .fromRGBO(
+                                                                          0,
+                                                                          0,
+                                                                          0,
+                                                                          0.1),
+                                                                  shape:
+                                                                      const RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .only(
+                                                                      topLeft: Radius
+                                                                          .circular(
+                                                                              20.0),
+                                                                      topRight:
+                                                                          Radius.circular(
+                                                                              20.0),
+                                                                    ),
+                                                                  ),
+                                                                  builder:
+                                                                      (context) =>
+                                                                          FollowBottomSheetWidget(
+                                                                            userId:
+                                                                                widget.user.idUser,
+                                                                            userMainId:
+                                                                                widget.user.idUser,
+                                                                            initialIndex:
+                                                                                1,
+                                                                          ));
+                                                            },
+                                                            child: Text.rich(
+                                                              TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                      text: _user
+                                                                          .followings
+                                                                          .toString(),
+                                                                      style: const TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.bold)),
+                                                                  TextSpan(
+                                                                    text: widget.user.followings ==
+                                                                            1
+                                                                        ? ' Seguido '
+                                                                        : ' Seguidos ',
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 14,
+                                                              ),
                                                             ),
-                                                          ],
-                                                        ),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: const TextStyle(
-                                                          fontFamily:
-                                                              'Montserrat',
-                                                          fontSize: 14,
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
-
-                                                      // Text(
-                                                      //   user.email,
-                                                      //   maxLines: 1,
-                                                      //   overflow:
-                                                      //       TextOverflow.ellipsis,
-                                                      //   style: TextStyle(
-                                                      //       fontWeight:
-                                                      //           FontWeight.w400,
-                                                      //       fontSize: 14,
-                                                      //       color: Colors.black,
-                                                      //       fontFamily: 'Montserrat'),
-                                                      // ),
                                                     ],
                                                   ),
                                                 ),
@@ -362,60 +458,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   labelStyle: const TextStyle(
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.w600),
-                                  tabs: [
+                                  tabs: const [
                                     Tab(text: 'Reseñas'),
                                     Tab(text: 'Comentarios'),
-                                    StreamBuilder<List<Business>>(
-                                      stream: businessStreamController.stream,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData) {
-                                          return Tab(
-                                            icon: Row(
-                                              children: [
-                                                Text(
-                                                  'Proyectos',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                Container(
-                                                  width: 20,
-                                                  height: 20,
-                                                  margin:
-                                                      EdgeInsets.only(left: 2),
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: _tabController!
-                                                                  .index ==
-                                                              2
-                                                          ? ColorStyle
-                                                              .darkPurple
-                                                          : Colors.grey,
-                                                      border: Border.all(
-                                                          color: Colors.white,
-                                                          width: 2)),
-                                                  child: Text(
-                                                    '${snapshot.data!.length}',
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        color: Colors.white,
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        } else {
-                                          return Tab(
-                                            text: 'Proyectos 0',
-                                          );
-                                        }
-                                      },
+                                    Tab(
+                                      text: "Proyectos",
                                     ),
                                     Tab(text: 'Mis me gusta'),
                                   ],
@@ -1155,6 +1202,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     } catch (e) {
       // Handle the error or set state to show an error message
       if (mounted) {
+        print(e);
         showErrorSnackBar(context, e.toString());
         setState(() {
           isLoading = false;

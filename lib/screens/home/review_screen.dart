@@ -14,6 +14,7 @@ import 'package:w_app/screens/home/widgets/review_card.dart';
 import 'package:w_app/screens/home/widgets/comment_card.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
+import 'package:w_app/widgets/arrow_back_widget.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
 import 'package:w_app/widgets/snackbar.dart';
 
@@ -365,24 +366,13 @@ class _ReviewPageState extends State<ReviewPage> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    PressTransform(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 16, right: 8),
-                            child: Icon(FeatherIcons.arrowLeft),
-                          ),
-                          Text(
-                            "Atrás",
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ],
+                    Positioned(
+                      left: 0,
+                      child: PressTransform(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: ArrowBackWidget(),
                       ),
                     ),
                     const Text(

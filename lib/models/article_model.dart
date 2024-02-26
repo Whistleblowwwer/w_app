@@ -11,7 +11,7 @@ class Article {
   DateTime? publishedAt;
   bool isPublished;
   String? idCategory; // Puede ser nulo
-  Uint8List? imageUrl; // Puede ser nulo o no estar en el JSON
+  String? imageUrl; // Puede ser nulo o no estar en el JSON
   String authorName;
   String authorEmail;
 
@@ -34,12 +34,11 @@ class Article {
       title: json['title'] ?? '',
       subtitle: json['subtitle'] ?? '',
       content: json['content'] ?? '',
-      publishedAt: json['published_at'] != null
-          ? DateTime.parse(json['published_at'])
-          : null,
+      publishedAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       isPublished: json['is_published'],
       idCategory: json['_id_category'],
-      imageUrl: extractFirstImage(json),
+      imageUrl: json['img_url'], //extractFirstImage(json),
       authorName: json['Author']?['name'] ?? '',
       authorEmail: json['Author']?['email'] ?? '',
     );

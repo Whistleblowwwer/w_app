@@ -155,7 +155,9 @@ class AuthHandler extends StatelessWidget {
       listener: (context, state) {
         if (state is AuthError) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          showErrorSnackBar(context, state.error);
+          if (state.error.isNotEmpty) {
+            showErrorSnackBar(context, state.error);
+          }
         }
       },
       builder: (context, state) {

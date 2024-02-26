@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -19,6 +21,7 @@ class _NewChatPageState extends State<NewChatPage> {
   List<dynamic> users = [];
   late UserBloc _userBloc;
   late User user;
+  Timer? _searchDebounce; // Variable para controlar el debounce
 
   List<dynamic> listFilter = [];
   TextEditingController controllerSearch = TextEditingController();
@@ -33,34 +36,56 @@ class _NewChatPageState extends State<NewChatPage> {
     }
     loadUsers();
     super.initState();
+    controllerSearch.addListener(_onSearchChanged);
 
-    controllerSearch.addListener(_filterChats);
+    // controllerSearch.addListener(_filterChats);
   }
 
   Future<void> loadUsers() async {
     final us = await ApiService().getNewChats();
     if (!mounted) return;
     setState(() {
-      users = us;
+      users = [...us];
     });
     setState(() {
       listFilter = [...us];
     });
   }
 
-  // Función para filtrar chats
-  void _filterChats() {
-    String searchTerm = controllerSearch.text.toLowerCase();
-    setState(() {
-      if (searchTerm.isNotEmpty) {
-        listFilter = users.where((user) {
-          String name = (user['name'] ?? '').toLowerCase();
-          return name.contains(searchTerm);
-        }).toList();
+  @override
+  void dispose() {
+    controllerSearch.removeListener(_onSearchChanged);
+    controllerSearch.dispose();
+    _searchDebounce
+        ?.cancel(); // Cancelar el debounce si el widget se está desechando
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    _searchDebounce
+        ?.cancel(); // Cancela el timer existente si se está escribiendo rápido
+    _searchDebounce = Timer(const Duration(milliseconds: 300), () {
+      // Espera un poco antes de empezar la búsqueda
+      final searchTerm = controllerSearch.text.toLowerCase();
+      if (searchTerm.isEmpty) {
+        setState(() {
+          listFilter = [...users];
+        });
       } else {
-        listFilter = List.from(users);
+        _performSearch(searchTerm);
       }
     });
+  }
+
+  Future<void> _performSearch(String searchTerm) async {
+    // Coloca aquí tu lógica de búsqueda actual
+    final responseSearch = await ApiService().getSearchUsersChat(searchTerm);
+    if (mounted && searchTerm == controllerSearch.text.toLowerCase()) {
+      // Verifica si los resultados siguen siendo relevantes
+      setState(() {
+        listFilter = responseSearch != null ? [...responseSearch] : [];
+      });
+    }
   }
 
   @override
@@ -125,7 +150,7 @@ class _NewChatPageState extends State<NewChatPage> {
                                   )
                                 : null,*/
                             ),
-                            onChanged: (value) {},
+                            onChanged: (value) async {},
                           ),
                         ),
                       ),

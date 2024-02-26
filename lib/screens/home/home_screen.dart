@@ -14,7 +14,7 @@ import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/review_model.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
-import 'package:w_app/screens/home/advisors_screen.dart';
+import 'package:w_app/screens/home/assitants_screen.dart';
 import 'package:w_app/screens/home/lawyers_screen.dart';
 import 'package:w_app/screens/chat/chat_screen.dart';
 import 'package:w_app/screens/home/review_screen.dart';
@@ -269,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const AdvisorScreen()),
+                                        const AssistantScreen()),
                               );
                             },
                             child: Container(
