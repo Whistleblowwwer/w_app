@@ -659,8 +659,9 @@ class ReviewCard extends StatelessWidget {
                                                   ),
                                                   builder: (context) =>
                                                       LikesBottomSheetWidget(
-                                                        reviewId:
-                                                            review.idReview,
+                                                        id: review.idReview,
+                                                        postType:
+                                                            PostType.review,
                                                         userMain: stateUser
                                                             .user.idUser,
                                                       ));

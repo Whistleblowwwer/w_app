@@ -396,12 +396,13 @@ class CommentWidget extends StatelessWidget {
                                         ),
                                         builder: (context) =>
                                             LikesBottomSheetWidget(
-                                              reviewId: comment.idReview,
+                                              id: comment.idComment,
+                                              postType: PostType.comment,
                                               userMain: userMain.idUser,
                                             ));
                                   },
                                   child: Text(
-                                    "${comment.likes} Me gustas",
+                                    "${comment.likes} Me gusta",
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w300,
                                         fontFamily: 'Montserrat'),

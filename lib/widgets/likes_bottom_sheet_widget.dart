@@ -10,13 +10,20 @@ import 'package:w_app/widgets/circularAvatar.dart';
 import 'package:w_app/widgets/press_transform_widget.dart';
 import 'package:w_app/widgets/snackbar.dart';
 
+enum PostType {
+  review,
+  comment,
+}
+
 class LikesBottomSheetWidget extends StatefulWidget {
-  final String reviewId;
+  final String id;
+  final PostType postType;
   final String userMain;
   final int? initialIndex;
   const LikesBottomSheetWidget(
       {super.key,
-      required this.reviewId,
+      required this.id,
+      required this.postType,
       this.initialIndex,
       required this.userMain});
 
@@ -40,12 +47,13 @@ class _LikesBottomSheetWidgetState extends State<LikesBottomSheetWidget>
         length: 2, vsync: this, initialIndex: widget.initialIndex ?? 0);
     feedBloc = BlocProvider.of<FeedBloc>(context);
 
-    loadLikesByReview();
+    loadLikesByPost();
   }
 
-  Future<void> loadLikesByReview() async {
+  Future<void> loadLikesByPost() async {
     try {
-      var likesList = await ApiService().getLikesByReview(widget.reviewId);
+      var likesList =
+          await ApiService().getLikesByPost(widget.id, widget.postType);
 
       if (mounted) {
         setState(() {
@@ -56,7 +64,7 @@ class _LikesBottomSheetWidgetState extends State<LikesBottomSheetWidget>
     } catch (e) {
       // Handle the error or set state to show an error message
       if (mounted) {
-        showErrorSnackBar(context, e.toString());
+        // showErrorSnackBar(context, e.toString());
         setState(() {
           isLoadinglikes = false;
         });

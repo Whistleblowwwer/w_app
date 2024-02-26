@@ -405,7 +405,7 @@ class SearchScreenState extends State<SearchScreen>
                                                   height: 112,
                                                   margin: const EdgeInsets
                                                       .symmetric(
-                                                      horizontal: 24,
+                                                      horizontal: 16,
                                                       vertical: 8),
                                                   decoration: BoxDecoration(
                                                       color: Colors.white,
@@ -1513,22 +1513,6 @@ class NoticeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-//     List<Article> articles = [
-//       Article(
-//           id: '',
-//           title: 'HOLA SOMOS WHISTLEBLOWER',
-//           content: """Hola! Somos Whistleblowwer.
-// Nosotros al igual que tu, fuimos víctimas de un incumplimiento de una desarrolladora inmobiliaria.
-// Durante años estuvimos puntualmente pagando. Con esfuerzo logramos reunir un enganche y privándonos de vacaciones, salidas al cine, etc. estuvímos pagando nuestras mensualidades para que al final no nos cumplieran.
-// Esta inversión era nuestro patrimonio, la universidad de nuestros hijos, nuestra primera casa, nuestro retiro, en fin… nuestros sueños y nuestro futuro.
-// Hoy comprar una casa es imposible, te tienes que privar de casi todos los lujos para lograrlo. Para que al final llegue un charlatán y te quite tus ahorros, tu casa, tus sueños, tu futuro!  No se vale!!
-// Intentamos una y mil veces a hablar con alguien y siempre eran excusas y pretextos. Buscamos a otros inversionistas para unir fuerzas pero era como buscar una aguja en un pajar! Pero ahora con Whistleblowwer, podemos encontrarnos y juntos, los desarrolladores inmobiliarios VAN A TEMBLAR porque van a tener afuera de sus proyectos y sus oficinas a 50 o mas clientes inconformes exigiendo justicia. Y si no nos cumplen, que al menos TODOS se enteren y no vuelvan a vender un solo metro cuadrado mas!
-// SOMOS UNA PEQUEÑA STARTUP. PORFAVOR COMPARTE EN TUS REDES SOCIALES PARA LLEGAR A MAS GENTE Y TENER MAS PODER EN CONTRA DE LAS GRANDES DESARROLLADORAS INMOBILIARIAS!""",
-//           publishedAt: DateTime(2023, 12, 24),
-//           isPublished: true,
-//           idCategory: '',
-//           imageUrl: 'assets/images/logos/Whistle.png'),
-//     ];
     return FutureBuilder<List<Article>>(
       future: ApiService().getArticles(),
       builder: (context, snapshot) {

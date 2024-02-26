@@ -14,6 +14,7 @@ import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:w_app/widgets/likes_bottom_sheet_widget.dart';
 
 class ApiService {
   static final ApiService _singleton = ApiService._internal();
@@ -422,9 +423,12 @@ class ApiService {
     }
   }
 
-  Future<List<User>> getLikesByReview(String idReview) async {
+  Future<List<User>> getLikesByPost(String id, PostType postType) async {
     try {
-      var response = await _utils.get('reviews/$idReview/likes');
+      var response = await _utils.get(
+          '${PostType.review == postType ? 'reviews' : 'comments'}/$id/likes');
+
+      print(response);
       final List<dynamic>? companyData =
           _utils.handleResponse(response)['users'];
 
