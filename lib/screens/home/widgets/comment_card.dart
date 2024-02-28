@@ -331,8 +331,8 @@ class CommentWidget extends StatelessWidget {
                                           comment.isLiked
                                               ? 'assets/images/icons/likeActive.svg'
                                               : 'assets/images/icons/like.svg',
-                                          width: 18,
-                                          height: 18,
+                                          width: 20,
+                                          height: 20,
                                         ),
                                       ),
                                       const SizedBox(
@@ -342,32 +342,32 @@ class CommentWidget extends StatelessWidget {
                                         onPressed: onComment,
                                         child: SvgPicture.asset(
                                           'assets/images/icons/commentReview.svg',
-                                          width: 18,
-                                          height: 18,
+                                          width: 20,
+                                          height: 20,
                                         ),
                                       ),
                                       const SizedBox(
                                         width: 16,
                                       ),
-                                      PressTransform(
-                                        onPressed: () {
-                                          HapticFeedback.lightImpact();
-                                          // Construye la URL del review para compartir
-                                          final String reviewUrl =
-                                              'https://www.whistleblowwer.com/review/${comment.idReview}';
+                                      // PressTransform(
+                                      //   onPressed: () {
+                                      //     HapticFeedback.lightImpact();
+                                      //     // Construye la URL del review para compartir
+                                      //     final String reviewUrl =
+                                      //         'https://www.whistleblowwer.com/review/${comment.idReview}';
 
-                                          //identificar cuando recibo el detail que el back me devuelva si es review o comment
-                                          //un review puede llegar a tener el mismo id que un comment
-                                          //por ahora quedara con el id review del comment para que no se dañe
+                                      //     //identificar cuando recibo el detail que el back me devuelva si es review o comment
+                                      //     //un review puede llegar a tener el mismo id que un comment
+                                      //     //por ahora quedara con el id review del comment para que no se dañe
 
-                                          Share.share(reviewUrl);
-                                        },
-                                        child: SvgPicture.asset(
-                                          'assets/images/icons/send.svg',
-                                          width: 18,
-                                          height: 18,
-                                        ),
-                                      ),
+                                      //     Share.share(reviewUrl);
+                                      //   },
+                                      //   child: SvgPicture.asset(
+                                      //     'assets/images/icons/send.svg',
+                                      //     width: 18,
+                                      //     height: 18,
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ],
