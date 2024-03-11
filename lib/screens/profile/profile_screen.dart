@@ -1360,7 +1360,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     });
   }
 
-  void _updateReviewsIfChanged(List<Review> updatedReviews) {
+  void _updateReviewsIfChanged(List<dynamic> updatedReviews) {
     bool needsUpdate = false;
 
     // Comprobar si alguna de las reseñas en el perfil ha sido actualizada en el feed

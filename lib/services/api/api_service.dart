@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:w_app/models/article_model.dart';
 import 'package:w_app/models/assistant_model.dart';
 import 'package:w_app/models/attorney_model.dart';
+import 'package:w_app/models/banner_model.dart';
 import 'package:w_app/models/borkers.dart';
 import 'dart:convert';
 import 'package:w_app/models/comment_model.dart';
@@ -269,6 +270,28 @@ class ApiService {
     }
   }
 
+  Future<Map<String, List<BannerModel>>> getBanners() async {
+    try {
+      var response = await _utils.get('ads/type/Banner');
+      print(response);
+      Map<String, dynamic> allData = _utils.handleResponse(response);
+      print(allData);
+      Map<String, List<BannerModel>> bannersBySection = {};
+
+      allData.forEach((section, data) {
+        List<dynamic> sectionData = data;
+        List<BannerModel> banners =
+            sectionData.map((data) => BannerModel.fromJson(data)).toList();
+        bannersBySection[section] = banners;
+      });
+
+      return bannersBySection;
+    } catch (e) {
+      print(e);
+      return {};
+    }
+  }
+
   Future<List<Business>> getAllBusiness() async {
     try {
       var response = await _utils.get('business/');
@@ -353,16 +376,47 @@ class ApiService {
   }
 
   Future<List<Review>> getReviews() async {
-    List<dynamic> companyData = [];
+    List<dynamic> reviewsData = [];
+    List<dynamic> adsData = [];
+
     try {
       var response = await _utils.get('reviews/');
-      final hanldeResponse = _utils.handleResponse(response);
+      final handleResponse = _utils.handleResponse(response);
 
-      if (hanldeResponse.containsKey('reviews')) {
-        companyData = hanldeResponse['reviews'];
+      if (handleResponse.containsKey('reviews')) {
+        reviewsData = handleResponse['reviews'];
+      }
+      if (handleResponse.containsKey('adsList')) {
+        adsData = handleResponse['adsList'];
       }
 
-      return companyData.map((data) => Review.fromJson(data)).toList();
+      List<Review> reviews =
+          reviewsData.map((data) => Review.fromJson(data)).toList();
+      List<Review> ads = adsData.map((data) => Review.fromJson(data)).toList();
+
+      List<Review> finalList = [];
+      int reviewCount = 0;
+      int adIndex = 0;
+
+      // Agregar el primer ad antes de cualquier reseña
+      if (ads.isNotEmpty) {
+        finalList.add(ads[adIndex++ %
+            ads.length]); // Usar modulo para repetir los ads si es necesario
+      }
+
+      // Recorrer las reseñas y agregar un ad cada 3 reseñas
+      while (reviewCount < reviews.length) {
+        finalList.add(reviews[reviewCount++]);
+
+        // Cada 3 reseñas, añadir un ad de la lista de ads, repitiendo los ads si se acaban
+        if (reviewCount % 3 == 0 && reviewCount < reviews.length) {
+          // Comprobar si aún quedan reseñas antes de añadir otro ad
+          finalList.add(
+              ads[adIndex++ % ads.length]); // Usar modulo para repetir los ads
+        }
+      }
+
+      return finalList;
     } catch (e) {
       return Future.error(e);
     }

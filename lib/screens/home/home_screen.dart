@@ -36,7 +36,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late UserBloc _userBloc;
   late FeedBloc _feedBloc;
-  late Future<List<Review>> futureReview;
+  late Future<List<dynamic>> futureReview;
   final ScrollController _scrollController = ScrollController();
   StreamSubscription? _sub;
 

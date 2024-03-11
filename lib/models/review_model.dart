@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
+import 'package:w_app/models/ad_model.dart';
 import 'package:w_app/models/comment_model.dart';
 
 class Review extends Equatable {
@@ -8,7 +9,6 @@ class Review extends Equatable {
   final bool? isValid;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-
   final int likes;
   final int comments;
   final BusinessData? business;
@@ -17,6 +17,7 @@ class Review extends Equatable {
   final double rating;
   final List<Comment>? children;
   final List<String>? images;
+  final Ad? ad;
 
   const Review(
       {required this.idReview,
@@ -31,12 +32,13 @@ class Review extends Equatable {
       required this.isLiked,
       required this.rating,
       this.children,
-      this.images});
+      this.images,
+      this.ad});
 
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(
       idReview: json['_id_review'],
-      content: json['content'],
+      content: json['content'] ?? '',
       isValid: json['is_valid'] ?? false,
       createdAt:
           json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
@@ -50,7 +52,14 @@ class Review extends Equatable {
       children: json['children'] != null
           ? (json['children'] as List).map((c) => Comment.fromJson(c)).toList()
           : null,
-      images: json['Images'] != null ? List<String>.from(json['Images']) : null,
+      images: json['Images'] != null
+          ? List<String>.from(json['Images'])
+          : json['ReviewImages'] != null
+              ? (json['ReviewImages'] as List)
+                  .map((item) => item['image_url'] as String)
+                  .toList()
+              : [],
+      ad: json['Ad'] != null ? Ad.fromJson(json['Ad']) : null,
     );
   }
 
@@ -126,7 +135,8 @@ class Review extends Equatable {
       bool? isLiked,
       double? rating,
       List<Comment>? children,
-      List<String>? images}) {
+      List<String>? images,
+      Ad? ad}) {
     return Review(
         idReview: idReview ?? this.idReview,
         content: content ?? this.content,
@@ -140,7 +150,8 @@ class Review extends Equatable {
         isLiked: isLiked ?? this.isLiked,
         rating: rating ?? this.rating,
         children: children ?? this.children,
-        images: images ?? this.images);
+        images: images ?? this.images,
+        ad: ad ?? this.ad);
   }
 
   @override
@@ -157,7 +168,8 @@ class Review extends Equatable {
         isLiked,
         rating,
         children,
-        images
+        images,
+        ad
       ];
 }
 
@@ -167,14 +179,15 @@ class BusinessData extends Equatable {
   final String entity;
   final double rating;
   final bool followed;
+  final String? profilePictureUrl;
 
-  const BusinessData({
-    required this.idBusiness,
-    required this.name,
-    required this.entity,
-    required this.rating,
-    required this.followed,
-  });
+  const BusinessData(
+      {required this.idBusiness,
+      required this.name,
+      required this.entity,
+      required this.rating,
+      required this.followed,
+      this.profilePictureUrl});
 
   factory BusinessData.fromJson(Map<String, dynamic> json) {
     return BusinessData(
@@ -182,7 +195,8 @@ class BusinessData extends Equatable {
         name: json['name'] ?? '',
         entity: json['entity'] ?? '',
         followed: json['is_followed'] ?? false,
-        rating: json['avarage_rating'] ?? 0.0);
+        rating: json['avarage_rating'] ?? 0.0,
+        profilePictureUrl: json['profile_picture_url']);
   }
 
   Map<String, dynamic> toJson() {
@@ -199,17 +213,20 @@ class BusinessData extends Equatable {
       String? name,
       String? entity,
       bool? followed,
-      double? rating}) {
+      double? rating,
+      String? profilePictureUrl}) {
     return BusinessData(
         idBusiness: idBusiness ?? this.idBusiness,
         name: name ?? this.name,
         entity: entity ?? this.entity,
         followed: followed ?? this.followed,
-        rating: rating ?? this.rating);
+        rating: rating ?? this.rating,
+        profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl);
   }
 
   @override
-  List<Object?> get props => [idBusiness, name, entity, followed, rating];
+  List<Object?> get props =>
+      [idBusiness, name, entity, followed, rating, profilePictureUrl];
 }
 
 class UserData extends Equatable {

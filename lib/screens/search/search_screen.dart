@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:w_app/bloc/search_bloc/search_bloc.dart';
 import 'package:w_app/bloc/search_bloc/search_event.dart';
@@ -12,6 +11,7 @@ import 'package:w_app/bloc/search_bloc/search_state.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/models/article_model.dart';
+import 'package:w_app/models/banner_model.dart';
 import 'package:w_app/models/company_model.dart';
 import 'package:w_app/models/user.dart';
 import 'package:w_app/repository/user_repository.dart';
@@ -20,6 +20,7 @@ import 'package:w_app/screens/add/add_review.dart';
 import 'package:w_app/screens/business_screen.dart';
 import 'package:w_app/screens/profile/foreign_profile_screen.dart';
 import 'package:w_app/screens/search/notice_detail_screen.dart';
+import 'package:w_app/screens/search/trending_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
 import 'package:w_app/styles/color_style.dart';
 import 'package:w_app/styles/gradient_style.dart';
@@ -40,7 +41,10 @@ class SearchScreen extends StatefulWidget {
 }
 
 class SearchScreenState extends State<SearchScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<SearchScreen> {
+  @override
+  bool get wantKeepAlive => true;
+
   late SearchBloc _searchBloc;
   TabController? _tabController;
   TabController? _tabControllerSearched;
@@ -48,13 +52,13 @@ class SearchScreenState extends State<SearchScreen>
   FocusNode focusNodeSearch = FocusNode();
   late Future<List<Business>> futureSearch;
 
-  List<Business> businesses = [];
   bool isLoading = true;
+  List<Business> businesses = [];
   List<Article> articles = [];
   bool isLoadingArticles = true;
-//Notices
+  List<BannerModel> banners = [];
+  //Notices
   int currentPage = 0;
-
   final PageController _boardController =
       PageController(initialPage: 0, viewportFraction: 1);
   AnimatedContainer doIndicator(index) {
@@ -72,10 +76,39 @@ class SearchScreenState extends State<SearchScreen>
     );
   }
 
-  List noticeImages = [
-    'assets/images/ilustrations/banner_startup1.jpg',
-    'assets/images/ilustrations/banner_startup2.jpg',
+  List<BannerModel> noticeImages = [
+    // 'assets/images/ilustrations/banner_startup1.jpg',
+    // 'assets/images/ilustrations/banner_startup2.jpg',
   ];
+
+  //For You
+  int currentPageForYou = 0;
+  final PageController _boardControllerForYou =
+      PageController(initialPage: 0, viewportFraction: 1);
+  AnimatedContainer doIndicatorForYou(index) {
+    return AnimatedContainer(
+      margin: const EdgeInsets.only(right: 4, left: 4),
+      duration: const Duration(milliseconds: 300),
+      height: 2,
+      width: currentPageForYou == index ? 12 : 10,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: currentPageForYou == index
+            ? ColorStyle.darkPurple.withOpacity(0.8)
+            : Colors.grey.withOpacity(0.5),
+      ),
+    );
+  }
+
+  List<BannerModel> imagesForYou = [
+    // 'assets/images/ilustrations/banner_how1.jpg',
+    // 'assets/images/ilustrations/banner_how2.jpg',
+    // 'assets/images/ilustrations/banner_how3.jpg',
+    // 'assets/images/ilustrations/banner_how4.jpg',
+    // 'assets/images/ilustrations/banner_how5.jpg',
+  ];
+
+  List<BannerModel> trendingImages = [];
 
   @override
   void initState() {
@@ -95,6 +128,8 @@ class SearchScreenState extends State<SearchScreen>
 
       loadBusiness();
       loadArticles();
+      loadBanners();
+
       // _fetchUserProfile();
     });
   }
@@ -119,6 +154,32 @@ class SearchScreenState extends State<SearchScreen>
           isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> loadBanners() async {
+    try {
+      // Suponiendo que getBanners() devuelve Map<String, List<BannerModel>>
+      Map<String, List<BannerModel>> bannersBySection =
+          await ApiService().getBanners();
+
+      // Separando las secciones en listas individuales
+      List<BannerModel> fyBanners = bannersBySection['FY'] ?? [];
+      List<BannerModel> tdBanners = bannersBySection['TD'] ?? [];
+      List<BannerModel> nwBanners = bannersBySection['NW'] ?? [];
+
+      // Ahora puedes trabajar con las listas fyBanners, tdBanners, y nwBanners individualmente
+      // Por ejemplo, imprimir los títulos de los banners de la sección FY
+      fyBanners.sort((a, b) => a.indexPosition.compareTo(b.indexPosition));
+      nwBanners.sort((a, b) => a.indexPosition.compareTo(b.indexPosition));
+      tdBanners.sort((a, b) => a.indexPosition.compareTo(b.indexPosition));
+      setState(() {
+        imagesForYou = fyBanners;
+        noticeImages = nwBanners;
+        trendingImages = tdBanners;
+      });
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -155,6 +216,7 @@ class SearchScreenState extends State<SearchScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: SizedBox(
         height: double.maxFinite,
@@ -166,380 +228,12 @@ class SearchScreenState extends State<SearchScreen>
                 return TabBarView(
                   controller: _tabController,
                   children: [
-                    ForYouScreen(),
-
-                    //Empresas
-                    RefreshIndicator.adaptive(
-                        displacement: 48,
-                        edgeOffset: 176,
-                        color: ColorStyle.darkPurple,
-                        backgroundColor: ColorStyle.grey,
-                        onRefresh: () async {
-                          await loadBusiness();
-                          Future.delayed(const Duration(milliseconds: 1000));
-                          print("trunca");
-                        },
-                        child: CustomScrollView(
-                            physics: BouncingScrollPhysics(),
-                            slivers: [
-                              isLoading
-                                  ? SliverToBoxAdapter(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 296),
-                                        child: Center(
-                                            child: CircularProgressIndicator
-                                                .adaptive(
-                                          backgroundColor: ColorStyle
-                                              .grey, // Fondo del indicador
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  ColorStyle.darkPurple),
-                                        )),
-                                      ),
-                                    )
-                                  : businesses.isEmpty
-                                      ? SliverToBoxAdapter(
-                                          child: Padding(
-                                              padding:
-                                                  EdgeInsets.only(top: 296),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Sigue proyectos',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            "Montserrat",
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                ],
-                                              )),
-                                        )
-                                      : SliverPadding(
-                                          padding: const EdgeInsets.only(
-                                              top: 168, bottom: 80),
-                                          sliver: SliverList(
-                                              delegate: SliverChildBuilderDelegate(
-                                                  childCount: businesses
-                                                      .length, // número de items en la lista
-                                                  (BuildContext context,
-                                                      int index) {
-                                            return BusinessWidget(
-                                              business: businesses[index],
-                                              onAddReview: () async {
-                                                final userBloc =
-                                                    BlocProvider.of<UserBloc>(
-                                                        context);
-
-                                                final userState =
-                                                    userBloc.state;
-                                                if (userState is UserLoaded) {
-                                                  await showModalBottomSheet(
-                                                      context: context,
-                                                      isScrollControlled: true,
-                                                      barrierColor:
-                                                          const Color.fromRGBO(
-                                                              0, 0, 0, 0.1),
-                                                      shape:
-                                                          const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  20.0),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  20.0),
-                                                        ),
-                                                      ),
-                                                      builder: (context) =>
-                                                          BackdropFilter(
-                                                              filter: ImageFilter
-                                                                  .blur(
-                                                                      sigmaX: 6,
-                                                                      sigmaY:
-                                                                          6),
-                                                              child:
-                                                                  CombinedBottomSheet(
-                                                                user: userState
-                                                                    .user,
-                                                                business:
-                                                                    businesses[
-                                                                        index],
-                                                              )));
-                                                }
-                                              },
-                                            );
-                                          })))
-                            ])),
-                    //Noticias
-                    RefreshIndicator.adaptive(
-                        displacement: 48,
-                        edgeOffset: 176,
-                        color: ColorStyle.darkPurple,
-                        backgroundColor: ColorStyle.grey,
-                        onRefresh: () async {
-                          await loadArticles();
-                          Future.delayed(const Duration(milliseconds: 1000));
-                        },
-                        child: CustomScrollView(
-                            physics: BouncingScrollPhysics(),
-                            slivers: [
-                              SliverToBoxAdapter(
-                                  child: Column(
-                                children: [
-                                  Container(
-                                    height: 256,
-                                    margin: EdgeInsets.only(top: 162),
-                                    width: double.maxFinite,
-                                    child: PageView.builder(
-                                        physics: ClampingScrollPhysics(),
-                                        onPageChanged: (value) {
-                                          setState(() {
-                                            currentPage = value;
-                                          });
-                                        },
-                                        controller: _boardController,
-                                        itemCount: noticeImages.length,
-                                        itemBuilder: (context, snapshot) {
-                                          var scale = currentPage == snapshot
-                                              ? 1.0
-                                              : 1.0;
-                                          return TweenAnimationBuilder(
-                                            duration: const Duration(
-                                                milliseconds: 350),
-                                            tween:
-                                                Tween(begin: scale, end: scale),
-                                            curve: Curves.ease,
-                                            builder: (BuildContext context,
-                                                double value, Widget? child) {
-                                              return Transform.scale(
-                                                scale: value,
-                                                child: child,
-                                              );
-                                            },
-                                            child: Image.asset(
-                                              noticeImages[snapshot],
-                                              fit: BoxFit.fitWidth,
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: List.generate(noticeImages.length,
-                                        (index) => doIndicator(index)),
-                                  ),
-                                ],
-                              )),
-                              isLoadingArticles
-                                  ? SliverToBoxAdapter(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 296),
-                                        child: Center(
-                                            child: CircularProgressIndicator
-                                                .adaptive(
-                                          backgroundColor: ColorStyle
-                                              .grey, // Fondo del indicador
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  ColorStyle.darkPurple),
-                                        )),
-                                      ),
-                                    )
-                                  : articles.isEmpty
-                                      ? SliverToBoxAdapter(
-                                          child: Padding(
-                                              padding:
-                                                  EdgeInsets.only(top: 296),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'No hay articulos',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            "Montserrat",
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                ],
-                                              )),
-                                        )
-                                      : SliverPadding(
-                                          padding: const EdgeInsets.only(
-                                              top: 24, bottom: 96),
-                                          sliver: SliverList(
-                                              delegate: SliverChildBuilderDelegate(
-                                                  childCount: articles
-                                                      .length, // número de items en la lista
-                                                  (BuildContext context,
-                                                      int index) {
-                                            final article = articles[index];
-                                            return PressTransform(
-                                                onPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          NoticeDetailScreen(
-                                                        article: article,
-                                                        index: index,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  height: 112,
-                                                  margin: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 16,
-                                                      vertical: 8),
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      boxShadow: [
-                                                        ShadowStyle()
-                                                            .baseComponentShadow
-                                                      ]),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        width: 128,
-                                                        height: 112,
-                                                        margin: const EdgeInsets
-                                                            .only(right: 16),
-                                                        clipBehavior: Clip
-                                                            .antiAliasWithSaveLayer,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.white,
-                                                            borderRadius: BorderRadius
-                                                                .horizontal(
-                                                                    left: Radius
-                                                                        .circular(
-                                                                            8))),
-                                                        child: Hero(
-                                                            tag: index,
-                                                            child: article
-                                                                        .imageUrl !=
-                                                                    null
-                                                                ? Image.network(
-                                                                    article
-                                                                        .imageUrl!,
-                                                                    width: double
-                                                                        .maxFinite,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  )
-                                                                : Image.asset(
-                                                                    'assets/images/logos/Whistle.png',
-                                                                    width: double
-                                                                        .maxFinite,
-                                                                  )),
-                                                      ),
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  top: 8,
-                                                                  bottom: 8,
-                                                                  right: 8),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            children: [
-                                                              Text(
-                                                                article.title,
-                                                                maxLines: 2,
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontFamily:
-                                                                        'Montserrat',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        14),
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 4,
-                                                              ),
-                                                              Text(
-                                                                article
-                                                                    .subtitle,
-                                                                maxLines: 2,
-                                                                style: const TextStyle(
-                                                                    fontFamily:
-                                                                        'Montserrat',
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400),
-                                                              ),
-                                                              Expanded(
-                                                                child: Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .bottomLeft,
-                                                                  child: Text(
-                                                                    article
-                                                                        .formatDate(),
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .right,
-                                                                    style: const TextStyle(
-                                                                        color: ColorStyle
-                                                                            .textGrey,
-                                                                        fontFamily:
-                                                                            'Montserrat',
-                                                                        fontSize:
-                                                                            12,
-                                                                        fontWeight:
-                                                                            FontWeight.w500),
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // Markdown(
-                                                      //     shrinkWrap: true,
-                                                      //     physics:
-                                                      //         NeverScrollableScrollPhysics(),
-                                                      //     data:
-                                                      //         article.content),
-                                                    ],
-                                                  ),
-                                                ));
-                                          })))
-                            ])),
-
-                    TrendingScreen()
+                    _buildForYou(),
+                    _buisinessScreen(),
+                    _noticeScreen(),
+                    TrendingScreen(
+                      banners: trendingImages,
+                    )
                   ],
                 );
               } else if (state is Searching) {
@@ -1444,28 +1138,520 @@ class SearchScreenState extends State<SearchScreen>
       ),
     );
   }
+
+  Widget _noticeScreen() {
+    return RefreshIndicator.adaptive(
+        displacement: 48,
+        edgeOffset: 176,
+        color: ColorStyle.darkPurple,
+        backgroundColor: ColorStyle.grey,
+        onRefresh: () async {
+          await loadArticles();
+          Future.delayed(const Duration(milliseconds: 1000));
+        },
+        child: CustomScrollView(physics: BouncingScrollPhysics(), slivers: [
+          SliverToBoxAdapter(
+              child: Column(
+            children: [
+              Container(
+                height: 256,
+                margin: EdgeInsets.only(top: 162),
+                width: double.maxFinite,
+                child: PageView.builder(
+                    onPageChanged: (value) {
+                      setState(() {
+                        currentPage = value;
+                      });
+                    },
+                    controller: _boardController,
+                    physics: ClampingScrollPhysics(),
+                    itemCount: imagesForYou.length,
+                    itemBuilder: (context, snapshot) {
+                      var scale = currentPageForYou == snapshot ? 1.0 : 1.0;
+                      return TweenAnimationBuilder(
+                        duration: const Duration(milliseconds: 350),
+                        tween: Tween(begin: scale, end: scale),
+                        curve: Curves.ease,
+                        builder: (BuildContext context, double value,
+                            Widget? child) {
+                          return Transform.scale(
+                            scale: value,
+                            child: child,
+                          );
+                        },
+                        child: CachedNetworkImage(
+                          imageUrl: noticeImages[snapshot].ad.imageUrl!,
+                          fit: BoxFit.fitWidth,
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error_outline),
+                        ),
+                      );
+                    }),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: List.generate(
+                    noticeImages.length, (index) => doIndicator(index)),
+              ),
+            ],
+          )),
+          isLoadingArticles
+              ? SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 296),
+                    child: Center(
+                        child: CircularProgressIndicator.adaptive(
+                      backgroundColor: ColorStyle.grey, // Fondo del indicador
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(ColorStyle.darkPurple),
+                    )),
+                  ),
+                )
+              : articles.isEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.only(top: 296),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'No hay articulos',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          )),
+                    )
+                  : SliverPadding(
+                      padding: const EdgeInsets.only(top: 24, bottom: 96),
+                      sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                              childCount: articles
+                                  .length, // número de items en la lista
+                              (BuildContext context, int index) {
+                        final article = articles[index];
+                        return PressTransform(
+                            onPressed: () {
+                              Navigator.of(context, rootNavigator: true).push(
+                                MaterialPageRoute(
+                                  builder: (context) => NoticeDetailScreen(
+                                    article: article,
+                                    index: index,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 112,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    ShadowStyle().baseComponentShadow
+                                  ]),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 128,
+                                    height: 112,
+                                    margin: const EdgeInsets.only(right: 16),
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.horizontal(
+                                            left: Radius.circular(8))),
+                                    child: Hero(
+                                        tag: index,
+                                        child: article.imageUrl != null
+                                            ? Image.network(
+                                                article.imageUrl!,
+                                                width: double.maxFinite,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Image.asset(
+                                                'assets/images/logos/Whistle.png',
+                                                width: double.maxFinite,
+                                              )),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 8, bottom: 8, right: 8),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Text(
+                                            article.title,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14),
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text(
+                                            article.subtitle,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                          Expanded(
+                                            child: Align(
+                                              alignment: Alignment.bottomLeft,
+                                              child: Text(
+                                                article.formatDate(),
+                                                textAlign: TextAlign.right,
+                                                style: const TextStyle(
+                                                    color: ColorStyle.textGrey,
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  // Markdown(
+                                  //     shrinkWrap: true,
+                                  //     physics:
+                                  //         NeverScrollableScrollPhysics(),
+                                  //     data:
+                                  //         article.content),
+                                ],
+                              ),
+                            ));
+                      })))
+        ]));
+  }
+
+  Widget _buisinessScreen() {
+    return RefreshIndicator.adaptive(
+        displacement: 48,
+        edgeOffset: 176,
+        color: ColorStyle.darkPurple,
+        backgroundColor: ColorStyle.grey,
+        onRefresh: () async {
+          await loadBusiness();
+          Future.delayed(const Duration(milliseconds: 1000));
+          print("trunca");
+        },
+        child: CustomScrollView(physics: BouncingScrollPhysics(), slivers: [
+          isLoading
+              ? SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 296),
+                    child: Center(
+                        child: CircularProgressIndicator.adaptive(
+                      backgroundColor: ColorStyle.grey, // Fondo del indicador
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(ColorStyle.darkPurple),
+                    )),
+                  ),
+                )
+              : businesses.isEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.only(top: 296),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Sigue proyectos',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          )),
+                    )
+                  : SliverPadding(
+                      padding: const EdgeInsets.only(top: 168, bottom: 80),
+                      sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                              childCount: businesses
+                                  .length, // número de items en la lista
+                              (BuildContext context, int index) {
+                        return BusinessWidget(
+                          business: businesses[index],
+                          onAddReview: () async {
+                            final userBloc = BlocProvider.of<UserBloc>(context);
+
+                            final userState = userBloc.state;
+                            if (userState is UserLoaded) {
+                              await showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  barrierColor:
+                                      const Color.fromRGBO(0, 0, 0, 0.1),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20.0),
+                                      topRight: Radius.circular(20.0),
+                                    ),
+                                  ),
+                                  builder: (context) => BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 6, sigmaY: 6),
+                                      child: CombinedBottomSheet(
+                                        user: userState.user,
+                                        business: businesses[index],
+                                      )));
+                            }
+                          },
+                        );
+                      })))
+        ]));
+  }
+
+  Widget _buildForYou() {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.only(bottom: 160),
+      child: Column(
+        children: [
+          Container(
+            height: 256,
+            margin: EdgeInsets.only(top: 162),
+            width: double.maxFinite,
+            child: PageView.builder(
+                onPageChanged: (value) {
+                  setState(() {
+                    currentPageForYou = value;
+                  });
+                },
+                controller: _boardControllerForYou,
+                physics: ClampingScrollPhysics(),
+                itemCount: imagesForYou.length,
+                itemBuilder: (context, snapshot) {
+                  var scale = currentPageForYou == snapshot ? 1.0 : 1.0;
+                  return TweenAnimationBuilder(
+                    duration: const Duration(milliseconds: 350),
+                    tween: Tween(begin: scale, end: scale),
+                    curve: Curves.ease,
+                    builder:
+                        (BuildContext context, double value, Widget? child) {
+                      return Transform.scale(
+                        scale: value,
+                        child: child,
+                      );
+                    },
+                    child: CachedNetworkImage(
+                      imageUrl: imagesForYou[snapshot].ad.imageUrl!,
+                      fit: BoxFit.fitWidth,
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.error_outline),
+                    ),
+                  );
+                }),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: List.generate(
+                imagesForYou.length, (index) => doIndicatorForYou(index)),
+          ),
+
+          Column(
+              children: List.generate(
+            banners
+                .where((element) => element.location == 'BS')
+                .toList()
+                .length,
+            (index) => Container(
+              height: 256,
+              margin: EdgeInsets.only(top: 162),
+              width: double.maxFinite,
+              padding: const EdgeInsets.only(left: 24, bottom: 16),
+              decoration: BoxDecoration(
+                gradient: GradientStyle().grayGradient,
+                // image: DecorationImage(
+                //     image: NetworkImage(banners
+                //         .where((element) => element.location == 'BS')
+                //         .toList()[index]
+                //         .ad
+                //         .imageUrl))
+              ),
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        banners
+                            .where((element) => element.location == 'BS')
+                            .toList()[index]
+                            .ad
+                            .title,
+                        style: TextStyle(
+                            color: Colors.black.withOpacity(0.5),
+                            fontFamily: 'Montserrat',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          )),
+
+          Column(
+            children: List.generate(
+                0,
+                (index) => Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Tendencia en Mexico",
+                            style: TextStyle(
+                                color: ColorStyle.textGrey,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(
+                            height: 6,
+                          ),
+                          Text(
+                            "Estafadores!!! No cumplen sus políticas, son unos corruptos.",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            "24 Me gusta • 6 comentarios",
+                            style: TextStyle(
+                                color: ColorStyle.textGrey,
+                                fontFamily: 'Montserrat',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    )),
+          ),
+          // const Divider(
+          //   color: ColorStyle.midToneGrey,
+          // ),
+          // ReviewCardDefault(
+          //     review: Review(
+          //         idReview: '',
+          //         content:
+          //             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
+          //         likes: 2,
+          //         rating: 2.5,
+          //         isLiked: true,
+          //         isValid: true,
+          //         createdAt: null,
+          //         updatedAt: null,
+          //         comments: 4,
+          //         business: BusinessData(
+          //             idBusiness: '',
+          //             name: 'Starbucks',
+          //             entity: 'Alsea',
+          //             rating: 4,
+          //             followed: true),
+          //         user: UserData(
+          //             idUser: '',
+          //             name: 'Harold',
+          //             lastName: 'Lancheros',
+          //             followed: true)))
+        ],
+      ),
+    );
+  }
 }
 
-// class BusinessScreen extends StatelessWidget {
-//   const BusinessScreen({
+
+//class BusinessSearchScreen extends StatefulWidget {
+//   final List<Business> business;
+//   const BusinessSearchScreen({
 //     super.key,
+//     required this.business,
 //   });
+
+//   @override
+//   State<BusinessSearchScreen> createState() => _BusinessSearchScreenState();
+// }
+
+// class _BusinessSearchScreenState extends State<BusinessSearchScreen> {
+//   List<Business> businesses = [];
+//   bool isLoading = true;
+
+//   @override
+//   void initState() {
+//     // TODO: implement initState
+//     super.initState();
+//   }
+
+//   Future<void> loadBusiness() async {
+//     try {
+//       final businessList = await ApiService().getAllBusiness();
+//       print(businessList);
+//       print("ssaaa");
+
+//       if (mounted) {
+//         setState(() {
+//           businesses = businessList;
+//           isLoading = false;
+//         });
+//       }
+//     } catch (e) {
+//       // Handle the error or set state to show an error message
+//       if (mounted) {
+//         showErrorSnackBar(context, e.toString());
+//         setState(() {
+//           isLoading = false;
+//         });
+//       }
+//     }
+//   }
 
 //   @override
 //   Widget build(BuildContext context) {
 //     return RefreshIndicator.adaptive(
+//         displacement: 48,
+//         edgeOffset: 176,
 //         color: ColorStyle.darkPurple,
 //         backgroundColor: ColorStyle.grey,
 //         onRefresh: () async {
-//           await loadBusinessFollowed();
+//           await loadBusiness();
 //           Future.delayed(const Duration(milliseconds: 1000));
+//           print("trunca");
 //         },
-//         child:
-//             CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
+//         child: CustomScrollView(physics: BouncingScrollPhysics(), slivers: [
 //           isLoading
-//               ? const SliverToBoxAdapter(
+//               ? SliverToBoxAdapter(
 //                   child: Padding(
-//                     padding: EdgeInsets.only(top: 96),
+//                     padding: EdgeInsets.only(top: 296),
 //                     child: Center(
 //                         child: CircularProgressIndicator.adaptive(
 //                       backgroundColor: ColorStyle.grey, // Fondo del indicador
@@ -1477,7 +1663,7 @@ class SearchScreenState extends State<SearchScreen>
 //               : businesses.isEmpty
 //                   ? SliverToBoxAdapter(
 //                       child: Padding(
-//                           padding: EdgeInsets.only(top: 96),
+//                           padding: EdgeInsets.only(top: 296),
 //                           child: Row(
 //                             mainAxisAlignment: MainAxisAlignment.center,
 //                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1494,544 +1680,182 @@ class SearchScreenState extends State<SearchScreen>
 //                           )),
 //                     )
 //                   : SliverPadding(
-//                       padding: const EdgeInsets.only(bottom: 128),
+//                       padding: const EdgeInsets.only(top: 168, bottom: 80),
 //                       sliver: SliverList(
 //                           delegate: SliverChildBuilderDelegate(
 //                               childCount: businesses
 //                                   .length, // número de items en la lista
 //                               (BuildContext context, int index) {
-//                         return BusinessWidget(business: businesses[index]);
+//                         return BusinessWidget(
+//                           business: businesses[index],
+//                           onAddReview: () async {
+//                             final userBloc = BlocProvider.of<UserBloc>(context);
+
+//                             final userState = userBloc.state;
+//                             if (userState is UserLoaded) {
+//                               await showModalBottomSheet(
+//                                   context: context,
+//                                   isScrollControlled: true,
+//                                   barrierColor:
+//                                       const Color.fromRGBO(0, 0, 0, 0.1),
+//                                   shape: const RoundedRectangleBorder(
+//                                     borderRadius: BorderRadius.only(
+//                                       topLeft: Radius.circular(20.0),
+//                                       topRight: Radius.circular(20.0),
+//                                     ),
+//                                   ),
+//                                   builder: (context) => BackdropFilter(
+//                                       filter: ImageFilter.blur(
+//                                           sigmaX: 6, sigmaY: 6),
+//                                       child: CombinedBottomSheet(
+//                                         user: userState.user,
+//                                         business: businesses[index],
+//                                       )));
+//                             }
+//                           },
+//                         );
 //                       })))
 //         ]));
 //   }
 // }
 
-class NoticeScreen extends StatelessWidget {
-  const NoticeScreen({
-    super.key,
-  });
+// class NoticeScreen extends StatelessWidget {
+//   const NoticeScreen({
+//     super.key,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Article>>(
-      future: ApiService().getArticles(),
-      builder: (context, snapshot) {
-        // Verificar si hay errores
-        if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              "Error: ${snapshot.error}",
-              style: TextStyle(fontFamily: 'Montserrat'),
-            ),
-          );
-        }
+//   @override
+//   Widget build(BuildContext context) {
+//     return FutureBuilder<List<Article>>(
+//       future: ApiService().getArticles(),
+//       builder: (context, snapshot) {
+//         // Verificar si hay errores
+//         if (snapshot.hasError) {
+//           return Center(
+//             child: Text(
+//               "Error: ${snapshot.error}",
+//               style: TextStyle(fontFamily: 'Montserrat'),
+//             ),
+//           );
+//         }
 
-        // Esperando a que la Future se complete
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator.adaptive());
-        }
+//         // Esperando a que la Future se complete
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return Center(child: CircularProgressIndicator.adaptive());
+//         }
 
-        // Datos recibidos y sin errores
-        if (snapshot.connectionState == ConnectionState.done) {
-          // Verifica si la lista de artículos está vacía
-          if (snapshot.data?.isEmpty ?? true) {
-            return Center(
-              child: Text(
-                "No hay artículos disponibles.",
-                style: TextStyle(fontFamily: 'Montserrat'),
-              ),
-            );
-          }
+//         // Datos recibidos y sin errores
+//         if (snapshot.connectionState == ConnectionState.done) {
+//           // Verifica si la lista de artículos está vacía
+//           if (snapshot.data?.isEmpty ?? true) {
+//             return Center(
+//               child: Text(
+//                 "No hay artículos disponibles.",
+//                 style: TextStyle(fontFamily: 'Montserrat'),
+//               ),
+//             );
+//           }
 
-          // Datos existen y no están vacíos
-          return SingleChildScrollView(
-            child: Column(
-              children: List.generate(snapshot.data!.length, (index) {
-                final article = snapshot.data![index];
-                return PressTransform(
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(
-                          builder: (context) => NoticeDetailScreen(
-                            article: article,
-                            index: index,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 8),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 10),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: double.maxFinite,
-                            margin: const EdgeInsets.only(bottom: 10),
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Hero(
-                              tag: index,
-                              child: index == 0
-                                  ? Image.asset(
-                                      'assets/images/logos/Whistle.png',
-                                      width: double.maxFinite,
-                                    )
-                                  : Image.asset(
-                                      'assets/images/ilustrations/169.jpg',
-                                      width: double.maxFinite,
-                                    ),
-                            ),
-                          ),
-                          Text(
-                            snapshot.data![index].title,
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Markdown(
-                              shrinkWrap: true,
-                              data: snapshot.data![index].content),
-                          // Text(
-                          //   snapshot.data![index].content,
-                          //   maxLines: 4,
-                          //   style: const TextStyle(
-                          //       fontFamily: 'Montserrat',
-                          //       fontSize: 14,
-                          //       fontWeight: FontWeight.w400),
-                          // ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              snapshot.data![index].formatDate(),
-                              textAlign: TextAlign.right,
-                              style: const TextStyle(
-                                  color: ColorStyle.textGrey,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ));
-              }),
-            ),
-          );
-        }
+//           // Datos existen y no están vacíos
+//           return SingleChildScrollView(
+//             child: Column(
+//               children: List.generate(snapshot.data!.length, (index) {
+//                 final article = snapshot.data![index];
+//                 return PressTransform(
+//                     onPressed: () {
+//                       Navigator.of(context, rootNavigator: true).push(
+//                         MaterialPageRoute(
+//                           builder: (context) => NoticeDetailScreen(
+//                             article: article,
+//                             index: index,
+//                           ),
+//                         ),
+//                       );
+//                     },
+//                     child: Container(
+//                       margin: const EdgeInsets.symmetric(
+//                           horizontal: 24, vertical: 8),
+//                       padding: const EdgeInsets.symmetric(
+//                           vertical: 10, horizontal: 10),
+//                       decoration: BoxDecoration(
+//                           color: Colors.white,
+//                           borderRadius: BorderRadius.circular(10)),
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Container(
+//                             width: double.maxFinite,
+//                             margin: const EdgeInsets.only(bottom: 10),
+//                             clipBehavior: Clip.antiAliasWithSaveLayer,
+//                             decoration: BoxDecoration(
+//                                 color: Colors.white,
+//                                 borderRadius: BorderRadius.circular(8)),
+//                             child: Hero(
+//                               tag: index,
+//                               child: index == 0
+//                                   ? Image.asset(
+//                                       'assets/images/logos/Whistle.png',
+//                                       width: double.maxFinite,
+//                                     )
+//                                   : Image.asset(
+//                                       'assets/images/ilustrations/169.jpg',
+//                                       width: double.maxFinite,
+//                                     ),
+//                             ),
+//                           ),
+//                           Text(
+//                             snapshot.data![index].title,
+//                             style: const TextStyle(
+//                                 color: Colors.black,
+//                                 fontFamily: 'Montserrat',
+//                                 fontWeight: FontWeight.w600,
+//                                 fontSize: 14),
+//                           ),
+//                           const SizedBox(
+//                             height: 4,
+//                           ),
+//                           Markdown(
+//                               shrinkWrap: true,
+//                               data: snapshot.data![index].content),
+//                           // Text(
+//                           //   snapshot.data![index].content,
+//                           //   maxLines: 4,
+//                           //   style: const TextStyle(
+//                           //       fontFamily: 'Montserrat',
+//                           //       fontSize: 14,
+//                           //       fontWeight: FontWeight.w400),
+//                           // ),
+//                           const SizedBox(
+//                             height: 4,
+//                           ),
+//                           Align(
+//                             alignment: Alignment.centerRight,
+//                             child: Text(
+//                               snapshot.data![index].formatDate(),
+//                               textAlign: TextAlign.right,
+//                               style: const TextStyle(
+//                                   color: ColorStyle.textGrey,
+//                                   fontFamily: 'Montserrat',
+//                                   fontSize: 12,
+//                                   fontWeight: FontWeight.w500),
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ));
+//               }),
+//             ),
+//           );
+//         }
 
-        // Si el Future aún no se ha iniciado o no hay otros estados definidos
-        return Center(
-          child: Text(
-            "Algo salió mal.",
-            style: TextStyle(fontFamily: 'Montserrat'),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class ForYouScreen extends StatefulWidget {
-  const ForYouScreen({
-    super.key,
-  });
-
-  @override
-  State<ForYouScreen> createState() => _ForYouScreenState();
-}
-
-class _ForYouScreenState extends State<ForYouScreen> {
-  int currentPage = 0;
-
-  final PageController _boardController =
-      PageController(initialPage: 0, viewportFraction: 1);
-  AnimatedContainer doIndicator(index) {
-    return AnimatedContainer(
-      margin: const EdgeInsets.only(right: 4, left: 4),
-      duration: const Duration(milliseconds: 300),
-      height: 2,
-      width: currentPage == index ? 12 : 10,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: currentPage == index
-            ? ColorStyle.darkPurple.withOpacity(0.8)
-            : Colors.grey.withOpacity(0.5),
-      ),
-    );
-  }
-
-  List images = [
-    'assets/images/ilustrations/banner_how1.jpg',
-    'assets/images/ilustrations/banner_how2.jpg',
-    'assets/images/ilustrations/banner_how3.jpg',
-    'assets/images/ilustrations/banner_how4.jpg',
-    'assets/images/ilustrations/banner_how5.jpg',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.only(bottom: 160),
-      child: Column(
-        children: [
-          Container(
-            height: 256,
-            margin: EdgeInsets.only(top: 162),
-            width: double.maxFinite,
-            child: PageView.builder(
-                onPageChanged: (value) {
-                  setState(() {
-                    currentPage = value;
-                  });
-                },
-                controller: _boardController,
-                physics: ClampingScrollPhysics(),
-                itemCount: images.length,
-                itemBuilder: (context, snapshot) {
-                  var scale = currentPage == snapshot ? 1.0 : 1.0;
-                  return TweenAnimationBuilder(
-                    duration: const Duration(milliseconds: 350),
-                    tween: Tween(begin: scale, end: scale),
-                    curve: Curves.ease,
-                    builder:
-                        (BuildContext context, double value, Widget? child) {
-                      return Transform.scale(
-                        scale: value,
-                        child: child,
-                      );
-                    },
-                    child: Image.asset(
-                      images[snapshot],
-                      fit: BoxFit.fitWidth,
-                    ),
-                  );
-                }),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children:
-                List.generate(images.length, (index) => doIndicator(index)),
-          ),
-
-          // Container(
-          //   height: 256,
-          //   margin: EdgeInsets.only(top: 162),
-          //   width: double.maxFinite,
-          //   padding: const EdgeInsets.only(left: 24, bottom: 16),
-          //   decoration: const BoxDecoration(
-          //       // gradient: GradientStyle().grayGradient,
-          //       image: DecorationImage(
-          //           image: AssetImage(
-          //               'assets/images/ilustrations/Banner 1 - W.jpg'))),
-          //   child: Stack(
-          //     children: [
-          //       Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         mainAxisAlignment: MainAxisAlignment.end,
-          //         children: [
-          //           // Text("Encabezado",
-          //           //     style: TextStyle(
-          //           //         color: Colors.white,
-          //           //         fontFamily: 'Montserrat',
-          //           //         fontSize: 14,
-          //           //         fontWeight: FontWeight.w500)),
-          //           const SizedBox(
-          //             height: 4,
-          //           ),
-          //           Text(
-          //             "Publicidad",
-          //             style: TextStyle(
-          //                 color: Colors.white.withOpacity(0.5),
-          //                 fontFamily: 'Montserrat',
-          //                 fontSize: 24,
-          //                 fontWeight: FontWeight.bold),
-          //           ),
-          //         ],
-          //       )
-          //     ],
-          //   ),
-          // ),
-
-          Column(
-            children: List.generate(
-                0,
-                (index) => Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 24),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Tendencia en Mexico",
-                            style: TextStyle(
-                                color: ColorStyle.textGrey,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(
-                            height: 6,
-                          ),
-                          Text(
-                            "Estafadores!!! No cumplen sus políticas, son unos corruptos.",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            "24 Me gusta • 6 comentarios",
-                            style: TextStyle(
-                                color: ColorStyle.textGrey,
-                                fontFamily: 'Montserrat',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
-                    )),
-          ),
-          // const Divider(
-          //   color: ColorStyle.midToneGrey,
-          // ),
-          // ReviewCardDefault(
-          //     review: Review(
-          //         idReview: '',
-          //         content:
-          //             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
-          //         likes: 2,
-          //         rating: 2.5,
-          //         isLiked: true,
-          //         isValid: true,
-          //         createdAt: null,
-          //         updatedAt: null,
-          //         comments: 4,
-          //         business: BusinessData(
-          //             idBusiness: '',
-          //             name: 'Starbucks',
-          //             entity: 'Alsea',
-          //             rating: 4,
-          //             followed: true),
-          //         user: UserData(
-          //             idUser: '',
-          //             name: 'Harold',
-          //             lastName: 'Lancheros',
-          //             followed: true)))
-        ],
-      ),
-    );
-  }
-}
-
-class TrendingScreen extends StatefulWidget {
-  const TrendingScreen({
-    super.key,
-  });
-
-  @override
-  State<TrendingScreen> createState() => _TrendingScreenState();
-}
-
-class _TrendingScreenState extends State<TrendingScreen> {
-  int currentPage = 0;
-
-  final PageController _boardController =
-      PageController(initialPage: 0, viewportFraction: 1);
-  AnimatedContainer doIndicator(index) {
-    return AnimatedContainer(
-      margin: const EdgeInsets.only(right: 4, left: 4),
-      duration: const Duration(milliseconds: 300),
-      height: 2,
-      width: currentPage == index ? 12 : 10,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: currentPage == index
-            ? ColorStyle.darkPurple.withOpacity(0.8)
-            : Colors.grey.withOpacity(0.5),
-      ),
-    );
-  }
-
-  List images = [
-    'assets/images/ilustrations/banner_defraudados.jpg',
-    'assets/images/ilustrations/banner_defraudados2.jpg',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.only(bottom: 160),
-      child: Column(
-        children: [
-          Container(
-            height: 256,
-            margin: EdgeInsets.only(top: 162),
-            width: double.maxFinite,
-            child: PageView.builder(
-                physics: ClampingScrollPhysics(),
-                onPageChanged: (value) {
-                  setState(() {
-                    currentPage = value;
-                  });
-                },
-                controller: _boardController,
-                itemCount: images.length,
-                itemBuilder: (context, snapshot) {
-                  var scale = currentPage == snapshot ? 1.0 : 1.0;
-                  return TweenAnimationBuilder(
-                    duration: const Duration(milliseconds: 350),
-                    tween: Tween(begin: scale, end: scale),
-                    curve: Curves.ease,
-                    builder:
-                        (BuildContext context, double value, Widget? child) {
-                      return Transform.scale(
-                        scale: value,
-                        child: child,
-                      );
-                    },
-                    child: Image.asset(
-                      images[snapshot],
-                      fit: BoxFit.fitWidth,
-                    ),
-                  );
-                }),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children:
-                List.generate(images.length, (index) => doIndicator(index)),
-          ),
-
-          // Container(
-          //   height: 256,
-          //   margin: EdgeInsets.only(top: 162),
-          //   width: double.maxFinite,
-          //   padding: const EdgeInsets.only(left: 24, bottom: 16),
-          //   decoration: const BoxDecoration(
-          //       // gradient: GradientStyle().grayGradient,
-          //       image: DecorationImage(
-          //           image: AssetImage(
-          //               'assets/images/ilustrations/Banner 1 - W.jpg'))),
-          //   child: Stack(
-          //     children: [
-          //       Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         mainAxisAlignment: MainAxisAlignment.end,
-          //         children: [
-          //           // Text("Encabezado",
-          //           //     style: TextStyle(
-          //           //         color: Colors.white,
-          //           //         fontFamily: 'Montserrat',
-          //           //         fontSize: 14,
-          //           //         fontWeight: FontWeight.w500)),
-          //           const SizedBox(
-          //             height: 4,
-          //           ),
-          //           Text(
-          //             "Publicidad",
-          //             style: TextStyle(
-          //                 color: Colors.white.withOpacity(0.5),
-          //                 fontFamily: 'Montserrat',
-          //                 fontSize: 24,
-          //                 fontWeight: FontWeight.bold),
-          //           ),
-          //         ],
-          //       )
-          //     ],
-          //   ),
-          // ),
-
-          Column(
-            children: List.generate(
-                0,
-                (index) => Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 24),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Tendencia en Mexico",
-                            style: TextStyle(
-                                color: ColorStyle.textGrey,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(
-                            height: 6,
-                          ),
-                          Text(
-                            "Estafadores!!! No cumplen sus políticas, son unos corruptos.",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            "24 Me gusta • 6 comentarios",
-                            style: TextStyle(
-                                color: ColorStyle.textGrey,
-                                fontFamily: 'Montserrat',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
-                    )),
-          ),
-          // const Divider(
-          //   color: ColorStyle.midToneGrey,
-          // ),
-          // ReviewCardDefault(
-          //     review: Review(
-          //         idReview: '',
-          //         content:
-          //             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
-          //         likes: 2,
-          //         rating: 2.5,
-          //         isLiked: true,
-          //         isValid: true,
-          //         createdAt: null,
-          //         updatedAt: null,
-          //         comments: 4,
-          //         business: BusinessData(
-          //             idBusiness: '',
-          //             name: 'Starbucks',
-          //             entity: 'Alsea',
-          //             rating: 4,
-          //             followed: true),
-          //         user: UserData(
-          //             idUser: '',
-          //             name: 'Harold',
-          //             lastName: 'Lancheros',
-          //             followed: true)))
-        ],
-      ),
-    );
-  }
-}
+//         // Si el Future aún no se ha iniciado o no hay otros estados definidos
+//         return Center(
+//           child: Text(
+//             "Algo salió mal.",
+//             style: TextStyle(fontFamily: 'Montserrat'),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
