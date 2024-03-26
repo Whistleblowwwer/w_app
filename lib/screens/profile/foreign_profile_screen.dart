@@ -113,33 +113,27 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen>
                   child: PressTransform(
                     onPressed: () async {
                       String? tk = await UserRepository().getToken();
-                      if (tk != null) {
-                        if (userMain.idUser != currentUser.idUser) {
-                          //Sacar el token largo, el; corto ya esta
-                          if (mounted) {
-                            Navigator.of(context, rootNavigator: true).push(
-                                MaterialPageRoute(
-                                    settings: const RouteSettings(),
-                                    builder: (context) => InboxScreen(
-                                        receiver: currentUser.idUser,
-                                        receiverName: currentUser.name +
-                                            " " +
-                                            currentUser.lastName,
-                                        initials: userMain.name[0] +
-                                            userMain.lastName[0])));
-                          }
-                        } else {
-                          if (mounted) {
-                            Navigator.of(context, rootNavigator: true)
-                                .push(MaterialPageRoute(
-                                    settings: const RouteSettings(),
-                                    builder: (context) => ChatPage(
-                                          user: userMain,
-                                        )));
-                          }
-                        }
+
+                      if (userMain.idUser != currentUser.idUser) {
+                        //Sacar el token largo, el; corto ya esta
+
+                        Navigator.of(context, rootNavigator: true)
+                            .push(MaterialPageRoute(
+                                settings: const RouteSettings(),
+                                builder: (context) => InboxScreen(
+                                      receiver: currentUser.idUser,
+                                      receiverName:
+                                          "${currentUser.name} ${currentUser.lastName}",
+                                    )));
                       } else {
-                        print("Token no provisto o no valido");
+                        if (mounted) {
+                          Navigator.of(context, rootNavigator: true)
+                              .push(MaterialPageRoute(
+                                  settings: const RouteSettings(),
+                                  builder: (context) => ChatPage(
+                                        user: userMain,
+                                      )));
+                        }
                       }
                     },
                     child: Container(

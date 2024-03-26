@@ -33,9 +33,9 @@ class UserChatCard extends StatelessWidget {
           Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
               settings: const RouteSettings(),
               builder: (context) => InboxScreen(
-                  receiver: receiver,
-                  receiverName: name + " " + lastName,
-                  initials: initials)));
+                    receiver: receiver,
+                    receiverName: "$name $lastName",
+                  )));
         } else {
           print("Token no provisto o no valido");
         }

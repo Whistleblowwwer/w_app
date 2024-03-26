@@ -26,7 +26,10 @@ import 'repository/user_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
+      .then((value) {
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  });
 
   await dotenv.load(fileName: ".env");
   final apiService = ApiService();
@@ -43,6 +46,11 @@ void main() async {
   ]).then((_) {
     runApp(MainApp(authBloc, apiService, userRepository));
   });
+}
+
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+  // Realiza operaciones necesarias, como mostrar notificaciones locales.
 }
 
 class MainApp extends StatefulWidget {
@@ -120,9 +128,10 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
+            useMaterial3: false,
             primaryColor: const Color.fromRGBO(28, 79, 200, 1),
             popupMenuTheme: PopupMenuThemeData(
-              textStyle: const TextStyle(fontFamily: 'Anuphan'),
+              textStyle: const TextStyle(fontFamily: 'Montserrat'),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),

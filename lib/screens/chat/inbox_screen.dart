@@ -17,13 +17,12 @@ import 'package:w_app/widgets/press_transform_widget.dart';
 class InboxScreen extends StatefulWidget {
   final String receiver;
   final String receiverName;
-  final String initials;
 
-  const InboxScreen(
-      {super.key,
-      required this.receiver,
-      required this.receiverName,
-      required this.initials});
+  const InboxScreen({
+    super.key,
+    required this.receiver,
+    required this.receiverName,
+  });
 
   @override
   State<InboxScreen> createState() => _InboxScreenState();
@@ -193,7 +192,8 @@ class _InboxScreenState extends State<InboxScreen> {
                           child: CircleAvatar(
                             radius: 18,
                             backgroundColor: ColorStyle.solidBlue,
-                            child: Text(widget.initials.toUpperCase(),
+                            child: Text(
+                                (user.name[0] + user.lastName[0]).toUpperCase(),
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,

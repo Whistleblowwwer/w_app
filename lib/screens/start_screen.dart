@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -10,16 +11,22 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:w_app/bloc/auth_bloc/auth_bloc_event.dart';
+import 'package:w_app/bloc/feed_bloc/feed_bloc.dart';
+import 'package:w_app/bloc/feed_bloc/feed_event.dart';
 import 'package:w_app/bloc/socket_bloc/socket_bloc.dart';
 import 'package:w_app/bloc/socket_bloc/socket_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_event.dart';
 import 'package:w_app/bloc/user_bloc/user_bloc_state.dart';
 import 'package:w_app/repository/user_repository.dart';
+import 'package:w_app/screens/actions/comment_bottom_sheet.dart';
 import 'package:w_app/screens/add/add_review.dart';
 import 'package:w_app/screens/alert/alert_screen.dart';
+import 'package:w_app/screens/chat/inbox_screen.dart';
+import 'package:w_app/screens/home/comment_screen.dart';
 import 'package:w_app/screens/home/home_screen.dart';
 import 'package:w_app/screens/home/review_screen.dart';
+import 'package:w_app/screens/profile/foreign_profile_screen.dart';
 import 'package:w_app/screens/profile/profile_screen.dart';
 import 'package:w_app/screens/search/search_screen.dart';
 import 'package:w_app/services/api/api_service.dart';
@@ -41,6 +48,8 @@ class StartPageState extends State<StartPage> {
   late AuthBloc _authBloc;
   late UserBloc _userBloc;
   late SocketBloc _socketBloc;
+  late FeedBloc _feedBloc;
+
   String? userId;
 
   final Map<int, GlobalKey<NavigatorState>> navigatorKeys = {
@@ -59,25 +68,26 @@ class StartPageState extends State<StartPage> {
         // Es seguro usar el context aquí
         _authBloc = BlocProvider.of<AuthBloc>(context);
         _userBloc = BlocProvider.of<UserBloc>(context);
+        _feedBloc = BlocProvider.of<FeedBloc>(context);
         _fetchUserProfile();
         _socketBloc = BlocProvider.of<SocketBloc>(context);
         _socketBloc.add(Connect());
       }
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print("sapa");
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AlertScreen(widget.userRepository),
-          ));
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       print(message.data);
       print(message.notification?.title);
-      if (message.data.containsKey('type')) {
-        String type = message.data['type'];
+      print(message.notification?.body);
 
-        // Navegar a la pantalla correspondiente basada en 'type'
+      try {
+        await handleNotificationClick(context, message);
+      } catch (e) {
+        if (mounted) {
+          Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
+            builder: (context) => AlertScreen(widget.userRepository),
+          ));
+        }
       }
     });
   }
@@ -92,6 +102,396 @@ class StartPageState extends State<StartPage> {
           decodedToken['_id_user']; // Asume que el ID está bajo la clave 'id'
       print(userId);
       _userBloc.add(FetchUserProfile());
+    }
+  }
+
+  Future<void> handleNotificationClick(
+      BuildContext context, RemoteMessage message) async {
+    print(message.data);
+    switch (message.data['target_type']) {
+      case "profile":
+        final user =
+            await ApiService().getProfileDetail(message.data['_id_target']);
+        if (mounted) {
+          Navigator.of(context, rootNavigator: false).push(
+            MaterialPageRoute(builder: (context) => ForeignProfileScreen(user)),
+          );
+        }
+        break;
+      case "review":
+        final review = await ApiService().getReview(message.data['_id_target']);
+
+        if (mounted) {
+          Navigator.of(context, rootNavigator: false).push(
+            MaterialPageRoute(
+                builder: (context) => ReviewPage(
+                      review: review,
+                      onLike: () {
+                        _feedBloc.add(LikeReview(review));
+                      },
+                      onFollowUser: () {
+                        _feedBloc.add(FollowUser(review.user.idUser));
+                      },
+                      onFollowBusiness: () {
+                        _feedBloc
+                            .add(FollowBusiness(review.business!.idBusiness));
+                      },
+                      onDelete: () async {
+                        try {
+                          final response =
+                              await ApiService().deleteReview(review.idReview);
+
+                          if (response == 200) {
+                            setState(() {});
+                            _feedBloc.add(DeleteReview(review.idReview));
+                            if (mounted) {
+                              showSuccessSnackBar(context,
+                                  message: "Se elimino la reseña exitosamente");
+                            }
+                          } else {
+                            if (mounted) {
+                              showErrorSnackBar(
+                                  context, "No se pudo eliminar la reseña");
+                            }
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            showErrorSnackBar(
+                                context, "No se pudo eliminar la reseña");
+                          }
+                        }
+                      },
+                      onComment: () async {
+                        final userBloc = BlocProvider.of<UserBloc>(context);
+                        final userState = userBloc.state;
+                        if (userState is UserLoaded) {
+                          Map<String, dynamic>? response =
+                              await showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  useRootNavigator: true,
+                                  barrierColor:
+                                      const Color.fromRGBO(0, 0, 0, 0.1),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20.0),
+                                      topRight: Radius.circular(20.0),
+                                    ),
+                                  ),
+                                  builder: (context) => BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 6, sigmaY: 6),
+                                      child: CommentBottomSheet(
+                                        user: userState.user,
+                                        name: review.user.name,
+                                        lastName: review.user.lastName,
+                                        content: review.content,
+                                        images: review.images,
+                                      )));
+
+                          if (response != null) {
+                            try {
+                              final responseComment = await ApiService()
+                                  .commentReview(
+                                      content: response['content'],
+                                      idReview: review.idReview);
+
+                              if (mounted) {
+                                showSuccessSnackBar(context);
+                              }
+
+                              try {
+                                if (response['images'] != null) {
+                                  final imagesResponse =
+                                      await ApiService().uploadCommentImages(
+                                    responseComment.idComment,
+                                    response['images'],
+                                  );
+
+                                  if (imagesResponse.statusCode == 201 ||
+                                      imagesResponse.statusCode == 200) {
+                                    final jsonImageResponse =
+                                        json.decode(imagesResponse.body);
+
+                                    // Convierte cada elemento de la lista a una cadena (String)
+                                    List<String> dynamicList =
+                                        List<String>.from(
+                                            jsonImageResponse['Images']
+                                                .map((e) => e.toString()));
+
+                                    // newReview = newReview.copyWith(
+                                    //     images: stringList);
+                                  }
+                                }
+                              } catch (e) {
+                                if (mounted) {
+                                  showErrorSnackBar(
+                                      context, "No se logró subir imagenes");
+                                }
+                              }
+
+                              // _feedBloc.add(AddComment(
+                              //     comment:
+                              //         responseComment,
+                              //     reviewId: state
+                              //         .reviews[
+                              //             index]
+                              //         .idReview));
+
+                              return 200;
+                            } catch (e) {
+                              if (mounted) {
+                                showErrorSnackBar(context,
+                                    'No se pudo agregar el comentario');
+                              }
+                            }
+                          }
+                        }
+                      },
+                    )),
+          );
+        }
+        break;
+      case "comment":
+        final userBlocState = BlocProvider.of<UserBloc>(context).state;
+        if (userBlocState is UserLoaded) {
+          final comment =
+              await ApiService().getComment(message.data['_id_target']);
+          if (mounted) {
+            Navigator.of(context, rootNavigator: false).push(
+              MaterialPageRoute(
+                  builder: (context) => CommentPage(
+                        user: userBlocState.user,
+                        comment: comment,
+                        onLike: () async {
+                          await ApiService()
+                              .likeComment(idComment: comment.idComment);
+                        },
+                        onFollowUser: () {
+                          _feedBloc.add(FollowUser(comment.user.idUser));
+                        },
+                        onDelete: () async {
+                          try {
+                            final response = await ApiService()
+                                .deleteComment(comment.idComment);
+                            if (response == 200) {
+                              if (mounted) {
+                                showSuccessSnackBar(context,
+                                    message:
+                                        "Se elimino el comentario exitosamente");
+                              }
+                              return true;
+                            } else {
+                              if (mounted) {
+                                showErrorSnackBar(context,
+                                    "No se pudo eliminar el comentario");
+                              }
+                            }
+                          } catch (e) {
+                            if (mounted) {
+                              showErrorSnackBar(
+                                  context, "No se pudo eliminar el comentario");
+                            }
+                          }
+                        },
+                        onComment: () async {
+                          final userState = _userBloc.state;
+
+                          if (userState is UserLoaded) {
+                            Map<String, dynamic>? response =
+                                await showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    useRootNavigator: true,
+                                    barrierColor:
+                                        const Color.fromRGBO(0, 0, 0, 0.1),
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20.0),
+                                        topRight: Radius.circular(20.0),
+                                      ),
+                                    ),
+                                    builder: (context) => CommentBottomSheet(
+                                          user: userState.user,
+                                          name: comment.user.name,
+                                          lastName: comment.user.lastName,
+                                          content: comment.content,
+                                          images: comment.images,
+                                        ));
+
+                            if (response != null) {
+                              try {
+                                await ApiService().commentReview(
+                                    content: response['content'],
+                                    idReview: comment.idReview,
+                                    idParent: comment.idComment);
+                                if (mounted) {
+                                  showSuccessSnackBar(context);
+                                }
+                              } catch (e) {
+                                if (mounted) {
+                                  showErrorSnackBar(context, e.toString());
+                                }
+                              }
+                            }
+                          }
+                        },
+                      )),
+            );
+          }
+        }
+        break;
+      case "chat":
+        final userBlocState = BlocProvider.of<UserBloc>(context).state;
+        if (userBlocState is UserLoaded) {
+          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+              settings: const RouteSettings(),
+              builder: (context) => InboxScreen(
+                    receiver: message.data['_id_target'],
+                    receiverName: message.notification?.title ?? 'Username',
+                  )));
+        }
+        break;
+      case "business":
+        final review = await ApiService().getReview(message.data['_id_target']);
+
+        if (mounted) {
+          Navigator.of(context, rootNavigator: true).push(
+            MaterialPageRoute(
+                builder: (context) => ReviewPage(
+                      review: review,
+                      onLike: () {
+                        _feedBloc.add(LikeReview(review));
+                      },
+                      onFollowUser: () {
+                        _feedBloc.add(FollowUser(review.user.idUser));
+                      },
+                      onFollowBusiness: () {
+                        _feedBloc
+                            .add(FollowBusiness(review.business!.idBusiness));
+                      },
+                      onDelete: () async {
+                        try {
+                          final response =
+                              await ApiService().deleteReview(review.idReview);
+
+                          if (response == 200) {
+                            setState(() {});
+                            _feedBloc.add(DeleteReview(review.idReview));
+                            if (mounted) {
+                              showSuccessSnackBar(context,
+                                  message: "Se elimino la reseña exitosamente");
+                            }
+                          } else {
+                            if (mounted) {
+                              showErrorSnackBar(
+                                  context, "No se pudo eliminar la reseña");
+                            }
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            showErrorSnackBar(
+                                context, "No se pudo eliminar la reseña");
+                          }
+                        }
+                      },
+                      onComment: () async {
+                        final userBloc = BlocProvider.of<UserBloc>(context);
+                        final userState = userBloc.state;
+                        if (userState is UserLoaded) {
+                          Map<String, dynamic>? response =
+                              await showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  useRootNavigator: true,
+                                  barrierColor:
+                                      const Color.fromRGBO(0, 0, 0, 0.1),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20.0),
+                                      topRight: Radius.circular(20.0),
+                                    ),
+                                  ),
+                                  builder: (context) => BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 6, sigmaY: 6),
+                                      child: CommentBottomSheet(
+                                        user: userState.user,
+                                        name: review.user.name,
+                                        lastName: review.user.lastName,
+                                        content: review.content,
+                                        images: review.images,
+                                      )));
+
+                          if (response != null) {
+                            try {
+                              final responseComment = await ApiService()
+                                  .commentReview(
+                                      content: response['content'],
+                                      idReview: review.idReview);
+
+                              if (mounted) {
+                                showSuccessSnackBar(context);
+                              }
+
+                              try {
+                                if (response['images'] != null) {
+                                  final imagesResponse =
+                                      await ApiService().uploadCommentImages(
+                                    responseComment.idComment,
+                                    response['images'],
+                                  );
+
+                                  if (imagesResponse.statusCode == 201 ||
+                                      imagesResponse.statusCode == 200) {
+                                    final jsonImageResponse =
+                                        json.decode(imagesResponse.body);
+
+                                    // Convierte cada elemento de la lista a una cadena (String)
+                                    List<String> dynamicList =
+                                        List<String>.from(
+                                            jsonImageResponse['Images']
+                                                .map((e) => e.toString()));
+
+                                    // newReview = newReview.copyWith(
+                                    //     images: stringList);
+                                  }
+                                }
+                              } catch (e) {
+                                if (mounted) {
+                                  showErrorSnackBar(
+                                      context, "No se logró subir imagenes");
+                                }
+                              }
+
+                              // _feedBloc.add(AddComment(
+                              //     comment:
+                              //         responseComment,
+                              //     reviewId: state
+                              //         .reviews[
+                              //             index]
+                              //         .idReview));
+
+                              return 200;
+                            } catch (e) {
+                              if (mounted) {
+                                showErrorSnackBar(context,
+                                    'No se pudo agregar el comentario');
+                              }
+                            }
+                          }
+                        }
+                      },
+                    )),
+          );
+        }
+        break;
+      default:
+        Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
+          builder: (context) => AlertScreen(widget.userRepository),
+        ));
+
+        break;
     }
   }
 
